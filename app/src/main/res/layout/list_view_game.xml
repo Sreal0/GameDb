@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:background="@color/colorWhite">
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/game_cover"
+        android:src="@drawable/app_icon"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/game_title"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/game_cover"
+        android:layout_toEndOf="@+id/game_cover"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/game_rating"
+        android:text="@string/game_rating"
+        android:textSize="20sp"
+        android:layout_alignBaseline="@+id/textView"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/game_release_date"
+        android:text="@string/game_release_date"
+        android:layout_below="@+id/game_rating"
+        android:layout_toRightOf="@+id/game_cover"
+        android:layout_toEndOf="@+id/game_cover"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/game_platiform"
+        android:text="@string/game_platform"
+        android:layout_below="@+id/game_release_date"
+        android:layout_toRightOf="@+id/game_cover"
+        android:layout_toEndOf="@+id/game_cover"/>
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/game_ownage"
+        android:layout_below="@+id/game_platiform"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="11dp"
+        android:layout_marginEnd="11dp"/>
+
+</RelativeLayout>
