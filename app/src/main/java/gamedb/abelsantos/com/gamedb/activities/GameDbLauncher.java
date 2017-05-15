@@ -181,6 +181,8 @@ public class GameDbLauncher extends AppCompatActivity {
         }
     }
 
+
+    //Slide Menu
     private class DrawerListAdapter extends BaseAdapter{
         Context mContext;
         List<NavItem> mNavItems;

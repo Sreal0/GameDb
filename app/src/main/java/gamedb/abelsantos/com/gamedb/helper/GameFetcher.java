@@ -3,6 +3,7 @@ package gamedb.abelsantos.com.gamedb.helper;
 import android.net.Uri;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Database.Game;
+import gamedb.abelsantos.com.gamedb.Database.GameListObject;
 
 /**
  * Created by Abel Cruz dos Santos on 16.02.2017.
@@ -55,8 +57,8 @@ public class GameFetcher {
         return new String(getUrlBytes(urlSpec));
     }
 
-    public List<Game> fetchItems(){
-        List<Game> items = new ArrayList<>();
+    public List<GameListObject> fetchItems(){
+        List<GameListObject> items = new ArrayList<>();
 
         try{
             String url = Uri.parse("https://igdbcom-internet-game-database-v1.p.mashape.com/games/?fields=*&limit=10")
@@ -68,14 +70,34 @@ public class GameFetcher {
             Log.i(TAG, "Received JSON: " + jsonString);
 
             JSONObject jsonObject = new JSONObject(jsonString);
+            parseItems(items, jsonObject);
 
         }catch (JSONException je){
             Log.e(TAG, "Failed to parse JSON", je);
         }catch (IOException ioe){
             Log.e(TAG, "Failed to fetch items", ioe);
         }
-
         return items;
+    }
+
+    private void parseItems(List<GameListObject> items, JSONObject jsonBody)
+            throws IOException, JSONException{
+
+        JSONObject gameNameJSONObject = jsonBody.getJSONObject("games");
+        JSONArray gameJsonArray = gameNameJSONObject.getJSONArray("game");
+
+        for(int i = 0; i < gameJsonArray.length(); i++){
+            JSONObject object = gameJsonArray.getJSONObject(i);
+
+            GameListObject item = new GameListObject();
+            item.setGame(object.getString("name"));
+            item.setScore(object.getDouble("rating"));
+
+            items.add(item);
+        }
+
+
+
     }
 
 }
