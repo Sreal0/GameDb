@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.R;
+import gamedb.abelsantos.com.gamedb.fragments.AboutFragment;
 import gamedb.abelsantos.com.gamedb.fragments.MyGamesFragment;
 import gamedb.abelsantos.com.gamedb.fragments.PreferencesFragment;
 import gamedb.abelsantos.com.gamedb.fragments.SearchFragment;
@@ -127,18 +128,26 @@ public class GameDbLauncher extends AppCompatActivity {
             case 0:
                 Fragment myGamesFragment = new MyGamesFragment();
                 transaction.replace(R.id.mainContent, myGamesFragment);
+                transaction.addToBackStack(null);
                 transaction.commit();
                 break;
             case 1:
                 Fragment searchFragment = new SearchFragment();
                 transaction.replace(R.id.mainContent, searchFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+                break;
+            case 2:
+                Fragment preferencesFragment = new PreferencesFragment();
+                transaction.replace(R.id.mainContent, preferencesFragment);
+                transaction.addToBackStack(null);
                 transaction.commit();
                 break;
             case 3:
-                Fragment preferencesFragment = new PreferencesFragment();
-                transaction.replace(R.id.mainContent, preferencesFragment);
+                Fragment aboutFragment = new AboutFragment();
+                transaction.replace(R.id.mainContent, aboutFragment);
+                transaction.addToBackStack(null);
                 transaction.commit();
-                break;
             default:
                 break;
         }
