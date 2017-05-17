@@ -2,6 +2,7 @@ package gamedb.abelsantos.com.gamedb.activities;
 
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,17 +23,18 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import gamedb.abelsantos.com.gamedb.Database.GameListObject;
 import gamedb.abelsantos.com.gamedb.R;
 import gamedb.abelsantos.com.gamedb.fragments.AboutFragment;
 import gamedb.abelsantos.com.gamedb.fragments.MyGamesFragment;
 import gamedb.abelsantos.com.gamedb.fragments.PreferencesFragment;
 import gamedb.abelsantos.com.gamedb.fragments.SearchFragment;
+import gamedb.abelsantos.com.gamedb.helper.GameFetcher;
 
 public class GameDbLauncher extends AppCompatActivity {
 
@@ -43,10 +46,14 @@ public class GameDbLauncher extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private LinearLayout linearLayout;
+    private TextView mGameTitle;
+    private TextView mGameRating;
 
     private List<NavItem> mNavItems = new ArrayList<>();
+    private List<GameListObject> mItems = new ArrayList<>();
 
     private Toolbar mToolbar;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +105,8 @@ public class GameDbLauncher extends AppCompatActivity {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        //TODO: add recyclerView to layout
     }
 
     @Override
@@ -178,6 +187,65 @@ public class GameDbLauncher extends AppCompatActivity {
             mTitle = title;
             mSubtitle = subtitle;
             mIcon = icon;
+        }
+    }
+
+    //RecyclerView and FetchItemTask
+
+    private void setupAdapter(){
+
+    }
+    private class FetchItemsTask extends AsyncTask<Void, Void, List<GameListObject>>{
+
+        @Override
+        protected List<GameListObject> doInBackground(Void... voids) {
+            return new GameFetcher().fetchItems();
+        }
+
+        @Override
+        protected void onPostExecute(List<GameListObject> gameListObjects) {
+            mItems = gameListObjects;
+        }
+    }
+
+    private class GameHolder extends RecyclerView.ViewHolder{
+
+        public GameHolder(View itemView) {
+            super(itemView);
+            mGameRating = (TextView)itemView.findViewById(R.id.txt_game_rating);
+            mGameTitle =  (TextView) itemView.findViewById(R.id.txt_gameTitle);
+        }
+
+        public void bindGamelListItem(GameListObject gameListObject){
+            mGameTitle.setText(gameListObject.getGame());
+            mGameRating.setText(gameListObject.getRating() + "");
+        }
+    }
+
+    private class GameListAdapter extends RecyclerView.Adapter<GameHolder>{
+
+        private List<GameListObject> mGameListObjects;
+
+        public GameListAdapter(List<GameListObject> gameListObjects){
+            mGameListObjects = gameListObjects;
+        }
+        @Override
+        public GameHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getApplicationContext());
+            View view = layoutInflater.inflate(R.layout.list_view_game, parent, false);
+            return new GameHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(GameHolder holder, int position) {
+            GameListObject gameListObject = mGameListObjects.get(position);
+            holder.bindGamelListItem(gameListObject);
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return mGameListObjects.size();
         }
     }
 

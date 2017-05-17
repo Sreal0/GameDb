@@ -15,7 +15,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import gamedb.abelsantos.com.gamedb.Database.Game;
 import gamedb.abelsantos.com.gamedb.Database.GameListObject;
 
 /**
@@ -91,13 +90,10 @@ public class GameFetcher {
 
             GameListObject item = new GameListObject();
             item.setGame(object.getString("name"));
-            item.setScore(object.getDouble("rating"));
+            item.setRating(object.getDouble("rating"));
 
             items.add(item);
         }
-
-
-
     }
 
 }

@@ -13,16 +13,16 @@ public class GameListObject {
     private String mGame;
     private long mGameId;
     private Date mReleaseDate;
-    private double mScore;
+    private double mRating;
     private String mPublisher;
     private Image mThumbnail;
 
-    public GameListObject(String game, long gameId, Date releaseDate, double score, String publisher, Image thumbnail) {
+    public GameListObject(String game, long gameId, Date releaseDate, double rating, String publisher, Image thumbnail) {
         mThumbnail = thumbnail;
         mGame = game;
         mGameId = gameId;
         mReleaseDate = releaseDate;
-        mScore = score;
+        mRating = rating;
         mPublisher = publisher;
     }
 
@@ -54,12 +54,12 @@ public class GameListObject {
         mReleaseDate = releaseDate;
     }
 
-    public double getScore() {
-        return mScore;
+    public double getRating() {
+        return mRating;
     }
 
-    public void setScore(double score) {
-        mScore = score;
+    public void setRating(double rating) {
+        mRating = rating;
     }
 
     public String getPublisher() {
