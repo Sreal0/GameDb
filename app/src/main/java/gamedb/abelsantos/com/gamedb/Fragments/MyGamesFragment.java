@@ -1,4 +1,4 @@
-package gamedb.abelsantos.com.gamedb.fragments;
+package gamedb.abelsantos.com.gamedb.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,11 +10,12 @@ import android.view.ViewGroup;
 import gamedb.abelsantos.com.gamedb.R;
 
 /**
- * Created by Abel Cruz dos Santos on 20.01.2017.
+ * Created by Abel Cruz dos Santos on 20.03.2017.
  */
 
-public class PreferencesFragment extends Fragment {
-    private static final String TAG = "PreferencesFragment";
+public class MyGamesFragment extends Fragment {
+
+    private static final String TAG = "MyGamesFragment";
 
 
     @Override
@@ -22,7 +23,6 @@ public class PreferencesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.d(TAG, "Fragment started");
-        return inflater.inflate(R.layout.fragment_preferences, container, false);
+        return inflater.inflate(R.layout.fragment_my_games, container, false);
     }
-
 }

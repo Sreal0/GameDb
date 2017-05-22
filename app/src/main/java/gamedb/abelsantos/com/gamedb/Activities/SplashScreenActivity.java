@@ -1,4 +1,4 @@
-package gamedb.abelsantos.com.gamedb.activities;
+package gamedb.abelsantos.com.gamedb.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
