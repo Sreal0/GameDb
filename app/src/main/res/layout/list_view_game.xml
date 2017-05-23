@@ -29,11 +29,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_publisher"
+        android:id="@+id/txt_developer"
         android:textSize="15sp"
         android:paddingLeft="5dp"
         android:textColor="@color/colorPrimary"
-        android:text="Publisher"
+        android:text="Dev"
         android:layout_below="@id/txt_gameTitle"
         android:layout_toRightOf="@+id/img_thumbnail_game"
         android:layout_toEndOf="@+id/img_thumbnail_game"/>
@@ -42,10 +42,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/txt_game_rating"
         android:text="@string/game_rating"
-        android:textSize="20sp"
+        android:textSize="40sp"
         android:paddingRight="1dp"
-        android:layout_alignBaseline="@+id/txt_gameTitle"
-        android:layout_alignBottom="@+id/txt_gameTitle"
+        android:layout_alignBaseline="@+id/txt_developer"
+        android:layout_alignBottom="@+id/txt_developer"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
 
@@ -55,7 +55,7 @@
         android:id="@+id/txt_game_release_date"
         android:text="@string/game_release_date"
         android:paddingLeft="5dp"
-        android:layout_below="@+id/txt_publisher"
+        android:layout_below="@+id/txt_developer"
         android:layout_toRightOf="@+id/img_thumbnail_game"
         android:layout_toEndOf="@+id/img_thumbnail_game"/>
 

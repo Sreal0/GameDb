@@ -12,23 +12,30 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import gamedb.abelsantos.com.gamedb.Database.GameListObject;
+import gamedb.abelsantos.com.gamedb.IGDB.IgdbClient;
+import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
 import gamedb.abelsantos.com.gamedb.R;
 
 public class GameDbLauncher extends AppCompatActivity {
 
     private static String TAG = "gamedb.abelsantos";
 
+
     private TextView mGameTitle;
     private TextView mGameRating;
+    private ImageView mGameCover;
+    private TextView mGameDeveloper;
+    private TextView mGameReleaseDate;
+    private TextView mGamePlatforms;
 
-    private List<GameListObject> mItems = new ArrayList<>();
+    private List<IgdbGame> mItems = new ArrayList<>();
 
     private Toolbar mToolbar;
     private TextView mToolbarText;
@@ -43,7 +50,6 @@ public class GameDbLauncher extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerViewLauncher);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
 
         //Navigation Bar onClickListener
         mBottomNavigationView = (BottomNavigationView)findViewById(R.id.bottom_navigation);
@@ -72,6 +78,8 @@ public class GameDbLauncher extends AppCompatActivity {
 
 
         setupAdapter();
+        IgdbClient igdbClient = IgdbClient.getInstance();
+        mItems = igdbClient.getGames();
     }
 
     private void setupAdapter(){
@@ -85,20 +93,25 @@ public class GameDbLauncher extends AppCompatActivity {
             super(itemView);
             mGameRating = (TextView)itemView.findViewById(R.id.txt_game_rating);
             mGameTitle =  (TextView) itemView.findViewById(R.id.txt_gameTitle);
+            mGameCover = (ImageView)itemView.findViewById(R.id.img_thumbnail_game);
+            mGameDeveloper = (TextView)itemView.findViewById(R.id.txt_developer);
+            mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform);
+            mGameReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date);
+
         }
 
-        public void bindGamelListItem(GameListObject gameListObject){
-            mGameTitle.setText(gameListObject.getGame());
-            mGameRating.setText(gameListObject.getRating() + "");
+        public void bindGameListItem(IgdbGame igdbGame){
+            mGameTitle.setText(igdbGame.getName());
+            mGameRating.setText(igdbGame.getRating() + "");
         }
     }
 
     private class GameListAdapter extends RecyclerView.Adapter<GameHolder>{
 
-        private List<GameListObject> mGameListObjects;
+        private List<IgdbGame> mIgdbGames;
 
-        public GameListAdapter(List<GameListObject> gameListObjects){
-            mGameListObjects = gameListObjects;
+        public GameListAdapter(List<IgdbGame> igdbGames){
+            mIgdbGames = igdbGames;
         }
         @Override
         public GameHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -109,14 +122,14 @@ public class GameDbLauncher extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(GameHolder holder, int position) {
-            GameListObject gameListObject = mGameListObjects.get(position);
-            holder.bindGamelListItem(gameListObject);
+            IgdbGame igdbGame = mIgdbGames.get(position);
+            holder.bindGameListItem(igdbGame);
 
         }
 
         @Override
         public int getItemCount() {
-            return mGameListObjects.size();
+            return mIgdbGames.size();
         }
     }
 
