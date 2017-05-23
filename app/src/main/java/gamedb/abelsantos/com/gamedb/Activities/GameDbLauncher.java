@@ -40,6 +40,7 @@ public class GameDbLauncher extends AppCompatActivity {
     private Toolbar mToolbar;
     private TextView mToolbarText;
     private RecyclerView mRecyclerView;
+    private GameListAdapter mGameListAdapter;
     private BottomNavigationView mBottomNavigationView;
 
     @Override
@@ -49,7 +50,7 @@ public class GameDbLauncher extends AppCompatActivity {
         //Setting up NavMenu
 
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerViewLauncher);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
 
         //Navigation Bar onClickListener
         mBottomNavigationView = (BottomNavigationView)findViewById(R.id.bottom_navigation);
@@ -76,14 +77,18 @@ public class GameDbLauncher extends AppCompatActivity {
             }
         });
 
-
-        setupAdapter();
         IgdbClient igdbClient = IgdbClient.getInstance();
         mItems = igdbClient.getGames();
+        Toast.makeText(this, mItems.size() + "size", Toast.LENGTH_SHORT).show();
+
+        setupAdapter();
+
     }
 
     private void setupAdapter(){
-        mRecyclerView.setAdapter(new GameListAdapter(mItems));
+        mGameListAdapter = new GameListAdapter(mItems);
+        mRecyclerView.setAdapter(mGameListAdapter);
+        mGameListAdapter.notifyDataSetChanged();
     }
 
 
@@ -97,12 +102,14 @@ public class GameDbLauncher extends AppCompatActivity {
             mGameDeveloper = (TextView)itemView.findViewById(R.id.txt_developer);
             mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform);
             mGameReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date);
-
         }
 
         public void bindGameListItem(IgdbGame igdbGame){
             mGameTitle.setText(igdbGame.getName());
-            mGameRating.setText(igdbGame.getRating() + "");
+            String rat = igdbGame.getRating() + "";
+            mGameRating.setText(rat);
+            String date = igdbGame.getReleaseDate() + "";
+            mGameReleaseDate.setText(date);
         }
     }
 
@@ -115,7 +122,7 @@ public class GameDbLauncher extends AppCompatActivity {
         }
         @Override
         public GameHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            LayoutInflater layoutInflater = LayoutInflater.from(getApplicationContext());
+            LayoutInflater layoutInflater = LayoutInflater.from(getApplication());
             View view = layoutInflater.inflate(R.layout.list_view_game, parent, false);
             return new GameHolder(view);
         }

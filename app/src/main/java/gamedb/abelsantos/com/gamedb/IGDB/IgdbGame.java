@@ -1,5 +1,7 @@
 package gamedb.abelsantos.com.gamedb.IGDB;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 /**
  * Created by Abel Cruz dos Santos on 22.05.2017.
  */
@@ -10,6 +12,7 @@ public class IgdbGame {
     private String name;
     private String slug;
     private String url;
+    private long releaseDate;
     private int created_at;
     private int updated_at;
     private double rating;
@@ -17,10 +20,12 @@ public class IgdbGame {
     private int[] developers;
     private int[] category;
 
+
+
     public int getId() {
         return id;
     }
-
+    @JsonSetter("id")
     public void setId(int id) {
         this.id = id;
     }
@@ -28,7 +33,7 @@ public class IgdbGame {
     public String getName() {
         return name;
     }
-
+    @JsonSetter("name")
     public void setName(String name) {
         this.name = name;
     }
@@ -76,7 +81,7 @@ public class IgdbGame {
     public double getPopularity() {
         return popularity;
     }
-
+    @JsonSetter("popularity")
     public void setPopularity(double popularity) {
         this.popularity = popularity;
     }
@@ -84,7 +89,7 @@ public class IgdbGame {
     public int[] getDevelopers() {
         return developers;
     }
-
+    @JsonSetter("developers")
     public void setDevelopers(int[] developers) {
         this.developers = developers;
     }
@@ -95,5 +100,13 @@ public class IgdbGame {
 
     public void setCategory(int[] category) {
         this.category = category;
+    }
+
+    public long getReleaseDate() {
+        return releaseDate;
+    }
+    @JsonSetter("first_release_date")
+    public void setReleaseDate(long releaseDate) {
+        this.releaseDate = releaseDate;
     }
 }
