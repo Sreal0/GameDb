@@ -16,6 +16,15 @@ import gamedb.abelsantos.com.gamedb.R;
 public class WishlistFragment extends Fragment {
     private static final String TAG = "WishlistFragment";
 
+    public static WishlistFragment newInstance() {
+        WishlistFragment fragment = new WishlistFragment();
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

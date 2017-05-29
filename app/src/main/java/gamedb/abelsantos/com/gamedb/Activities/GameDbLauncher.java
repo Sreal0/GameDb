@@ -4,6 +4,8 @@ package gamedb.abelsantos.com.gamedb.Activities;
 import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,6 +38,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import gamedb.abelsantos.com.gamedb.Fragments.GamesFragment;
+import gamedb.abelsantos.com.gamedb.Fragments.MyGamesFragment;
+import gamedb.abelsantos.com.gamedb.Fragments.SearchFragment;
+import gamedb.abelsantos.com.gamedb.Fragments.WishlistFragment;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
 import gamedb.abelsantos.com.gamedb.R;
@@ -78,22 +84,24 @@ public class GameDbLauncher extends AppCompatActivity {
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment fragment = null;
                 switch (item.getItemId()){
-                    case R.id.action_home:
-                        Toast.makeText(getApplicationContext(), "My Games", Toast.LENGTH_SHORT).show();
-                        break;
                     case R.id.action_database:
-                        Toast.makeText(getApplicationContext(), "Games", Toast.LENGTH_SHORT).show();
+                        fragment = MyGamesFragment.newInstance();
+                        break;
+                    case R.id.action_home:
+                        fragment = GamesFragment.newInstance();
                         break;
                     case R.id.action_wishlist:
-                        Toast.makeText(getApplicationContext(), "search", Toast.LENGTH_SHORT).show();
+                        fragment = WishlistFragment.newInstance();
                         break;
                     case R.id.action_search:
-                        Toast.makeText(getApplicationContext(), "Wish list", Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
+                        fragment = SearchFragment.newInstance();
                         break;
                 }
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.commit();
                 return true;
             }
         });

@@ -4,9 +4,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <TextView android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:text="You are inside GamesFragment" />
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:text="You are inside myGamesFragment" />
 
 
 </LinearLayout>

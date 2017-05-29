@@ -20,13 +20,22 @@
 
     </android.support.v7.widget.Toolbar>
 
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_below="@id/toolbar_launcher"
+        android:animateLayoutChanges="true">
+
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/recyclerViewLauncher"
-            android:layout_above="@+id/bottom_navigation"
-            android:layout_below="@id/toolbar_launcher"/>
+            android:id="@+id/recyclerViewLauncher"/>
 
+    </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation"

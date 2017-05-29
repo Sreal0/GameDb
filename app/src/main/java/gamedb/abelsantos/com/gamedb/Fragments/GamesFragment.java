@@ -16,6 +16,15 @@ import gamedb.abelsantos.com.gamedb.R;
 public class GamesFragment extends Fragment {
     private static final String TAG = "GamesFragment";
 
+    public static GamesFragment newInstance() {
+        GamesFragment fragment = new GamesFragment();
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

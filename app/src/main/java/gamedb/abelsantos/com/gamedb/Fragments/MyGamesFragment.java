@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import gamedb.abelsantos.com.gamedb.R;
 
 /**
- * Created by Abel Cruz dos Santos on 20.03.2017.
+ * Created by Abel Cruz dos Santos on 29.05.2017.
  */
 
-public class SearchFragment extends Fragment {
+public class MyGamesFragment extends Fragment{
 
-    public static SearchFragment newInstance() {
-        SearchFragment fragment = new SearchFragment();
+    public static MyGamesFragment newInstance() {
+        MyGamesFragment fragment = new MyGamesFragment();
         return fragment;
     }
 
@@ -26,6 +26,6 @@ public class SearchFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        return inflater.inflate(R.layout.fragment_mygames, container, false);
     }
 }
