@@ -12,6 +12,7 @@ public class IgdbGame {
     private String name;
     private String slug;
     private String url;
+    private String thumbnailUrl;
     private long releaseDate;
     private int created_at;
     private int updated_at;
@@ -19,8 +20,15 @@ public class IgdbGame {
     private double popularity;
     private int[] developers;
     private int[] category;
+    private IgdbGameCover mIgdbGameCover;
 
-
+    public IgdbGameCover getIgdbGameCover() {
+        return mIgdbGameCover;
+    }
+    @JsonSetter("cover")
+    public void setIgdbGameCover(IgdbGameCover igdbGameCover) {
+        mIgdbGameCover = igdbGameCover;
+    }
 
     public int getId() {
         return id;
@@ -73,7 +81,7 @@ public class IgdbGame {
     public double getRating() {
         return rating;
     }
-
+    @JsonSetter("rating")
     public void setRating(double rating) {
         this.rating = rating;
     }
@@ -108,5 +116,13 @@ public class IgdbGame {
     @JsonSetter("first_release_date")
     public void setReleaseDate(long releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 }

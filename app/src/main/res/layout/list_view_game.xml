@@ -3,79 +3,72 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="100dp"
     android:layout_marginBottom="4dp"
     android:background="@color/colorWhite">
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/img_thumbnail_game"
-        android:src="@drawable/app_icon"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"/>
 
     <TextView
+        android:id="@+id/txt_game_release_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/game_release_date"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"/>
+
+    <!-- Thumbnail Image -->
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="8dp" />
+
+    <TextView
+        android:layout_width="245dp"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:textColor="@color/colorPrimaryDark"
         android:text="@string/game_title"
         android:id="@+id/txt_gameTitle"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:paddingLeft="5dp"
-        android:layout_toRightOf="@+id/img_thumbnail_game"
-        android:layout_toEndOf="@+id/img_thumbnail_game"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_developer"
-        android:textSize="15sp"
-        android:paddingLeft="5dp"
-        android:textColor="@color/colorPrimary"
-        android:text="Dev"
-        android:layout_below="@id/txt_gameTitle"
-        android:layout_toRightOf="@+id/img_thumbnail_game"
-        android:layout_toEndOf="@+id/img_thumbnail_game"/>
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/thumbnail"
+        />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txt_game_rating"
         android:text="@string/game_rating"
-        android:textSize="40sp"
-        android:paddingRight="1dp"
-        android:layout_alignBaseline="@+id/txt_developer"
-        android:layout_alignBottom="@+id/txt_developer"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_game_release_date"
-        android:text="@string/game_release_date"
+        android:textSize="15sp"
         android:paddingLeft="5dp"
-        android:layout_below="@+id/txt_developer"
-        android:layout_toRightOf="@+id/img_thumbnail_game"
-        android:layout_toEndOf="@+id/img_thumbnail_game"/>
+
+        android:textColor="@color/colorBlack"
+        android:layout_below="@+id/txt_gameTitle"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_toEndOf="@+id/thumbnail"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txt_game_platform"
         android:text="@string/game_platform"
+        android:textSize="15sp"
         android:paddingLeft="5dp"
-        android:layout_below="@+id/txt_game_release_date"
-        android:layout_toRightOf="@+id/img_thumbnail_game"
-        android:layout_toEndOf="@+id/img_thumbnail_game"/>
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/colorBlack"
+        android:layout_below="@+id/txt_game_rating"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_toEndOf="@+id/thumbnail"/>
 
-    <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:id="@+id/img_is_game_own"
-        android:layout_below="@+id/txt_game_release_date"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:paddingLeft="10dp"/>
+
 
 </RelativeLayout>

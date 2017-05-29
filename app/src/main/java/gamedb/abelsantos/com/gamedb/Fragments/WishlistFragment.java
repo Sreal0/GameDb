@@ -10,12 +10,11 @@ import android.view.ViewGroup;
 import gamedb.abelsantos.com.gamedb.R;
 
 /**
- * Created by Abel Cruz dos Santos on 20.03.2017.
+ * Created by Abel Cruz dos Santos on 09.05.2017.
  */
 
-public class MyGamesFragment extends Fragment {
-
-    private static final String TAG = "MyGamesFragment";
+public class WishlistFragment extends Fragment {
+    private static final String TAG = "WishlistFragment";
 
 
     @Override
@@ -23,6 +22,7 @@ public class MyGamesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.d(TAG, "Fragment started");
-        return inflater.inflate(R.layout.fragment_my_games, container, false);
+        return inflater.inflate(R.layout.fragment_wishlist, container, false);
     }
+
 }
