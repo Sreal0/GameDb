@@ -61,7 +61,6 @@ public class IgdbClientSingleton extends Application{
         if (mRequestQueue == null) {
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         }
-
         return mRequestQueue;
     }
 

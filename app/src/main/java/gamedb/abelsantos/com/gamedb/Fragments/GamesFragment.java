@@ -132,8 +132,8 @@ public class GamesFragment extends Fragment {
                 Log.d(TAG, error.toString());
             }
         });
-
-        sIgdbClientSingleton.addToRequestQueue(req, tag_json_arry);
+        //req.setShouldCache(true);
+        sIgdbClientSingleton.addToRequestQueue(req);
         Log.d(TAG, "Size of list " + mItems.size());
     }
 
@@ -143,11 +143,8 @@ public class GamesFragment extends Fragment {
             super(itemView);
             mGameRating = (TextView)itemView.findViewById(R.id.txt_game_rating);
             mGameTitle =  (TextView) itemView.findViewById(R.id.txt_gameTitle);
-            mGameCover = (ImageView)itemView.findViewById(R.id.thumbnail);
             mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform);
             mGameReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date);
-            mImageLoader = sIgdbClientSingleton.getImageLoader();
-
             mNetworkImageView = (NetworkImageView)itemView.findViewById(R.id.thumbnail);
         }
 
@@ -161,13 +158,12 @@ public class GamesFragment extends Fragment {
             //IgdbGameCover already has // in it.
             String protocol = "https:" + igdbGame.getIgdbGameCover().getUrl();
             Log.d(TAG, protocol);
+            mImageLoader = sIgdbClientSingleton.getImageLoader();
             mNetworkImageView.setImageUrl(protocol, mImageLoader);
         }
     }
 
     private class GameListAdapter extends RecyclerView.Adapter<GameHolder>{
-
-
         public GameListAdapter(){
         }
         @Override
@@ -176,17 +172,22 @@ public class GamesFragment extends Fragment {
             View view = layoutInflater.inflate(R.layout.list_view_game, parent, false);
             return new GameHolder(view);
         }
-
         @Override
         public void onBindViewHolder(GameHolder holder, int position) {
+            final
             IgdbGame igdbGame = mItems.get(position);
             holder.bindGameListItem(igdbGame);
-
         }
-
         @Override
         public int getItemCount() {
             return mItems.size();
+        }
+        /*Super important: I must override getItemViewType otherwise items in the RV will
+        * change order and I will get a strange behavior (Items were repeating and there was
+        * one crazy item that kept changing to another items).*/
+        @Override
+        public int getItemViewType(int position){
+            return position;
         }
     }
 
