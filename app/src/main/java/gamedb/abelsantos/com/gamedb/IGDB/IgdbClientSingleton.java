@@ -6,22 +6,8 @@ import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -37,9 +23,10 @@ public class IgdbClientSingleton extends Application{
 
     private static final String TAG = "IgdbClientSingleton";
     private static final String API_KEY = "?mashape-key=spjH1mZDLmmsh2xi8l8E4sz5dRFBp1FexQhjsnEsNlSCIqVzS0";
-    private static final String getGamesURL = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/";
-    private static final String gameAttributes = "&fields=name%2Ccover%2Crating%2Cfirst_release_date";
-    private static final String sortGamesByReleaseDateDESC = "&limit=10&offset=0";
+    private static final String GET_GAMES_URL = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/";
+    private static final String GAME_ATTRIBUTES = "&fields=name%2Ccover%2Crating%2Cfirst_release_date";
+    private static final String LIMIT_OFFSET = "&limit=20&offset=";
+    private static int offset = 0;
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
@@ -67,7 +54,7 @@ public class IgdbClientSingleton extends Application{
 
     public String  getGamesURLGames(){
 
-        return getGamesURL +  API_KEY + gameAttributes + sortGamesByReleaseDateDESC;
+        return GET_GAMES_URL +  API_KEY + GAME_ATTRIBUTES + LIMIT_OFFSET + offset;
     }
 
     public RequestQueue getRequestQueue() {
@@ -102,4 +89,15 @@ public class IgdbClientSingleton extends Application{
         }
     }
 
+    public static int getOffset() {
+        return offset;
+    }
+
+    public static void setOffset(int offset) {
+        IgdbClientSingleton.offset = offset;
+    }
+
+    public static void nextPage(){
+        offset++;
+    }
 }

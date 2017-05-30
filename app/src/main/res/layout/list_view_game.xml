@@ -26,19 +26,22 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="8dp" />
+        android:layout_marginRight="8dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        />
 
     <TextView
         android:layout_width="245dp"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:textColor="@color/colorPrimaryDark"
         android:text="@string/game_title"
         android:id="@+id/txt_gameTitle"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingLeft="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/thumbnail"
         />
 
@@ -48,8 +51,7 @@
         android:id="@+id/txt_game_rating"
         android:text="@string/game_rating"
         android:textSize="15sp"
-        android:paddingLeft="5dp"
-
+        android:layout_marginLeft="3dp"
         android:textColor="@color/colorBlack"
         android:layout_below="@+id/txt_gameTitle"
         android:layout_toRightOf="@+id/thumbnail"
@@ -61,7 +63,7 @@
         android:id="@+id/txt_game_platform"
         android:text="@string/game_platform"
         android:textSize="15sp"
-        android:paddingLeft="5dp"
+        android:layout_marginLeft="3dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/colorBlack"
