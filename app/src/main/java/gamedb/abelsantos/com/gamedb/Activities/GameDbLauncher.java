@@ -126,7 +126,9 @@ public class GameDbLauncher extends AppCompatActivity {
                 for (int j = 0; j < jsonArray.length(); j++){
                     try{
                         JSONObject in_obj = jsonArray.getJSONObject(j);
-                        if (in_obj.getInt("id") == igdbReleaseDates[i].getPlatform()){
+                        //SHIT... it worked. AWESOME!!!!
+                        if (in_obj.getInt("id") == igdbReleaseDates[i].getPlatform()
+                                && !consoles.contains(in_obj.getString("name"))) {
                             consoles += in_obj.getString("name") + " ";
                             Log.d(TAG, name + " " + igdbReleaseDates[i].getPlatform() + "");
                         }

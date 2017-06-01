@@ -90,7 +90,8 @@ public class GamesFragment extends Fragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 offset += 20;
-                loadNextDataFromAPI(offset);
+                //Same method as before, just sets the offset to + 20
+                getGames(offset);
             }
         };
         mRecyclerView.addOnScrollListener(mScrollListener);
@@ -101,7 +102,7 @@ public class GamesFragment extends Fragment {
         //Setting up the adapter to avoid getting -> No adapter attached; skipping layout
         //When data was gotten then the adapter will be notified
         setupAdapter();
-        getGames();
+        getGames(offset);
         //This is how I call a method from the activity on a fragment.
         //((GameDbLauncher)getActivity()).thisIsAMethod();
         return view;
@@ -112,47 +113,8 @@ public class GamesFragment extends Fragment {
         mRecyclerView.setAdapter(mGameListAdapter);
     }
 
-    public void loadNextDataFromAPI(int offset){
+    public void getGames(int offset){
         mStringURL = sIgdbClientSingleton.getMoreGamesURL(offset);
-        Log.d(TAG, mStringURL);
-        final JsonArrayRequest req = new JsonArrayRequest(
-                mStringURL, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                ObjectMapper mapper = new ObjectMapper();
-                //Log.d(TAG, response.toString());
-                for(int i = 0; i < response.length(); i++){
-                    try {
-                        JSONObject object = response.getJSONObject(i);
-                        String data = object.toString();
-                        IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
-                        mItems.add(igdbGame);
-                    } catch (JSONException e) {
-                        Log.d(TAG, "JSONException: " + e);
-                    } catch (JsonParseException e) {
-                        Log.d(TAG, "JsonParseException: " + e);
-                    } catch (JsonMappingException e) {
-                        Log.d(TAG, "JsonMappingException: " + e);
-                    } catch (IOException e) {
-                        Log.d(TAG, "IOException: " + e);
-                    }
-                }
-                Log.d(TAG, response.toString());
-                //Notify that the data changed.
-                mGameListAdapter.notifyDataSetChanged();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, error.toString());
-            }
-        });
-        //req.setShouldCache(true);
-        sIgdbClientSingleton.addToRequestQueue(req);
-    }
-
-    public void getGames(){
-        mStringURL = sIgdbClientSingleton.getGamesURLGames();
         // Request an Array response from the provided URL.
         final JsonArrayRequest req = new JsonArrayRequest(
                 mStringURL, new Response.Listener<JSONArray>() {
