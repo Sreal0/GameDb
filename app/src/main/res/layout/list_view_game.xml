@@ -65,7 +65,7 @@
         android:textSize="15sp"
         android:layout_marginLeft="3dp"
         android:ellipsize="end"
-        android:maxLines="1"
+        android:maxLines="2"
         android:textColor="@color/colorBlack"
         android:layout_below="@+id/txt_game_rating"
         android:layout_toRightOf="@+id/thumbnail"

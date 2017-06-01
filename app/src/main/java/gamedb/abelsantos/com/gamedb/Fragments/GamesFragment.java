@@ -49,7 +49,7 @@ public class GamesFragment extends Fragment {
 
 
     private TextView mGameTitle;
-    private TextView mGameRating;
+    private TextView mGameAggregatedRating;
     private ImageView mGameCover;
     private TextView mGameReleaseDate;
     private TextView mGamePlatforms;
@@ -87,6 +87,9 @@ public class GamesFragment extends Fragment {
         //When data was gotten then the adapter will be notified
         setupAdapter();
         getGames();
+
+        //This is how I call a method from the activity on a fragment.
+        //((GameDbLauncher)getActivity()).thisIsAMethod();
         return view;
     }
 
@@ -103,13 +106,12 @@ public class GamesFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
                 ObjectMapper mapper = new ObjectMapper();
-
+                //Log.d(TAG, response.toString());
                 for(int i = 0; i < response.length(); i++){
                     try {
                         JSONObject object = response.getJSONObject(i);
                         String data = object.toString();
                         IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
-                        Log.d(TAG, igdbGame.getName());
                         mItems.add(igdbGame);
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
@@ -134,32 +136,33 @@ public class GamesFragment extends Fragment {
         });
         //req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
-        Log.d(TAG, "Size of list " + mItems.size());
     }
 
     private class GameHolder extends RecyclerView.ViewHolder{
 
-        public GameHolder(View itemView) {
+        private GameHolder(View itemView) {
             super(itemView);
-            mGameRating = (TextView)itemView.findViewById(R.id.txt_game_rating);
+            mGameAggregatedRating = (TextView)itemView.findViewById(R.id.txt_game_rating);
             mGameTitle =  (TextView) itemView.findViewById(R.id.txt_gameTitle);
             mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform);
             mGameReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date);
             mNetworkImageView = (NetworkImageView)itemView.findViewById(R.id.thumbnail);
         }
 
-        public void bindGameListItem(IgdbGame igdbGame){
+        private void bindGameListItem(IgdbGame igdbGame){
             mGameTitle.setText(igdbGame.getName());
-            int rat = ((int) igdbGame.getRating());
-            mGameRating.setText(getString(R.string.game_rating)+ " " + rat);
+            int rat = ((int) igdbGame.getAggregated_rating());
+            mGameAggregatedRating.setText(getString(R.string.game_rating)+ " " + rat);
             String date = android.text.format.DateFormat.format("MM/dd/yyyy", new Date(igdbGame.getReleaseDate())).toString();
             mGameReleaseDate.setText(date);
+            String consoles = ((GameDbLauncher)getActivity()).resolveConsoleNames(igdbGame.getIgdbReleaseDates(), igdbGame.getName());
+            mGamePlatforms.setText(consoles);
             //To avoid getting an Exception because of the protocol. Note that the Url from the
             //IgdbGameCover already has // in it.
             String protocol = "https:" + igdbGame.getIgdbGameCover().getUrl();
-            Log.d(TAG, protocol);
             mImageLoader = sIgdbClientSingleton.getImageLoader();
             mNetworkImageView.setImageUrl(protocol, mImageLoader);
+
         }
     }
 

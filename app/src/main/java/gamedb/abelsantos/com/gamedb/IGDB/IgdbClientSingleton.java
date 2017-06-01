@@ -24,7 +24,13 @@ public class IgdbClientSingleton extends Application{
     private static final String TAG = "IgdbClientSingleton";
     private static final String API_KEY = "?mashape-key=spjH1mZDLmmsh2xi8l8E4sz5dRFBp1FexQhjsnEsNlSCIqVzS0";
     private static final String GET_GAMES_URL = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/";
-    private static final String GAME_ATTRIBUTES = "&fields=name%2Ccover%2Crating%2Cfirst_release_date";
+    private static final String AND_FIELDS = "&fields=";
+    private static final String FIELD_NAME = "name";
+    private static final String FIELD_COVER = ",cover";
+    private static final String FIELD_RELEASE_DATES = ",release_dates";
+    private static final String FIELD_AGGREGATED_RATING = ",aggregated_rating";
+    private static final String FIELD_FIRST_RELEASE_DATE = ",first_release_date";
+    private static final String GAME_ATTRIBUTES = "&fields=name%2Ccover%2Caggregated_rating%2Cfirst_release_date";
     private static final String LIMIT_OFFSET = "&limit=20&offset=";
     private static int offset = 0;
 
@@ -54,7 +60,8 @@ public class IgdbClientSingleton extends Application{
 
     public String  getGamesURLGames(){
 
-        return GET_GAMES_URL +  API_KEY + GAME_ATTRIBUTES + LIMIT_OFFSET + offset;
+        return GET_GAMES_URL +  API_KEY + AND_FIELDS + FIELD_NAME + FIELD_COVER +
+                FIELD_AGGREGATED_RATING + FIELD_FIRST_RELEASE_DATE + FIELD_RELEASE_DATES + LIMIT_OFFSET + offset;
     }
 
     public RequestQueue getRequestQueue() {
@@ -97,6 +104,6 @@ public class IgdbClientSingleton extends Application{
     }
 
     public static void nextPage(){
-        offset++;
+        offset += 20;
     }
 }
