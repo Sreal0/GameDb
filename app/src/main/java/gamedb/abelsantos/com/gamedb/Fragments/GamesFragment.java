@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -31,6 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
+import gamedb.abelsantos.com.gamedb.Fragments.Helpers.EndlessRecyclerViewScrollListener;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
 import gamedb.abelsantos.com.gamedb.R;
@@ -59,6 +61,9 @@ public class GamesFragment extends Fragment {
     private NetworkImageView mNetworkImageView;
 
     private List<IgdbGame> mItems = new ArrayList<>();
+    private EndlessRecyclerViewScrollListener mScrollListener;
+    private String mStringURL;
+    private int offset = 0;
 
     public static GamesFragment newInstance() {
         GamesFragment fragment = new GamesFragment();
@@ -77,8 +82,18 @@ public class GamesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_games, container, false);
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.recyclerViewGames);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
         sIgdbClientSingleton = IgdbClientSingleton.getInstance();
+        //Infinite Scrolling
+        mScrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                offset += 20;
+                loadNextDataFromAPI(offset);
+            }
+        };
+        mRecyclerView.addOnScrollListener(mScrollListener);
 
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage("Loading...");
@@ -87,7 +102,6 @@ public class GamesFragment extends Fragment {
         //When data was gotten then the adapter will be notified
         setupAdapter();
         getGames();
-
         //This is how I call a method from the activity on a fragment.
         //((GameDbLauncher)getActivity()).thisIsAMethod();
         return view;
@@ -98,11 +112,50 @@ public class GamesFragment extends Fragment {
         mRecyclerView.setAdapter(mGameListAdapter);
     }
 
+    public void loadNextDataFromAPI(int offset){
+        mStringURL = sIgdbClientSingleton.getMoreGamesURL(offset);
+        Log.d(TAG, mStringURL);
+        final JsonArrayRequest req = new JsonArrayRequest(
+                mStringURL, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                ObjectMapper mapper = new ObjectMapper();
+                //Log.d(TAG, response.toString());
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        JSONObject object = response.getJSONObject(i);
+                        String data = object.toString();
+                        IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
+                        mItems.add(igdbGame);
+                    } catch (JSONException e) {
+                        Log.d(TAG, "JSONException: " + e);
+                    } catch (JsonParseException e) {
+                        Log.d(TAG, "JsonParseException: " + e);
+                    } catch (JsonMappingException e) {
+                        Log.d(TAG, "JsonMappingException: " + e);
+                    } catch (IOException e) {
+                        Log.d(TAG, "IOException: " + e);
+                    }
+                }
+                Log.d(TAG, response.toString());
+                //Notify that the data changed.
+                mGameListAdapter.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.toString());
+            }
+        });
+        //req.setShouldCache(true);
+        sIgdbClientSingleton.addToRequestQueue(req);
+    }
+
     public void getGames(){
-        String url = sIgdbClientSingleton.getGamesURLGames();
+        mStringURL = sIgdbClientSingleton.getGamesURLGames();
         // Request an Array response from the provided URL.
         final JsonArrayRequest req = new JsonArrayRequest(
-                url, new Response.Listener<JSONArray>() {
+                mStringURL, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 ObjectMapper mapper = new ObjectMapper();
