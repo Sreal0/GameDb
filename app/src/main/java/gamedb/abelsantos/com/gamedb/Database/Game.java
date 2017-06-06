@@ -1,10 +1,5 @@
 package gamedb.abelsantos.com.gamedb.Database;
 
-import java.util.Date;
-
-import gamedb.abelsantos.com.gamedb.IGDB.IgdbGameCover;
-import gamedb.abelsantos.com.gamedb.IGDB.IgdbGameGenre;
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -22,7 +17,7 @@ public class Game extends RealmObject {
 
     private String  mGameName;
     private String  mSlug;
-    private String  mUrl;
+    private String  mThumbnailUrl;
     private long    mCreatedAt;
     private long    mUpdatedAt;
     private String  mSummary;
@@ -63,12 +58,12 @@ public class Game extends RealmObject {
         mSlug = slug;
     }
 
-    public String getUrl() {
-        return mUrl;
+    public String getThumbnailUrl() {
+        return mThumbnailUrl;
     }
 
-    public void setUrl(String url) {
-        mUrl = url;
+    public void setThumbnailUrl(String thumbnailUrl) {
+        mThumbnailUrl = thumbnailUrl;
     }
 
     public long getCreatedAt() {

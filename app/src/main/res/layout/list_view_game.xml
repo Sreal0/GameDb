@@ -75,10 +75,10 @@
         android:layout_toRightOf="@+id/thumbnail"
         android:layout_toEndOf="@+id/thumbnail"/>
     <ImageButton
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         android:id="@+id/button_add_database"
-        android:src="@mipmap/add_game_box"
+        android:src="@mipmap/add_game_green"
         android:layout_alignBottom="@+id/thumbnail"
         android:layout_alignLeft="@+id/txt_game_platform"
         android:layout_alignStart="@+id/txt_game_platform"/>
@@ -95,10 +95,10 @@
         android:layout_toRightOf="@+id/button_add_database"
         android:layout_toEndOf="@+id/button_add_database"/>
     <ImageButton
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         android:id="@+id/button_add_wishlist"
-        android:src="@mipmap/add_game_wishlist"
+        android:src="@mipmap/add_wishlist_blue"
         android:layout_marginStart="25dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="2dp"

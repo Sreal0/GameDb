@@ -131,7 +131,7 @@ public class GamesFragment extends Fragment {
                         JSONObject object = response.getJSONObject(i);
                         String data = object.toString();
                         IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
-                        //Log.d(TAG, igdbGame.getName() + " " + "http:" + igdbGame.getIgdbGameCover().getUrl());
+                        //Log.d(TAG, igdbGame.getName() + " " + "http:" + igdbGame.getIgdbGameCover().getThumbnailUrl());
                         //Log.d(TAG, "width: " + igdbGame.getIgdbGameCover().getWidth() +"height " +  igdbGame.getIgdbGameCover().getHeight() + "");
                         mItems.add(igdbGame);
                     } catch (JSONException e) {

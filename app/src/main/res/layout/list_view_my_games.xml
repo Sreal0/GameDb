@@ -73,4 +73,24 @@
         android:layout_toRightOf="@+id/thumbnail"
         android:layout_toEndOf="@+id/thumbnail"/>
 
+    <ImageButton
+        android:layout_width="25dp"
+        android:layout_height="30dp"
+        android:id="@+id/button_remove_game"
+        android:src="@mipmap/remove_game"
+        android:layout_alignBottom="@+id/thumbnail"
+        android:layout_alignLeft="@+id/txt_game_platform"
+        android:layout_alignStart="@+id/txt_game_platform"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="@string/text_remove_game_from_database"
+        android:id="@+id/text_add_to_database"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_alignBottom="@+id/button_remove_game"
+        android:layout_toRightOf="@+id/button_remove_game"
+        android:layout_toEndOf="@+id/button_remove_game"/>
+
 </RelativeLayout>

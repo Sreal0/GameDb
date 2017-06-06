@@ -50,8 +50,6 @@ public class GameDbLauncher extends AppCompatActivity {
 
     private static String TAG = "gamedb.abelsantos";
     private static final String tag_json_arry = "json_array_req";
-    private static final int TAG_DATABASE = 1;
-    private static final int TAG_WISHLIST = 2;
 
     private Toolbar mToolbar;
     private TextView mToolbarText;
@@ -99,7 +97,6 @@ public class GameDbLauncher extends AppCompatActivity {
         transaction.commit();
         //Prepare the Consoles file
         loadJSONFromAsset();
-
     }
 
     public void loadJSONFromAsset(){
@@ -149,7 +146,6 @@ public class GameDbLauncher extends AppCompatActivity {
                     }
                 }
             }
-
         }
         return consoles;
     }
@@ -161,7 +157,8 @@ public class GameDbLauncher extends AppCompatActivity {
             public void execute(Realm bgRealm) {
                 Game game = bgRealm.createObject(Game.class, igdbGame.getId());
                 game.setGameName(igdbGame.getName());
-                game.setRating(igdbGame.getRating());
+                game.setAggregated_rating(igdbGame.getAggregated_rating());
+                game.setThumbnailUrl(igdbGame.getIgdbGameCover().getUrl());
                 game.setDatabaseOrWishlist(tag);
             }
         }, new Realm.Transaction.OnSuccess() {
@@ -186,6 +183,18 @@ public class GameDbLauncher extends AppCompatActivity {
         Log.d(TAG, mGameRealmQuery.toString());
 
         return mGameRealmQuery;
+    }
+
+    public void removeGameFromDatabase(final long id){
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<Game> games = mRealm.where(Game.class)
+                        .equalTo("id", id)
+                        .findAll();
+                games.deleteAllFromRealm();
+            }
+        });
     }
 
 }
