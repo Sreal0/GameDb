@@ -9,9 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -21,6 +22,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +30,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
@@ -43,6 +44,8 @@ import gamedb.abelsantos.com.gamedb.R;
 
 public class GamesFragment extends Fragment {
     private static final String TAG = "GamesFragment";
+    private static final int TAG_DATABASE = 1;
+    private static final int TAG_WISHLIST = 2;
 
     private RecyclerView mRecyclerView;
     private GameListAdapter mGameListAdapter;
@@ -52,13 +55,15 @@ public class GamesFragment extends Fragment {
 
     private TextView mGameTitle;
     private TextView mGameAggregatedRating;
-    private ImageView mGameCover;
     private TextView mGameReleaseDate;
     private TextView mGamePlatforms;
     private ProgressDialog mProgressDialog;
     private IgdbClientSingleton sIgdbClientSingleton;
     private ImageLoader mImageLoader;
     private NetworkImageView mNetworkImageView;
+    private ImageView mThumbnail;
+    private ImageButton mAddToDatabaseButton;
+    private ImageButton mAddToWishlistButton;
 
     private List<IgdbGame> mItems = new ArrayList<>();
     private EndlessRecyclerViewScrollListener mScrollListener;
@@ -121,12 +126,13 @@ public class GamesFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
                 ObjectMapper mapper = new ObjectMapper();
-                //Log.d(TAG, response.toString());
                 for(int i = 0; i < response.length(); i++){
                     try {
                         JSONObject object = response.getJSONObject(i);
                         String data = object.toString();
                         IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
+                        //Log.d(TAG, igdbGame.getName() + " " + "http:" + igdbGame.getIgdbGameCover().getUrl());
+                        //Log.d(TAG, "width: " + igdbGame.getIgdbGameCover().getWidth() +"height " +  igdbGame.getIgdbGameCover().getHeight() + "");
                         mItems.add(igdbGame);
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
@@ -161,22 +167,59 @@ public class GamesFragment extends Fragment {
             mGameTitle =  (TextView) itemView.findViewById(R.id.txt_gameTitle);
             mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform);
             mGameReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date);
-            mNetworkImageView = (NetworkImageView)itemView.findViewById(R.id.thumbnail);
+            mThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
+            mAddToDatabaseButton = (ImageButton)itemView.findViewById(R.id.button_add_database);
+            mAddToWishlistButton = (ImageButton)itemView.findViewById(R.id.button_add_wishlist);
+            //mNetworkImageView = (NetworkImageView)itemView.findViewById(R.id.thumbnail);
         }
 
-        private void bindGameListItem(IgdbGame igdbGame){
+        private void bindGameListItem(final IgdbGame igdbGame){
             mGameTitle.setText(igdbGame.getName());
             int rat = ((int) igdbGame.getAggregated_rating());
             mGameAggregatedRating.setText(getString(R.string.game_rating)+ " " + rat);
-            String date = android.text.format.DateFormat.format("MM/dd/yyyy", new Date(igdbGame.getReleaseDate())).toString();
-            mGameReleaseDate.setText(date);
+            //Only release year will be shown here. A more detailed date can be shown in the details.
+            mGameReleaseDate.setText(igdbGame.resolveFirstReleaseYear());
             String consoles = ((GameDbLauncher)getActivity()).resolveConsoleNames(igdbGame.getIgdbReleaseDates(), igdbGame.getName());
             mGamePlatforms.setText(consoles);
-            //To avoid getting an Exception because of the protocol. Note that the Url from the
-            //IgdbGameCover already has // in it.
-            String protocol = "https:" + igdbGame.getIgdbGameCover().getUrl();
-            mImageLoader = sIgdbClientSingleton.getImageLoader();
-            mNetworkImageView.setImageUrl(protocol, mImageLoader);
+            mAddToDatabaseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((GameDbLauncher) getActivity()).saveGames(igdbGame, TAG_DATABASE);
+                    Toast.makeText(getContext(), igdbGame.getName() + " saved", Toast.LENGTH_SHORT).show();
+                }
+            });
+            mAddToWishlistButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((GameDbLauncher) getActivity()).saveGames(igdbGame, TAG_WISHLIST);
+                    Toast.makeText(getContext(), igdbGame.getName() + " saved", Toast.LENGTH_SHORT).show();
+                }
+            });
+            /*To avoid getting an Exception because of the protocol.
+             Note that the Url from the IgdbGameCover already has // in it.
+             Same games still have no cover. */
+            String protocol = "";
+            try{
+                 protocol = "https:" + igdbGame.getIgdbGameCover().getUrl();
+                Log.d(TAG, protocol);
+            }catch (NullPointerException e){
+                Log.d(TAG, e.toString());
+            }
+            //mImageLoader = sIgdbClientSingleton.getImageLoader();
+            //mNetworkImageView.setImageUrl(protocol, mImageLoader);
+            /*Picasso needs a valid url. If the returned url is not valid
+            * then I will set the thumbnail with the default error image.
+            * Else, picasso will do its thing*/
+            if (protocol != ""){
+                Picasso.with(getContext()).
+                        load(protocol).
+                        error(R.mipmap.ic_launcher).
+                        placeholder(R.mipmap.ic_img_placeholder).
+                        resize(75, 100).
+                        into(mThumbnail);
+            }else{
+                mThumbnail.setImageResource(R.mipmap.ic_launcher);
+            }
 
         }
     }
@@ -192,8 +235,7 @@ public class GamesFragment extends Fragment {
         }
         @Override
         public void onBindViewHolder(GameHolder holder, int position) {
-            final
-            IgdbGame igdbGame = mItems.get(position);
+            final IgdbGame igdbGame = mItems.get(position);
             holder.bindGameListItem(igdbGame);
         }
         @Override

@@ -1,12 +1,15 @@
 package gamedb.abelsantos.com.gamedb.IGDB;
 
+import android.widget.ImageView;
+
 import com.fasterxml.jackson.annotation.JsonSetter;
+
 
 /**
  * Created by Abel Cruz dos Santos on 22.05.2017.
  */
 
-public class IgdbGame {
+public class IgdbGame{
 
     private int id;
     private String name;
@@ -142,5 +145,21 @@ public class IgdbGame {
     @JsonSetter("release_dates")
     public void setIgdbReleaseDates(IgdbReleaseDates[] igdbReleaseDates) {
         mIgdbReleaseDates = igdbReleaseDates;
+    }
+
+    public String resolveFirstReleaseYear(){
+        //Gets the earliest release date
+        String date = "";
+        if (mIgdbReleaseDates != null){
+            int year = mIgdbReleaseDates[0].getYear();
+            for(int i = 0; i < mIgdbReleaseDates.length; i++){
+                if (mIgdbReleaseDates[i].getYear() < year){
+                    year = mIgdbReleaseDates[i].getYear();
+                }
+            }
+            return date = year + "";
+        }else{
+            return "N/A";
+        }
     }
 }

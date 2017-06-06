@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="110dp"
-    android:layout_marginBottom="4dp"
-    android:background="@color/colorWhite">
-
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="110dp">
     <TextView
         android:id="@+id/txt_game_release_date"
         android:layout_width="wrap_content"
@@ -45,8 +41,10 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:layout_marginLeft="3dp"
+        android:layout_marginStart="3dp"
         android:layout_marginTop="2dp"
         android:layout_toRightOf="@+id/thumbnail"
+        android:layout_toEndOf="@+id/thumbnail"
         />
 
     <TextView
@@ -74,47 +72,5 @@
         android:layout_below="@+id/txt_game_rating"
         android:layout_toRightOf="@+id/thumbnail"
         android:layout_toEndOf="@+id/thumbnail"/>
-    <ImageButton
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:id="@+id/button_add_database"
-        android:src="@mipmap/add_game_box"
-        android:layout_alignBottom="@+id/thumbnail"
-        android:layout_alignLeft="@+id/txt_game_platform"
-        android:layout_alignStart="@+id/txt_game_platform"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="10sp"
-        android:text="@string/text_add_to_database"
-        android:id="@+id/text_add_to_database"
-        android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp"
-        android:layout_alignBaseline="@+id/text_add_to_wishlist"
-        android:layout_alignBottom="@+id/text_add_to_wishlist"
-        android:layout_toRightOf="@+id/button_add_database"
-        android:layout_toEndOf="@+id/button_add_database"/>
-    <ImageButton
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:id="@+id/button_add_wishlist"
-        android:src="@mipmap/add_game_wishlist"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginEnd="2dp"
-        android:layout_alignBottom="@+id/txt_game_release_date"
-        android:layout_toRightOf="@+id/text_add_to_database"
-        android:layout_toEndOf="@+id/text_add_to_database"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_add_to_wishlist"
-        android:textSize="10sp"
-        android:layout_marginStart="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_alignTop="@+id/txt_game_release_date"
-        android:layout_toRightOf="@+id/button_add_wishlist"
-        android:layout_toEndOf="@+id/button_add_wishlist"
-        android:id="@+id/text_add_to_wishlist"/>
+
 </RelativeLayout>

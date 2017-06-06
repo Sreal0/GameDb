@@ -5,7 +5,9 @@ package gamedb.abelsantos.com.gamedb.IGDB;
  */
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-public class IgdbGameCover {
+import io.realm.RealmObject;
+
+public class IgdbGameCover{
     private String url;
     private String cloudinaryId;
     private int width;
@@ -23,7 +25,11 @@ public class IgdbGameCover {
     }
 
     public String getUrl() {
-        return url;
+        if (url != null){
+            return url;
+        }else{
+            return "";
+        }
     }
     @JsonSetter("url")
     public void setUrl(String url) {

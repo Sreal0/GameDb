@@ -57,13 +57,7 @@ public class IgdbClientSingleton extends Application{
         }
         return sIgdbClientSingleton;
     }
-
-    public String  getGamesURLGames(){
-
-        return GET_GAMES_URL +  API_KEY + AND_FIELDS + FIELD_NAME + FIELD_COVER +
-                FIELD_AGGREGATED_RATING + FIELD_FIRST_RELEASE_DATE + FIELD_RELEASE_DATES + LIMIT_OFFSET + offset;
-    }
-
+    //This Method will return a list of games. Offset is 20
     public String getMoreGamesURL(int offset){
         return GET_GAMES_URL +  API_KEY + AND_FIELDS + FIELD_NAME + FIELD_COVER +
                 FIELD_AGGREGATED_RATING + FIELD_FIRST_RELEASE_DATE + FIELD_RELEASE_DATES + LIMIT_OFFSET + offset;

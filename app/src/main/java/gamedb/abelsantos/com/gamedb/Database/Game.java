@@ -2,6 +2,9 @@ package gamedb.abelsantos.com.gamedb.Database;
 
 import java.util.Date;
 
+import gamedb.abelsantos.com.gamedb.IGDB.IgdbGameCover;
+import gamedb.abelsantos.com.gamedb.IGDB.IgdbGameGenre;
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -11,25 +14,37 @@ import io.realm.annotations.PrimaryKey;
 
 public class Game extends RealmObject {
 
+    private static final int TAG_DATABASE = 1;
+    private static final int TAG_WISHLIST = 2;
+
     @PrimaryKey
-    private long mGameId;
+    private long id;
 
-    private String mGameName;
-    private Date mReleaseDate;
-    private int mPlatformId;
-    private double mScore;
-    private String mUrl;
+    private String  mGameName;
+    private String  mSlug;
+    private String  mUrl;
+    private long    mCreatedAt;
+    private long    mUpdatedAt;
+    private String  mSummary;
+    private String  mStoryline;
+    private double  mRating;
+    private double  mAggregated_rating;
+    private int     mRatingCount;
+    //private IgdbGameCover mIgdbGameCover;
+    //private IgdbGameGenre mIgdbGameGenre;
+    private int     mDatabaseOrWishlist;
 
-    public Game(String gameName, Date releaseDate, int platformId, String url) {
-        mGameName = gameName;
-        mReleaseDate = releaseDate;
-        mPlatformId = platformId;
-        mUrl = url;
-    }
-
-    //Default empty Contructor must be declared
+    //Default empty Constructor must be declared
     public Game(){
 
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getGameName() {
@@ -40,28 +55,12 @@ public class Game extends RealmObject {
         mGameName = gameName;
     }
 
-    public Date getReleaseDate() {
-        return mReleaseDate;
+    public String getSlug() {
+        return mSlug;
     }
 
-    public void setReleaseDate(Date releaseDate) {
-        mReleaseDate = releaseDate;
-    }
-
-    public int getPlatformId() {
-        return mPlatformId;
-    }
-
-    public void setPlatformId(int platformId) {
-        mPlatformId = platformId;
-    }
-
-    public double getScore() {
-        return mScore;
-    }
-
-    public void setScore(double score) {
-        mScore = score;
+    public void setSlug(String slug) {
+        mSlug = slug;
     }
 
     public String getUrl() {
@@ -70,5 +69,85 @@ public class Game extends RealmObject {
 
     public void setUrl(String url) {
         mUrl = url;
+    }
+
+    public long getCreatedAt() {
+        return mCreatedAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        mCreatedAt = createdAt;
+    }
+
+    public long getUpdatedAt() {
+        return mUpdatedAt;
+    }
+
+    public void setUpdatedAt(long updatedAt) {
+        mUpdatedAt = updatedAt;
+    }
+
+    public String getSummary() {
+        return mSummary;
+    }
+
+    public void setSummary(String summary) {
+        mSummary = summary;
+    }
+
+    public String getStoryline() {
+        return mStoryline;
+    }
+
+    public void setStoryline(String storyline) {
+        mStoryline = storyline;
+    }
+
+    public double getRating() {
+        return mRating;
+    }
+
+    public void setRating(double rating) {
+        mRating = rating;
+    }
+
+    public double getAggregated_rating() {
+        return mAggregated_rating;
+    }
+
+    public void setAggregated_rating(double aggregated_rating) {
+        mAggregated_rating = aggregated_rating;
+    }
+
+    public int getRatingCount() {
+        return mRatingCount;
+    }
+
+    public void setRatingCount(int ratingCount) {
+        mRatingCount = ratingCount;
+    }
+
+    /*public IgdbGameCover getIgdbGameCover() {
+        return mIgdbGameCover;
+    }
+
+    public void setIgdbGameCover(IgdbGameCover igdbGameCover) {
+        mIgdbGameCover = igdbGameCover;
+    }
+
+    public IgdbGameGenre getIgdbGameGenre() {
+        return mIgdbGameGenre;
+    }
+
+    public void setIgdbGameGenre(IgdbGameGenre igdbGameGenre) {
+        mIgdbGameGenre = igdbGameGenre;
+    }*/
+
+    public int getDatabaseOrWishlist() {
+        return mDatabaseOrWishlist;
+    }
+
+    public void setDatabaseOrWishlist(int databaseOrWishlist) {
+        mDatabaseOrWishlist = databaseOrWishlist;
     }
 }
