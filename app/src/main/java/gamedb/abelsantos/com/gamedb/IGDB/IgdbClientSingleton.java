@@ -30,8 +30,8 @@ public class IgdbClientSingleton extends Application{
     private static final String FIELD_RELEASE_DATES = ",release_dates";
     private static final String FIELD_AGGREGATED_RATING = ",aggregated_rating";
     private static final String FIELD_FIRST_RELEASE_DATE = ",first_release_date";
-    private static final String GAME_ATTRIBUTES = "&fields=name%2Ccover%2Caggregated_rating%2Cfirst_release_date";
     private static final String LIMIT_OFFSET = "&limit=20&offset=";
+    private static final String SORT = "&order=release_dates.date%3Adesc";
     private static int offset = 0;
 
     private RequestQueue mRequestQueue;
@@ -60,7 +60,7 @@ public class IgdbClientSingleton extends Application{
     //This Method will return a list of games. Offset is 20
     public String getMoreGamesURL(int offset){
         return GET_GAMES_URL +  API_KEY + AND_FIELDS + FIELD_NAME + FIELD_COVER +
-                FIELD_AGGREGATED_RATING + FIELD_FIRST_RELEASE_DATE + FIELD_RELEASE_DATES + LIMIT_OFFSET + offset;
+                FIELD_AGGREGATED_RATING + FIELD_FIRST_RELEASE_DATE + FIELD_RELEASE_DATES + LIMIT_OFFSET + offset + SORT;
     }
 
     public RequestQueue getRequestQueue() {

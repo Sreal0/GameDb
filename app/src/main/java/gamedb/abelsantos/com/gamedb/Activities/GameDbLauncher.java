@@ -1,12 +1,12 @@
 package gamedb.abelsantos.com.gamedb.Activities;
 
 
-import android.app.ProgressDialog;
-import android.nfc.Tag;
+
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,8 +14,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +34,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import gamedb.abelsantos.com.gamedb.Database.Game;
 import gamedb.abelsantos.com.gamedb.Fragments.GamesFragment;
@@ -56,13 +59,20 @@ public class GameDbLauncher extends AppCompatActivity {
     private BottomNavigationView mBottomNavigationView;
     private String mConsoleFromAssets;
     private Realm mRealm;
-    private RealmResults<Game> mGameRealmQuery;
+    private Game results;
+    RealmResults<Game> mGameRealmQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_db_launcher);
         mRealm = Realm.getDefaultInstance();
+
+        mToolbar = (Toolbar)findViewById(R.id.toolbar_launcher);
+        mToolbar.setTitle("GameDb");
+        mToolbar.setTitleTextColor(0xffffffff);
+
+        setSupportActionBar(mToolbar);
 
         //Navigation Bar onClickListener
         mBottomNavigationView = (BottomNavigationView)findViewById(R.id.bottom_navigation);
@@ -99,6 +109,13 @@ public class GameDbLauncher extends AppCompatActivity {
         loadJSONFromAsset();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.sort_options, menu);
+        return true;
+    }
+
     public void loadJSONFromAsset(){
         //Loads the assets file with the console names
         if (mConsoleFromAssets == null){
@@ -116,7 +133,9 @@ public class GameDbLauncher extends AppCompatActivity {
         }
     }
 
-    public  String resolveConsoleNames(IgdbReleaseDates[] igdbReleaseDates, String name) {
+    //Method to resolve names of the platforms based on the id that is returned by the API.
+    //Uses a JSON file from the Assets folder.
+    public  String resolvePlatformNames(IgdbReleaseDates[] igdbReleaseDates, String name) {
         String consoles = "";
         if (mConsoleFromAssets != null){
             //Converts the variable into a JSON Object - consoles IS an Object
@@ -150,8 +169,9 @@ public class GameDbLauncher extends AppCompatActivity {
         return consoles;
     }
 
+    //Saves a game to the database from the GamesFragment
     public void saveGames (final IgdbGame igdbGame, final int tag){
-        //TODO: add a check to see if the game ID is already saved.
+
         mRealm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm bgRealm) {
@@ -175,15 +195,17 @@ public class GameDbLauncher extends AppCompatActivity {
         });
     }
 
+    //Returns games saved in the Database, only MyGames
     public RealmResults<Game> getMyGames(){
         RealmQuery<Game> query = mRealm.where(Game.class);
         query.equalTo("mDatabaseOrWishlist", 1);
 
-        mGameRealmQuery =  query.findAll();
+        mGameRealmQuery = query.findAll();
         Log.d(TAG, mGameRealmQuery.toString());
 
         return mGameRealmQuery;
     }
+
 
     public void removeGameFromDatabase(final long id){
         mRealm.executeTransaction(new Realm.Transaction() {
@@ -192,7 +214,7 @@ public class GameDbLauncher extends AppCompatActivity {
                 RealmResults<Game> games = mRealm.where(Game.class)
                         .equalTo("id", id)
                         .findAll();
-                games.deleteAllFromRealm();
+                games.deleteFirstFromRealm();
             }
         });
     }

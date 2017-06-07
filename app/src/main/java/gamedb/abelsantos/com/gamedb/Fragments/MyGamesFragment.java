@@ -2,6 +2,8 @@ package gamedb.abelsantos.com.gamedb.Fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,12 +34,15 @@ public class MyGamesFragment extends Fragment{
     private static final String TAG = "MyGamesFragment";
     private RecyclerView mRecyclerView;
     private MyGamesAdapter mMyGamesAdapter;
-
+    private static final int TAG_DATABASE = 1;
+    private static final int TAG_WISHLIST = 2;
     private List<Game> mGames;
     private ImageView mThumbnail;
     private TextView mGameName;
     private TextView mScore;
     private ImageButton mRemoveGame;
+    private Snackbar mSnackbar;
+    private CoordinatorLayout mCoordinatorLayout;
 
     public static MyGamesFragment newInstance() {
         MyGamesFragment fragment = new MyGamesFragment();
@@ -52,6 +57,7 @@ public class MyGamesFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mygames, container, false);
+        mCoordinatorLayout = (CoordinatorLayout)view.findViewById(R.id.coordinator_layout);
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.recyclerViewMyGames);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -90,23 +96,35 @@ public class MyGamesFragment extends Fragment{
             if (protocol != ""){
                 Picasso.with(getContext()).
                         load(protocol).
-                        error(R.mipmap.ic_launcher).
-                        placeholder(R.mipmap.ic_img_placeholder).
+                        error(R.drawable.ic_error).
+                        placeholder(R.drawable.ic_img_placeholder).
                         resize(75, 100).
                         into(mThumbnail);
             }else{
-                mThumbnail.setImageResource(R.mipmap.ic_launcher);
+                mThumbnail.setImageResource(R.drawable.ic_error);
             }
             int flag = 0;
             mRemoveGame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO: add a check to ask if user is sure he wants to remove game
-                    //mGames.remove(getAdapterPosition());
+                    //Removes the game from the database, reloads the games list and
+                    //notifies the recycler view about the changes.
                     ((GameDbLauncher) getActivity()).removeGameFromDatabase(game.getId());
                     mGames = ((GameDbLauncher)getActivity()).getMyGames();
                     mMyGamesAdapter.notifyItemRemoved(getAdapterPosition());
                     mMyGamesAdapter.notifyItemRangeChanged(getAdapterPosition(), mGames.size());
+                    /*Snackbar allows the User to UNDO the delete action.*/
+                    mSnackbar = Snackbar.make(mCoordinatorLayout, getString(R.string.game_was_removed),
+                            Snackbar.LENGTH_LONG).setAction(getString(R.string.undo), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Snackbar snackbar = Snackbar.make(mCoordinatorLayout, getString(R.string.game_was_restored),
+                                    Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+                        }
+                    });
+                    mSnackbar.show();
+
                 }
             });
         }

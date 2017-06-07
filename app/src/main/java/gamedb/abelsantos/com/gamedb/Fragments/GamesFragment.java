@@ -2,6 +2,8 @@ package gamedb.abelsantos.com.gamedb.Fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -64,6 +65,7 @@ public class GamesFragment extends Fragment {
     private ImageView mThumbnail;
     private ImageButton mAddToDatabaseButton;
     private ImageButton mAddToWishlistButton;
+    private CoordinatorLayout mCoordinatorLayout;
 
     private List<IgdbGame> mItems = new ArrayList<>();
     private EndlessRecyclerViewScrollListener mScrollListener;
@@ -85,6 +87,7 @@ public class GamesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_games, container, false);
+        mCoordinatorLayout = (CoordinatorLayout)view.findViewById(R.id.coordinator_layout_games_fragment);
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.recyclerViewGames);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -179,20 +182,22 @@ public class GamesFragment extends Fragment {
             mGameAggregatedRating.setText(getString(R.string.game_rating)+ " " + rat);
             //Only release year will be shown here. A more detailed date can be shown in the details.
             mGameReleaseDate.setText(igdbGame.resolveFirstReleaseYear());
-            String consoles = ((GameDbLauncher)getActivity()).resolveConsoleNames(igdbGame.getIgdbReleaseDates(), igdbGame.getName());
+            String consoles = ((GameDbLauncher)getActivity()).resolvePlatformNames(igdbGame.getIgdbReleaseDates(), igdbGame.getName());
             mGamePlatforms.setText(consoles);
             mAddToDatabaseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ((GameDbLauncher) getActivity()).saveGames(igdbGame, TAG_DATABASE);
-                    Toast.makeText(getContext(), igdbGame.getName() + " saved", Toast.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, getString(R.string.game_added_to_database), Snackbar.LENGTH_SHORT);
+                    snackbar.show();
                 }
             });
             mAddToWishlistButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ((GameDbLauncher) getActivity()).saveGames(igdbGame, TAG_WISHLIST);
-                    Toast.makeText(getContext(), igdbGame.getName() + " saved", Toast.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, getString(R.string.game_added_to_wishlist), Snackbar.LENGTH_SHORT);
+                    snackbar.show();
                 }
             });
             /*To avoid getting an Exception because of the protocol.
@@ -213,14 +218,13 @@ public class GamesFragment extends Fragment {
             if (protocol != ""){
                 Picasso.with(getContext()).
                         load(protocol).
-                        error(R.mipmap.ic_launcher).
-                        placeholder(R.mipmap.ic_img_placeholder).
+                        error(R.drawable.ic_error).
+                        placeholder(R.drawable.ic_img_placeholder).
                         resize(75, 100).
                         into(mThumbnail);
             }else{
-                mThumbnail.setImageResource(R.mipmap.ic_launcher);
+                mThumbnail.setImageResource(R.drawable.ic_error);
             }
-
         }
     }
 
