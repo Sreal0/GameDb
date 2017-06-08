@@ -13,10 +13,13 @@
                 android:title="@string/sort_rating" />
             <item
                 android:id="@+id/menuSortAggregatedRating"
-                android:title="@string/sort_rating" />
+                android:title="@string/sort_aggregated_rating" />
             <item
                 android:id="@+id/menuSortReleaseDate"
                 android:title="@string/sort_release_date_newest" />
+            <item
+                android:id="@+id/menuSortPopularity"
+                android:title="@string/sort_popularity"/>
         </menu>
     </item>
     <item
@@ -26,11 +29,20 @@
         android:title="@string/title_action_overflow">
         <menu>
             <item
-                android:id="@+id/menuFilterSOmething"
-                android:title="@string/sort_rating" />
+                android:id="@+id/menuGetNewestGames"
+                android:title="@string/get_newest_releases" />
             <item
-                android:id="@+id/menuFilterWhatever"
-                android:title="@string/sort_aggregated_rating" />
+                android:id="@+id/menuGetHighestRatings6Months"
+                android:title="@string/get_highest_rating_6_months" />
+            <item
+                android:id="@+id/menuGetHighestRatings12Months"
+                android:title="@string/get_highest_rating_12_months" />
+            <item
+                android:id="@+id/menuGetHighestRatingsAllTime"
+                android:title="@string/get_highest_rating_all_time" />
+            <item
+                android:id="@+id/menuGetPopularGames"
+                android:title="@string/get_popular_games" />
         </menu>
     </item>
 </menu>

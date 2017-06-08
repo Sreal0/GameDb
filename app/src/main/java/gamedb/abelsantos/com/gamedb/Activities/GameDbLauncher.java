@@ -132,12 +132,24 @@ public class GameDbLauncher extends AppCompatActivity {
                 Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
                         .show();
                 break;
-            case R.id.menuFilterSOmething:
+            case R.id.menuGetNewestGames:
                 Toast.makeText(this, "Filtered something", Toast.LENGTH_SHORT)
                         .show();
                 break;
             // action with ID action_settings was selected
-            case R.id.menuFilterWhatever:
+            case R.id.menuGetHighestRatings6Months:
+                Toast.makeText(this, "Filtered something else", Toast.LENGTH_SHORT)
+                        .show();
+                break;
+            case R.id.menuGetHighestRatings12Months:
+                Toast.makeText(this, "Filtered something else", Toast.LENGTH_SHORT)
+                        .show();
+                break;
+            case R.id.menuGetHighestRatingsAllTime:
+                Toast.makeText(this, "Filtered something else", Toast.LENGTH_SHORT)
+                        .show();
+                break;
+            case R.id.menuGetPopularGames:
                 Toast.makeText(this, "Filtered something else", Toast.LENGTH_SHORT)
                         .show();
                 break;

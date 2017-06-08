@@ -123,8 +123,6 @@ public class GamesFragment extends Fragment {
 
     public void getGames(int offset){
         mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
-        Log.d(TAG, mStringURL);
-        Log.d(TAG, sIgdbClientSingleton.getNewReleasesLast6Months(offset));
         // Request an Array response from the provided URL.
         final JsonArrayRequest req = new JsonArrayRequest(
                 mStringURL, new Response.Listener<JSONArray>() {
@@ -136,8 +134,6 @@ public class GamesFragment extends Fragment {
                         JSONObject object = response.getJSONObject(i);
                         String data = object.toString();
                         IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
-                        Log.d(TAG, mStringURL);
-                        //Log.d(TAG, "width: " + igdbGame.getIgdbGameCover().getWidth() +"height " +  igdbGame.getIgdbGameCover().getHeight() + "");
                         mItems.add(igdbGame);
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
@@ -163,50 +159,6 @@ public class GamesFragment extends Fragment {
         //req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
     }
-
-    public void getNewReleases6Months(int offset){
-        mStringURL = sIgdbClientSingleton.getNewReleasesLast6Months(offset);
-        Log.d(TAG, mStringURL);
-        // Request an Array response from the provided URL.
-        final JsonArrayRequest req = new JsonArrayRequest(
-                mStringURL, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                ObjectMapper mapper = new ObjectMapper();
-                for(int i = 0; i < response.length(); i++){
-                    try {
-                        JSONObject object = response.getJSONObject(i);
-                        String data = object.toString();
-                        IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
-                        Log.d(TAG, mStringURL);
-                        //Log.d(TAG, "width: " + igdbGame.getIgdbGameCover().getWidth() +"height " +  igdbGame.getIgdbGameCover().getHeight() + "");
-                        mItems.add(igdbGame);
-                    } catch (JSONException e) {
-                        Log.d(TAG, "JSONException: " + e);
-                    } catch (JsonParseException e) {
-                        Log.d(TAG, "JsonParseException: " + e);
-                    } catch (JsonMappingException e) {
-                        Log.d(TAG, "JsonMappingException: " + e);
-                    } catch (IOException e) {
-                        Log.d(TAG, "IOException: " + e);
-                    }
-                }
-                Log.d(TAG, response.toString());
-                mProgressDialog.hide();
-                //Notify that the data changed.
-                mGameListAdapter.notifyDataSetChanged();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, error.toString());
-            }
-        });
-        //req.setShouldCache(true);
-        sIgdbClientSingleton.addToRequestQueue(req);
-    }
-
-
 
     private class GameHolder extends RecyclerView.ViewHolder{
 

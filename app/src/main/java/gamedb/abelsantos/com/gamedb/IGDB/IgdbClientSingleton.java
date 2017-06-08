@@ -10,6 +10,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -58,17 +59,15 @@ public class IgdbClientSingleton extends Application{
         return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset + ORDER_BY_POPULARITY;
     }
 
-    //This Method will return a list of game ordered by release date. Offset is 20
+    //This Method will return a list of game ordered by release date. Offset is 20 - WORKS!!!
     public String getGamesOrderedByNewestReleases(int offset){
         long timestamp = System.currentTimeMillis();
-        //String date = new SimpleDateFormat("yyyy-MM-dd").format(timestamp);
         return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset + FILTER_NEWEST_RELEASES
                 + timestamp + ORDER_RELEASE_DATES_DATE_DESC ;
     }
 
     //Get new releases last 6 months
-    public String getNewReleasesLast6Months(int offset){
-        //Wrong - not returning any values. check the parameters
+    public String getGamesSortedByRatings(int offset){
         long timestamp = System.currentTimeMillis()/1000;
         return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset +
                 + timestamp + ORDER_RELEASE_DATES_DATE_DESC;
