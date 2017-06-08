@@ -9,6 +9,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
+import java.text.SimpleDateFormat;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -21,18 +23,18 @@ public class IgdbClientSingleton extends Application{
     private static IgdbClientSingleton sIgdbClientSingleton;
     private static final String tag_json_arry = "json_array_req";
 
+    private static int offset = 0;
     private static final String TAG = "IgdbClientSingleton";
     private static final String API_KEY = "?mashape-key=spjH1mZDLmmsh2xi8l8E4sz5dRFBp1FexQhjsnEsNlSCIqVzS0";
     private static final String GET_GAMES_URL = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/";
-    private static final String AND_FIELDS = "&fields=";
-    private static final String FIELD_NAME = "name";
-    private static final String FIELD_COVER = ",cover";
-    private static final String FIELD_RELEASE_DATES = ",release_dates";
-    private static final String FIELD_AGGREGATED_RATING = ",aggregated_rating";
-    private static final String FIELD_FIRST_RELEASE_DATE = ",first_release_date";
-    private static final String LIMIT_OFFSET = "&limit=20&offset=";
-    private static final String SORT = "&order=release_dates.date%3Adesc";
-    private static int offset = 0;
+    private static final String ORDER_RELEASE_DATES_DATE_DESC = "&order=first_release_date:desc";
+    private static final String ORDER_BY_POPULARITY = "&order=popularity:desc";
+    private static final String FILTER_NEWEST_RELEASES = "&filter[first_release_date][lte]=";
+
+    private static final String GET_GAMES_KEY_ATTRIBUTES_LIMIT = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/" +
+                                                            "?mashape-key=spjH1mZDLmmsh2xi8l8E4sz5dRFBp1FexQhjsnEsNlSCIqVzS0" +
+                                                            "&fields=name,cover,release_dates,aggregated_rating,first_release_date" +
+                                                            "&limit=20&offset=";
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
@@ -40,12 +42,6 @@ public class IgdbClientSingleton extends Application{
     @Override
     public void onCreate(){
         super.onCreate();
-        //Db initialisation
-        Realm.init(getApplicationContext());
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm.setDefaultConfiguration(realmConfiguration);
 
         sIgdbClientSingleton = this;
     }
@@ -57,10 +53,25 @@ public class IgdbClientSingleton extends Application{
         }
         return sIgdbClientSingleton;
     }
-    //This Method will return a list of games. Offset is 20
-    public String getMoreGamesURL(int offset){
-        return GET_GAMES_URL +  API_KEY + AND_FIELDS + FIELD_NAME + FIELD_COVER +
-                FIELD_AGGREGATED_RATING + FIELD_FIRST_RELEASE_DATE + FIELD_RELEASE_DATES + LIMIT_OFFSET + offset + SORT;
+    //This Method will return a list of games ordered by popularity from the past 6 months. Offset is 20
+    public String getGamesOrderedByPopularityURL(int offset){
+        return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset + ORDER_BY_POPULARITY;
+    }
+
+    //This Method will return a list of game ordered by release date. Offset is 20
+    public String getGamesOrderedByNewestReleases(int offset){
+        long timestamp = System.currentTimeMillis();
+        //String date = new SimpleDateFormat("yyyy-MM-dd").format(timestamp);
+        return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset + FILTER_NEWEST_RELEASES
+                + timestamp + ORDER_RELEASE_DATES_DATE_DESC ;
+    }
+
+    //Get new releases last 6 months
+    public String getNewReleasesLast6Months(int offset){
+        //Wrong - not returning any values. check the parameters
+        long timestamp = System.currentTimeMillis()/1000;
+        return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset +
+                + timestamp + ORDER_RELEASE_DATES_DATE_DESC;
     }
 
     public RequestQueue getRequestQueue() {

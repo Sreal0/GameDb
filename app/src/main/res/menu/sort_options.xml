@@ -9,11 +9,14 @@
         >
         <menu>
             <item
-                android:id="@+id/menuSortNewest"
-                android:title="@string/sort1" />
-            <item
                 android:id="@+id/menuSortRating"
-                android:title="@string/sort2" />
+                android:title="@string/sort_rating" />
+            <item
+                android:id="@+id/menuSortAggregatedRating"
+                android:title="@string/sort_rating" />
+            <item
+                android:id="@+id/menuSortReleaseDate"
+                android:title="@string/sort_release_date_newest" />
         </menu>
     </item>
     <item
@@ -24,10 +27,10 @@
         <menu>
             <item
                 android:id="@+id/menuFilterSOmething"
-                android:title="@string/sort1" />
+                android:title="@string/sort_rating" />
             <item
                 android:id="@+id/menuFilterWhatever"
-                android:title="@string/sort2" />
+                android:title="@string/sort_aggregated_rating" />
         </menu>
     </item>
 </menu>

@@ -149,7 +149,6 @@ public class IgdbGame{
 
     public String resolveFirstReleaseYear(){
         //Gets the earliest release date
-        String date = "";
         if (mIgdbReleaseDates != null){
             int year = mIgdbReleaseDates[0].getYear();
             for(int i = 0; i < mIgdbReleaseDates.length; i++){
@@ -157,7 +156,7 @@ public class IgdbGame{
                     year = mIgdbReleaseDates[i].getYear();
                 }
             }
-            return date = year + "";
+            return year + "";
         }else{
             return "N/A";
         }

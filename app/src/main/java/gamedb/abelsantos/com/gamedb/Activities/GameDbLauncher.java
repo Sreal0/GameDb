@@ -116,6 +116,37 @@ public class GameDbLauncher extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.menuSortAggregatedRating:
+                //Write a callback to the fragment
+                break;
+            // action with ID action_settings was selected
+            case R.id.menuSortRating:
+                Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
+                        .show();
+                break;
+            case R.id.menuSortReleaseDate:
+                Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
+                        .show();
+                break;
+            case R.id.menuFilterSOmething:
+                Toast.makeText(this, "Filtered something", Toast.LENGTH_SHORT)
+                        .show();
+                break;
+            // action with ID action_settings was selected
+            case R.id.menuFilterWhatever:
+                Toast.makeText(this, "Filtered something else", Toast.LENGTH_SHORT)
+                        .show();
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
     public void loadJSONFromAsset(){
         //Loads the assets file with the console names
         if (mConsoleFromAssets == null){
@@ -171,7 +202,6 @@ public class GameDbLauncher extends AppCompatActivity {
 
     //Saves a game to the database from the GamesFragment
     public void saveGames (final IgdbGame igdbGame, final int tag){
-
         mRealm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm bgRealm) {
@@ -205,7 +235,6 @@ public class GameDbLauncher extends AppCompatActivity {
 
         return mGameRealmQuery;
     }
-
 
     public void removeGameFromDatabase(final long id){
         mRealm.executeTransaction(new Realm.Transaction() {
