@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">GameDb</string>
+    <string name="hello_app">Hello, you are now in a Fragment</string>
+    <string name="drawer_open">Drawer open</string>
+    <string name="drawer_closed">Drawer closed</string>
+    <string name="action_websearch">Web search</string>
+    <string name="game_title">Game Title</string>
+    <string name="game_rating">Score: </string>
+    <string name="game_release_date">Release date:</string>
+    <string name="game_platform">Avaliable on: </string>
+    <string name="text_games">Games</string>
+    <string name="text_my_games">My Games</string>
+    <string name="text_search">Search</string>
+    <string name="text_wishlist">Wishlist</string>
+    <string name="error_could_not_resolve_console">N/A</string>
+    <string name="text_add_to_database">Add to Database</string>
+    <string name="text_add_to_wishlist">Add to Wishlist</string>
+    <string name="text_remove_game_from_database">Remove game</string>
+    <string name="game_was_removed">Removed</string>
+    <string name="undo">UNDO</string>
+    <string name="game_was_restored">Restored</string>
+    <string name="game_added_to_database">Added to Database</string>
+    <string name="game_added_to_wishlist">Added to Wishlist</string>
+    <string name="sort_rating">Sort by ratings</string>
+    <string name="sort_aggregated_rating">Sort by aggregated rating</string>
+    <string name="sort_release_date_newest">Sort by release date</string>
+    <string name="sort_popularity">Sort by popularity</string>
+    <string name="get_newest_releases">Newest releases</string>
+    <string name="get_highest_rating_6_months">Highest rating [6 months]</string>
+    <string name="get_highest_rating_12_months">Highest rating [12 months]</string>
+    <string name="get_highest_rating_all_time">Highest rating [all time]</string>
+    <string name="get_popular_games">Popular now</string>
+
+    <string name="title_action_sort">Sort</string>
+    <string name="title_action_overflow">Filter</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

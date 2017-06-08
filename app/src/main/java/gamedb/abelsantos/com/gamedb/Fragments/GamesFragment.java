@@ -122,7 +122,9 @@ public class GamesFragment extends Fragment {
     }
 
     public void getGames(int offset){
-        mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
+        //Standard request
+        //mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
+        Log.d(TAG, mStringURL);
         // Request an Array response from the provided URL.
         final JsonArrayRequest req = new JsonArrayRequest(
                 mStringURL, new Response.Listener<JSONArray>() {

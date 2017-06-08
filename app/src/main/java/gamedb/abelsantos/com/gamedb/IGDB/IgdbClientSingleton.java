@@ -9,11 +9,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import java.util.Calendar;
 
 /**
  * Created by Abel Cruz dos Santos on 22.05.2017.
@@ -29,9 +25,11 @@ public class IgdbClientSingleton extends Application{
     private static final String API_KEY = "?mashape-key=spjH1mZDLmmsh2xi8l8E4sz5dRFBp1FexQhjsnEsNlSCIqVzS0";
     private static final String GET_GAMES_URL = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/";
     private static final String ORDER_RELEASE_DATES_DATE_DESC = "&order=first_release_date:desc";
+    private static final String ORDER_AGGREGATED_RATING_DESC = "&order=aggregated_rating:desc";
     private static final String ORDER_BY_POPULARITY = "&order=popularity:desc";
     private static final String FILTER_NEWEST_RELEASES = "&filter[first_release_date][lte]=";
-
+    private static final String FILTER_FIRST_RELEASE_DATE_GREATER_THAN_LAST_X_MONTHS = "&filter[first_release_date][gte]=";
+    private static final String FILTER_FIRST_RELEASE_DATE_LOWER_THAN_TODAY = "&filter[first_release_date][lte]=";
     private static final String GET_GAMES_KEY_ATTRIBUTES_LIMIT = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/" +
                                                             "?mashape-key=spjH1mZDLmmsh2xi8l8E4sz5dRFBp1FexQhjsnEsNlSCIqVzS0" +
                                                             "&fields=name,cover,release_dates,aggregated_rating,first_release_date" +
@@ -54,23 +52,42 @@ public class IgdbClientSingleton extends Application{
         }
         return sIgdbClientSingleton;
     }
+    //-->WORKS!!! <---
     //This Method will return a list of games ordered by popularity from the past 6 months. Offset is 20
     public String getGamesOrderedByPopularityURL(int offset){
         return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset + ORDER_BY_POPULARITY;
     }
 
-    //This Method will return a list of game ordered by release date. Offset is 20 - WORKS!!!
-    public String getGamesOrderedByNewestReleases(int offset){
+    //--> WORKS!!! <--
+    //This Method will return a list of game ordered by release date. Offset is 20
+    public String getGamesOrderedByNewestReleasesURL(int offset){
         long timestamp = System.currentTimeMillis();
         return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset + FILTER_NEWEST_RELEASES
                 + timestamp + ORDER_RELEASE_DATES_DATE_DESC ;
     }
 
-    //Get new releases last 6 months
-    public String getGamesSortedByRatings(int offset){
-        long timestamp = System.currentTimeMillis()/1000;
-        return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset +
-                + timestamp + ORDER_RELEASE_DATES_DATE_DESC;
+    //--> WORKS!!! <---
+    //Get highest rating last 6 months
+    public String getGamesHighestRatingLastXMonths(int offset, int months){
+        long timestamp = System.currentTimeMillis();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, - 6);
+        long sixMonthsAgo = calendar.getTimeInMillis();
+        //This will return the highest rated games of all times.
+        if (months == 0){
+            return GET_GAMES_KEY_ATTRIBUTES_LIMIT +
+                    offset +
+                    FILTER_FIRST_RELEASE_DATE_LOWER_THAN_TODAY +
+                    timestamp +
+                    ORDER_AGGREGATED_RATING_DESC;
+        }
+        return GET_GAMES_KEY_ATTRIBUTES_LIMIT +
+                offset +
+                FILTER_FIRST_RELEASE_DATE_GREATER_THAN_LAST_X_MONTHS +
+                sixMonthsAgo +
+                FILTER_FIRST_RELEASE_DATE_LOWER_THAN_TODAY +
+                timestamp +
+                ORDER_AGGREGATED_RATING_DESC;
     }
 
     public RequestQueue getRequestQueue() {
