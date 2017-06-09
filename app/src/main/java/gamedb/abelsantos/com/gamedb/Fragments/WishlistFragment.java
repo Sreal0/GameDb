@@ -14,7 +14,7 @@ import gamedb.abelsantos.com.gamedb.R;
  */
 
 public class WishlistFragment extends Fragment {
-    private static final String TAG = "WishlistFragment";
+    public static final String TAG = "WishlistFragment";
 
     public static WishlistFragment newInstance() {
         WishlistFragment fragment = new WishlistFragment();

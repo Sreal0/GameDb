@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +46,7 @@ import gamedb.abelsantos.com.gamedb.R;
  */
 
 public class GamesFragment extends Fragment {
-    private static final String TAG = "GamesFragment";
+    public static final String TAG = "GamesFragment";
     private static final int TAG_DATABASE = 1;
     private static final int TAG_WISHLIST = 2;
 
@@ -71,6 +73,7 @@ public class GamesFragment extends Fragment {
     private EndlessRecyclerViewScrollListener mScrollListener;
     private String mStringURL;
     private int offset = 0;
+    private int counter = 0;
 
     public static GamesFragment newInstance() {
         GamesFragment fragment = new GamesFragment();
@@ -80,6 +83,7 @@ public class GamesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -93,6 +97,7 @@ public class GamesFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
         sIgdbClientSingleton = IgdbClientSingleton.getInstance();
+
         //Infinite Scrolling
         mScrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
@@ -109,11 +114,36 @@ public class GamesFragment extends Fragment {
         mProgressDialog.show();
         //Setting up the adapter to avoid getting -> No adapter attached; skipping layout
         //When data was gotten then the adapter will be notified
-        setupAdapter();
-        getGames(offset);
+
         //This is how I call a method from the activity on a fragment.
         //((GameDbLauncher)getActivity()).thisIsAMethod();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null){
+            mItems = (List<IgdbGame>)savedInstanceState.getSerializable("games");
+            offset = savedInstanceState.getInt("offset");
+            counter = savedInstanceState.getInt("counter");
+            mGameListAdapter.notifyDataSetChanged();
+            Log.d(TAG, "Loaded stuff");
+        }else{
+            Log.d(TAG, "did everything again");
+            setupAdapter();
+            getGames(offset);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable("games", (Serializable)mItems);
+        savedInstanceState.putInt("offset", offset);
+        savedInstanceState.putInt("counter", counter);
+        Log.d("TAg", "Saved the instance" + savedInstanceState.toString());
     }
 
     private void setupAdapter(){
@@ -123,7 +153,9 @@ public class GamesFragment extends Fragment {
 
     public void getGames(int offset){
         //Standard request
-        //mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
+        mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
+        counter++;
+        Toast.makeText(getContext(), counter + "", Toast.LENGTH_SHORT).show();
         Log.d(TAG, mStringURL);
         // Request an Array response from the provided URL.
         final JsonArrayRequest req = new JsonArrayRequest(
@@ -220,6 +252,7 @@ public class GamesFragment extends Fragment {
                         load(protocol).
                         error(R.drawable.ic_error).
                         placeholder(R.drawable.ic_img_placeholder).
+                        resize(75, 100).
                         into(mThumbnail);
             }else{
                 mThumbnail.setImageResource(R.drawable.ic_error);

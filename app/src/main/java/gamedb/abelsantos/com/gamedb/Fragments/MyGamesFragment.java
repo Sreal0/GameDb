@@ -1,11 +1,9 @@
 package gamedb.abelsantos.com.gamedb.Fragments;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,15 +21,13 @@ import java.util.List;
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
 import gamedb.abelsantos.com.gamedb.Database.Game;
 import gamedb.abelsantos.com.gamedb.R;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 
 /**
  * Created by Abel Cruz dos Santos on 29.05.2017.
  */
 
 public class MyGamesFragment extends Fragment{
-    private static final String TAG = "MyGamesFragment";
+    public static final String TAG = "MyGamesFragment";
     private RecyclerView mRecyclerView;
     private MyGamesAdapter mMyGamesAdapter;
     private static final int TAG_DATABASE = 1;
@@ -57,7 +53,7 @@ public class MyGamesFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mygames, container, false);
-        mCoordinatorLayout = (CoordinatorLayout)view.findViewById(R.id.coordinator_layout);
+        mCoordinatorLayout = (CoordinatorLayout)view.findViewById(R.id.coordinator_layout_my_games);
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.recyclerViewMyGames);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());

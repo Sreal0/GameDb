@@ -5,6 +5,7 @@ package gamedb.abelsantos.com.gamedb.Activities;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -79,32 +80,73 @@ public class GameDbLauncher extends AppCompatActivity {
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment = null;
-                switch (item.getItemId()){
+                final FragmentManager supportFragmentManager = getSupportFragmentManager();
+                switch (item.getItemId()) {
                     case R.id.action_mygames:
-                        fragment = MyGamesFragment.newInstance();
+                        final Fragment myGamesFragment = supportFragmentManager.findFragmentByTag(MyGamesFragment.TAG);
+                        if (myGamesFragment == null) {
+                            supportFragmentManager.beginTransaction()
+                                    .replace(R.id.frame_layout, MyGamesFragment.newInstance(), MyGamesFragment.TAG)
+                                    .addToBackStack(null)
+                                    .commit();
+                        } else {
+                            supportFragmentManager.beginTransaction()
+                                    .replace(R.id.frame_layout, myGamesFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+                        }
                         break;
                     case R.id.action_games:
-                        fragment = GamesFragment.newInstance();
+                        final Fragment gamesFragment = supportFragmentManager.findFragmentByTag(GamesFragment.TAG);
+                        if (gamesFragment == null) {
+                            supportFragmentManager.beginTransaction()
+                                    .replace(R.id.frame_layout, GamesFragment.newInstance(), GamesFragment.TAG)
+                                    .addToBackStack(null)
+                                    .commit();
+                        } else {
+                            supportFragmentManager.beginTransaction()
+                                    .replace(R.id.frame_layout, gamesFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+                        }
                         break;
                     case R.id.action_wishlist:
-                        fragment = WishlistFragment.newInstance();
+                        final Fragment wishlistFragment = supportFragmentManager.findFragmentByTag(WishlistFragment.TAG);
+                        if (wishlistFragment == null) {
+                            supportFragmentManager.beginTransaction()
+                                    .replace(R.id.frame_layout, WishlistFragment.newInstance(), WishlistFragment.TAG)
+                                    .addToBackStack(null)
+                                    .commit();
+                        } else {
+                            supportFragmentManager.beginTransaction()
+                                    .replace(R.id.frame_layout, wishlistFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+                        }
                         break;
                     case R.id.action_search:
-                        fragment = SearchFragment.newInstance();
+                        final Fragment searchFragment = supportFragmentManager.findFragmentByTag(SearchFragment.TAG);
+                        if (searchFragment == null) {
+                            supportFragmentManager.beginTransaction()
+                                    .replace(R.id.frame_layout, SearchFragment.newInstance(), SearchFragment.TAG)
+                                    .addToBackStack(null)
+                                    .commit();
+                        } else {
+                            supportFragmentManager.beginTransaction()
+                                    .replace(R.id.frame_layout, searchFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+                        }
                         break;
                 }
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frame_layout, fragment);
-                fragmentTransaction.commit();
                 return true;
             }
         });
-
         //Manually displaying the first fragment - one time only
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, MyGamesFragment.newInstance());
-        transaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.frame_layout, MyGamesFragment.newInstance(), MyGamesFragment.TAG)
+                .addToBackStack(null)
+                .commit();
         //Prepare the Consoles file
         loadJSONFromAsset();
     }
@@ -157,6 +199,11 @@ public class GameDbLauncher extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     public void loadJSONFromAsset(){

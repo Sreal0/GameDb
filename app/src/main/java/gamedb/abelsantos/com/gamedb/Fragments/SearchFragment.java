@@ -13,6 +13,7 @@ import gamedb.abelsantos.com.gamedb.R;
  */
 
 public class SearchFragment extends Fragment {
+    public static final String TAG = "SearchFragment";
 
     public static SearchFragment newInstance() {
         SearchFragment fragment = new SearchFragment();
