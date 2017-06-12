@@ -1,5 +1,6 @@
 package gamedb.abelsantos.com.gamedb.Fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -109,12 +110,14 @@ public class GamesFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 offset += 20;
                 //Same method as before, just sets the offset to + 20
-                getGames(offset);
+                Activity activity = (GameDbLauncher)getActivity();
+                if (activity instanceof GameDbLauncher){
+                    ((GameDbLauncher) activity).getGamesFromAPI(offset);
+                }
+                mGameListAdapter.notifyDataSetChanged();
             }
         };
         mRecyclerView.addOnScrollListener(mScrollListener);
-
-
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage("Loading...");
         if (mItems.size() < 1){
@@ -135,12 +138,21 @@ public class GamesFragment extends Fragment {
 
         if (savedInstanceState != null){
             mContent = getFragmentManager().getFragment(savedInstanceState, TAG);
-            Log.d(TAG, "Loaded stuff");
+            Log.d(TAG, "Recovered");
         }else{
-            Log.d(TAG, "did everything again");
-            setupAdapter();
-            getGames(offset);
+            Activity activity = (GameDbLauncher)getActivity();
+            if (activity instanceof GameDbLauncher){
+                ((GameDbLauncher) activity).getGamesFromAPI(offset);
+                Log.d(TAG, "called Activity from Fragment");
+            }
         }
+    }
+
+    public void getShitUpAndRunning(List<IgdbGame> items){
+        setupAdapter();
+        mItems = items;
+        mGameListAdapter.notifyDataSetChanged();
+        Log.d(TAG, "Size of mItems is " + mItems.size());
     }
 
     @Override
@@ -154,7 +166,7 @@ public class GamesFragment extends Fragment {
         mRecyclerView.setAdapter(mGameListAdapter);
     }
 
-    public void getGames(int offset){
+    /*public void getGames(int offset){
         //Standard request
         mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
         counter++;
@@ -196,7 +208,7 @@ public class GamesFragment extends Fragment {
         //req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
     }
-
+*/
     private class GameHolder extends RecyclerView.ViewHolder{
 
         private GameHolder(View itemView) {

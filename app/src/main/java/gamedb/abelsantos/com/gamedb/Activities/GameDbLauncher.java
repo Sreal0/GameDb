@@ -16,12 +16,21 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 import gamedb.abelsantos.com.gamedb.Database.Game;
@@ -29,6 +38,7 @@ import gamedb.abelsantos.com.gamedb.Fragments.GamesFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.MyGamesFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.SearchFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.WishlistFragment;
+import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbReleaseDates;
 import gamedb.abelsantos.com.gamedb.R;
@@ -39,6 +49,7 @@ import io.realm.RealmResults;
 public class GameDbLauncher extends AppCompatActivity {
 
     private static String TAG = "gamedb.abelsantos";
+    public static final String TAG_GAMES_FRAGMENT = "GamesFragment";
     private static final String tag_json_arry = "json_array_req";
 
     private Toolbar mToolbar;
@@ -47,7 +58,9 @@ public class GameDbLauncher extends AppCompatActivity {
     private String mConsoleFromAssets;
     private Realm mRealm;
     private Game results;
-    RealmResults<Game> mGameRealmQuery;
+    private RealmResults<Game> mGameRealmQuery;
+    private IgdbClientSingleton sIgdbClientSingleton;
+    private List<IgdbGame> mItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +71,7 @@ public class GameDbLauncher extends AppCompatActivity {
         mToolbar = (Toolbar)findViewById(R.id.toolbar_launcher);
         mToolbar.setTitle("GameDb");
         mToolbar.setTitleTextColor(0xffffffff);
+        sIgdbClientSingleton = IgdbClientSingleton.getInstance();
 
         setSupportActionBar(mToolbar);
 
@@ -291,6 +305,49 @@ public class GameDbLauncher extends AppCompatActivity {
                 games.deleteFirstFromRealm();
             }
         });
+    }
+
+    public void getGamesFromAPI(int offset){
+        //Standard request
+        String mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
+        Log.d(TAG, mStringURL);
+        // Request an Array response from the provided URL.
+        final JsonArrayRequest req = new JsonArrayRequest(
+                mStringURL, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                ObjectMapper mapper = new ObjectMapper();
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        JSONObject object = response.getJSONObject(i);
+                        String data = object.toString();
+                        IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
+                        mItems.add(igdbGame);
+                        Log.d(TAG, "Added a new Item to items");
+                    } catch (JSONException e) {
+                        Log.d(TAG, "JSONException: " + e);
+                    } catch (JsonParseException e) {
+                        Log.d(TAG, "JsonParseException: " + e);
+                    } catch (JsonMappingException e) {
+                        Log.d(TAG, "JsonMappingException: " + e);
+                    } catch (IOException e) {
+                        Log.d(TAG, "IOException: " + e);
+                    }
+                }
+                Log.d(TAG, "Called method in Activity");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.toString());
+            }
+        });
+        //req.setShouldCache(true);
+        sIgdbClientSingleton.addToRequestQueue(req);
+        FragmentManager fm = getSupportFragmentManager();
+        GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(TAG_GAMES_FRAGMENT);
+        fragment.getShitUpAndRunning(mItems);
+        Log.d(TAG, mItems.size() + "");
     }
 
 }
