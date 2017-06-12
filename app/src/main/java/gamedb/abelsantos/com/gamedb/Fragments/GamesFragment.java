@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.ContentFrameLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -77,6 +78,7 @@ public class GamesFragment extends Fragment {
     private String mStringURL;
     private int offset = 0;
     private int counter = 0;
+    private Fragment mContent;
 
     public static GamesFragment newInstance() {
         GamesFragment fragment = new GamesFragment();
@@ -112,9 +114,13 @@ public class GamesFragment extends Fragment {
         };
         mRecyclerView.addOnScrollListener(mScrollListener);
 
+
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage("Loading...");
-        mProgressDialog.show();
+        if (mItems.size() < 1){
+            mProgressDialog.show();
+        }
+
         //Setting up the adapter to avoid getting -> No adapter attached; skipping layout
         //When data was gotten then the adapter will be notified
 
@@ -128,10 +134,7 @@ public class GamesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null){
-            mItems = (List<IgdbGame>)savedInstanceState.getSerializable("games");
-            offset = savedInstanceState.getInt("offset");
-            counter = savedInstanceState.getInt("counter");
-            mGameListAdapter.notifyDataSetChanged();
+            mContent = getFragmentManager().getFragment(savedInstanceState, TAG);
             Log.d(TAG, "Loaded stuff");
         }else{
             Log.d(TAG, "did everything again");
@@ -143,10 +146,7 @@ public class GamesFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putSerializable("games", (Serializable)mItems);
-        savedInstanceState.putInt("offset", offset);
-        savedInstanceState.putInt("counter", counter);
-        Log.d("TAg", "Saved the instance" + savedInstanceState.toString());
+        getFragmentManager().putFragment(savedInstanceState, TAG, mContent);
     }
 
     private void setupAdapter(){
