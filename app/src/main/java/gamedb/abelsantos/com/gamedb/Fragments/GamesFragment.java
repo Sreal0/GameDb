@@ -113,6 +113,7 @@ public class GamesFragment extends Fragment {
                 Activity activity = (GameDbLauncher)getActivity();
                 if (activity instanceof GameDbLauncher){
                     ((GameDbLauncher) activity).getGamesFromAPI(offset);
+                    Toast.makeText(getContext(), "Page " + counter, Toast.LENGTH_SHORT).show();
                 }
                 mGameListAdapter.notifyDataSetChanged();
             }
@@ -151,6 +152,7 @@ public class GamesFragment extends Fragment {
     public void getShitUpAndRunning(List<IgdbGame> items){
         setupAdapter();
         mItems = items;
+        mProgressDialog.hide();
         mGameListAdapter.notifyDataSetChanged();
         Log.d(TAG, "Size of mItems is " + mItems.size());
     }

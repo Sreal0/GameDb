@@ -87,12 +87,12 @@ public class GameDbLauncher extends AppCompatActivity {
                         if (myGamesFragment == null) {
                             supportFragmentManager.beginTransaction()
                                     .replace(R.id.frame_layout, MyGamesFragment.newInstance(), MyGamesFragment.TAG)
-                                    .addToBackStack(null)
+                                    .addToBackStack(MyGamesFragment.TAG)
                                     .commit();
                         } else {
                             supportFragmentManager.beginTransaction()
                                     .replace(R.id.frame_layout, myGamesFragment)
-                                    .addToBackStack(null)
+                                    .addToBackStack(MyGamesFragment.TAG)
                                     .commit();
                         }
                         break;
@@ -101,12 +101,12 @@ public class GameDbLauncher extends AppCompatActivity {
                         if (gamesFragment == null) {
                             supportFragmentManager.beginTransaction()
                                     .replace(R.id.frame_layout, GamesFragment.newInstance(), GamesFragment.TAG)
-                                    .addToBackStack(null)
+                                    .addToBackStack(GamesFragment.TAG)
                                     .commit();
                         } else {
                             supportFragmentManager.beginTransaction()
                                     .replace(R.id.frame_layout, gamesFragment)
-                                    .addToBackStack(null)
+                                    .addToBackStack(GamesFragment.TAG)
                                     .commit();
                         }
                         break;
@@ -115,12 +115,12 @@ public class GameDbLauncher extends AppCompatActivity {
                         if (wishlistFragment == null) {
                             supportFragmentManager.beginTransaction()
                                     .replace(R.id.frame_layout, WishlistFragment.newInstance(), WishlistFragment.TAG)
-                                    .addToBackStack(null)
+                                    .addToBackStack(WishlistFragment.TAG)
                                     .commit();
                         } else {
                             supportFragmentManager.beginTransaction()
                                     .replace(R.id.frame_layout, wishlistFragment)
-                                    .addToBackStack(null)
+                                    .addToBackStack(WishlistFragment.TAG)
                                     .commit();
                         }
                         break;
@@ -129,12 +129,12 @@ public class GameDbLauncher extends AppCompatActivity {
                         if (searchFragment == null) {
                             supportFragmentManager.beginTransaction()
                                     .replace(R.id.frame_layout, SearchFragment.newInstance(), SearchFragment.TAG)
-                                    .addToBackStack(null)
+                                    .addToBackStack(SearchFragment.TAG)
                                     .commit();
                         } else {
                             supportFragmentManager.beginTransaction()
                                     .replace(R.id.frame_layout, searchFragment)
-                                    .addToBackStack(null)
+                                    .addToBackStack(SearchFragment.TAG)
                                     .commit();
                         }
                         break;
@@ -311,6 +311,7 @@ public class GameDbLauncher extends AppCompatActivity {
         //Standard request
         String mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
         Log.d(TAG, mStringURL);
+        Log.d(TAG, "Offset " + offset);
         // Request an Array response from the provided URL.
         final JsonArrayRequest req = new JsonArrayRequest(
                 mStringURL, new Response.Listener<JSONArray>() {
@@ -334,7 +335,13 @@ public class GameDbLauncher extends AppCompatActivity {
                         Log.d(TAG, "IOException: " + e);
                     }
                 }
+
+                FragmentManager fm = getSupportFragmentManager();
+                GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
+                Log.d(TAG, fragment.getClass().getName());
+                fragment.getShitUpAndRunning(mItems);
                 Log.d(TAG, "Called method in Activity");
+                Log.d(TAG, mItems.size() + "");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -344,10 +351,5 @@ public class GameDbLauncher extends AppCompatActivity {
         });
         //req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
-        FragmentManager fm = getSupportFragmentManager();
-        GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(TAG_GAMES_FRAGMENT);
-        fragment.getShitUpAndRunning(mItems);
-        Log.d(TAG, mItems.size() + "");
     }
-
 }
