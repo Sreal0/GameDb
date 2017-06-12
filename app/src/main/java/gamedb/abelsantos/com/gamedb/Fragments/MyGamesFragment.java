@@ -28,6 +28,10 @@ import gamedb.abelsantos.com.gamedb.R;
 
 public class MyGamesFragment extends Fragment{
     public static final String TAG = "MyGamesFragment";
+    private static final String URL_COVER_BIG = "https://images.igdb.com/igdb/image/upload/t_cover_big/";
+    private static final String IMAGE_FORMAT_PNG = ".png";
+    private static final String IMAGE_FORMAT_JPG = ".jpg";
+
     private RecyclerView mRecyclerView;
     private MyGamesAdapter mMyGamesAdapter;
     private static final int TAG_DATABASE = 1;
@@ -84,7 +88,7 @@ public class MyGamesFragment extends Fragment{
             mScore.setText(game.getAggregated_rating() + "");
             String protocol = "";
             try{
-                protocol = "https:" + game.getThumbnailUrl();
+                protocol = URL_COVER_BIG + game.getCloudinaryId() + IMAGE_FORMAT_JPG;
                 Log.d(TAG, protocol);
             }catch (NullPointerException e){
                 Log.d(TAG, e.toString());
@@ -94,7 +98,6 @@ public class MyGamesFragment extends Fragment{
                         load(protocol).
                         error(R.drawable.ic_error).
                         placeholder(R.drawable.ic_img_placeholder).
-                        resize(75, 100).
                         into(mThumbnail);
             }else{
                 mThumbnail.setImageResource(R.drawable.ic_error);

@@ -17,7 +17,7 @@ public class Game extends RealmObject {
 
     private String  mGameName;
     private String  mSlug;
-    private String  mThumbnailUrl;
+    private String  mCloudinaryId;
     private long    mCreatedAt;
     private long    mUpdatedAt;
     private String  mSummary;
@@ -58,12 +58,12 @@ public class Game extends RealmObject {
         mSlug = slug;
     }
 
-    public String getThumbnailUrl() {
-        return mThumbnailUrl;
+    public String getCloudinaryId() {
+        return mCloudinaryId;
     }
 
-    public void setThumbnailUrl(String thumbnailUrl) {
-        mThumbnailUrl = thumbnailUrl;
+    public void setCloudinaryId(String cloudinaryId) {
+        mCloudinaryId = cloudinaryId;
     }
 
     public long getCreatedAt() {

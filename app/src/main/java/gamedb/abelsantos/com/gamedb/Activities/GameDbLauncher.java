@@ -6,28 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,7 +29,6 @@ import gamedb.abelsantos.com.gamedb.Fragments.GamesFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.MyGamesFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.SearchFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.WishlistFragment;
-import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbReleaseDates;
 import gamedb.abelsantos.com.gamedb.R;
@@ -267,7 +253,7 @@ public class GameDbLauncher extends AppCompatActivity {
                 Game game = bgRealm.createObject(Game.class, igdbGame.getId());
                 game.setGameName(igdbGame.getName());
                 game.setAggregated_rating(igdbGame.getAggregated_rating());
-                game.setThumbnailUrl(igdbGame.getIgdbGameCover().getUrl());
+                game.setCloudinaryId(igdbGame.getIgdbGameCover().getCloudinaryId());
                 game.setDatabaseOrWishlist(tag);
             }
         }, new Realm.Transaction.OnSuccess() {

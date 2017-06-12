@@ -49,6 +49,9 @@ public class GamesFragment extends Fragment {
     public static final String TAG = "GamesFragment";
     private static final int TAG_DATABASE = 1;
     private static final int TAG_WISHLIST = 2;
+    private static final String URL_COVER_BIG = "https://images.igdb.com/igdb/image/upload/t_cover_big/";
+    private static final String IMAGE_FORMAT_PNG = ".png";
+    private static final String IMAGE_FORMAT_JPG = ".jpg";
 
     private RecyclerView mRecyclerView;
     private GameListAdapter mGameListAdapter;
@@ -232,12 +235,12 @@ public class GamesFragment extends Fragment {
                     snackbar.show();
                 }
             });
-            /*To avoid getting an Exception because of the protocol.
-             Note that the Url from the IgdbGameCover already has // in it.
-             Same games still have no cover. */
             String protocol = "";
             try{
-                 protocol = "https:" + igdbGame.getIgdbGameCover().getUrl();
+                //Get the cloudniranyID... this is the id I need to acces the images I need.
+                //I then need to change the parameter in the query url to get the size i need delivered.
+                 protocol = URL_COVER_BIG +
+                         igdbGame.getIgdbGameCover().getCloudinaryId() + IMAGE_FORMAT_JPG;
                 Log.d(TAG, protocol);
             }catch (NullPointerException e){
                 Log.d(TAG, e.toString());
@@ -247,12 +250,13 @@ public class GamesFragment extends Fragment {
             /*Picasso needs a valid url. If the returned url is not valid
             * then I will set the thumbnail with the default error image.
             * Else, picasso will do its thing*/
+            /*ATTENTION: CHANGE. I will request a higher resolution of the picture and rescale it
+            * */
             if (protocol != ""){
                 Picasso.with(getContext()).
                         load(protocol).
                         error(R.drawable.ic_error).
                         placeholder(R.drawable.ic_img_placeholder).
-                        resize(75, 100).
                         into(mThumbnail);
             }else{
                 mThumbnail.setImageResource(R.drawable.ic_error);

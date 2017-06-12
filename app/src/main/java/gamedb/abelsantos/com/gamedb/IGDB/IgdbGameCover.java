@@ -37,6 +37,7 @@ public class IgdbGameCover{
     }
 
     public String getCloudinaryId() {
+
         return cloudinaryId;
     }
     @JsonSetter("cloudinary_id")
