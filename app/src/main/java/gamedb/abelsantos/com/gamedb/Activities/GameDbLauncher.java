@@ -51,7 +51,9 @@ public class GameDbLauncher extends AppCompatActivity {
     private static String TAG = "gamedb.abelsantos";
     public static final String TAG_GAMES_FRAGMENT = "GamesFragment";
     private static final String tag_json_arry = "json_array_req";
-
+    private static final int FLAG_GAMES_BY_RATING = 1;
+    private static final int FLAG_GAMES_BY_AGGREGATED_RATING = 2;
+    private static final int FLAG_GAMES_BY_NEWEST_RELEASES = 3;
     private Toolbar mToolbar;
     private TextView mToolbarText;
     private BottomNavigationView mBottomNavigationView;
@@ -61,6 +63,7 @@ public class GameDbLauncher extends AppCompatActivity {
     private RealmResults<Game> mGameRealmQuery;
     private IgdbClientSingleton sIgdbClientSingleton;
     private List<IgdbGame> mItems = new ArrayList<>();
+    private int offset = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,28 +174,34 @@ public class GameDbLauncher extends AppCompatActivity {
                         .show();
                 break;
             case R.id.menuSortReleaseDate:
-                Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Sort release date", Toast.LENGTH_SHORT)
                         .show();
                 break;
             case R.id.menuGetNewestGames:
-                Toast.makeText(this, "Filtered something", Toast.LENGTH_SHORT)
-                        .show();
+                FragmentManager fm = getSupportFragmentManager();
+                GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
+                fragment.setOffsetAndItemsToZero();
+                Log.d(TAG, "Cleared items");
+                fragment.setFlagForOnLoadMore(FLAG_GAMES_BY_NEWEST_RELEASES);
+                String url = sIgdbClientSingleton.getGamesOrderedByNewestReleasesURL(0);
+                List<IgdbGame> igdbGames = new ArrayList<>();
+                getGamesFromAPI(url, igdbGames);
                 break;
             // action with ID action_settings was selected
             case R.id.menuGetHighestRatings6Months:
-                Toast.makeText(this, "Filtered something else", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Highest rating last 6 months", Toast.LENGTH_SHORT)
                         .show();
                 break;
             case R.id.menuGetHighestRatings12Months:
-                Toast.makeText(this, "Filtered something else", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Highest rating last 12 months", Toast.LENGTH_SHORT)
                         .show();
                 break;
             case R.id.menuGetHighestRatingsAllTime:
-                Toast.makeText(this, "Filtered something else", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Highest rating all time", Toast.LENGTH_SHORT)
                         .show();
                 break;
             case R.id.menuGetPopularGames:
-                Toast.makeText(this, "Filtered something else", Toast.LENGTH_SHORT)
+                Toast.makeText(this, "Popular games", Toast.LENGTH_SHORT)
                         .show();
                 break;
             default:
@@ -222,7 +231,6 @@ public class GameDbLauncher extends AppCompatActivity {
             }
         }
     }
-
     //Method to resolve names of the platforms based on the id that is returned by the API.
     //Uses a JSON file from the Assets folder.
     public  String resolvePlatformNames(IgdbReleaseDates[] igdbReleaseDates, String name) {
@@ -258,7 +266,6 @@ public class GameDbLauncher extends AppCompatActivity {
         }
         return consoles;
     }
-
     //Saves a game to the database from the GamesFragment
     public void saveGames (final IgdbGame igdbGame, final int tag){
         mRealm.executeTransactionAsync(new Realm.Transaction() {
@@ -283,15 +290,12 @@ public class GameDbLauncher extends AppCompatActivity {
             }
         });
     }
-
     //Returns games saved in the Database, only MyGames
     public RealmResults<Game> getMyGames(){
         RealmQuery<Game> query = mRealm.where(Game.class);
         query.equalTo("mDatabaseOrWishlist", 1);
-
         mGameRealmQuery = query.findAll();
         Log.d(TAG, mGameRealmQuery.toString());
-
         return mGameRealmQuery;
     }
 
@@ -307,9 +311,10 @@ public class GameDbLauncher extends AppCompatActivity {
         });
     }
 
-    public void getGamesFromAPI(String url, int offset, final List<IgdbGame> igdbGames){
+    public void getGamesFromAPI(String url, final List<IgdbGame> igdbGames){
         //Standard request
         // Request an Array response from the provided URL.
+        Log.d(TAG, url);
         final JsonArrayRequest req = new JsonArrayRequest(
                 url, new Response.Listener<JSONArray>() {
             @Override
@@ -321,7 +326,6 @@ public class GameDbLauncher extends AppCompatActivity {
                         String data = object.toString();
                         IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
                         igdbGames.add(igdbGame);
-                        Log.d(TAG, "Added a new Item to items");
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
                     } catch (JsonParseException e) {
@@ -332,13 +336,9 @@ public class GameDbLauncher extends AppCompatActivity {
                         Log.d(TAG, "IOException: " + e);
                     }
                 }
-
                 FragmentManager fm = getSupportFragmentManager();
                 GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
-                Log.d(TAG, fragment.getClass().getName());
                 fragment.showsGamesList(igdbGames);
-                Log.d(TAG, "Called method in Activity");
-                Log.d(TAG, mItems.size() + "");
             }
         }, new Response.ErrorListener() {
             @Override

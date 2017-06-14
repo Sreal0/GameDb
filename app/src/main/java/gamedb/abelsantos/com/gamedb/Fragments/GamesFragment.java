@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.ContentFrameLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,22 +17,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +41,9 @@ public class GamesFragment extends Fragment {
     private static final String URL_COVER_BIG = "https://images.igdb.com/igdb/image/upload/t_cover_big/";
     private static final String IMAGE_FORMAT_PNG = ".png";
     private static final String IMAGE_FORMAT_JPG = ".jpg";
+    private static final int FLAG_GAMES_BY_RATING = 1;
+    private static final int FLAG_GAMES_BY_AGGREGATED_RATING = 2;
+    private static final int FLAG_GAMES_BY_NEWEST_RELEASES = 3;
 
     private RecyclerView mRecyclerView;
     private GameListAdapter mGameListAdapter;
@@ -77,8 +67,9 @@ public class GamesFragment extends Fragment {
     private List<IgdbGame> mItems = new ArrayList<>();
     private EndlessRecyclerViewScrollListener mScrollListener;
     private String mStringURL;
-    private int offset = 0;
-    private int counter = 1;
+    private int mOffset = 0;
+    private int mCounter = 1;
+    private int mFlag = 0;
     private Fragment mContent;
 
     public static GamesFragment newInstance() {
@@ -112,18 +103,29 @@ public class GamesFragment extends Fragment {
                 if (activity instanceof GameDbLauncher){
                     //games list is given as parameter so that the activity adds new Games to it
                     //and returns it
-                    offset += 20;
-                    //Same url with higher offset
-                    mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
-                    ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, offset, mItems);
-                    counter++;
-                    Toast.makeText(getContext(), "Page " + counter, Toast.LENGTH_SHORT).show();
+                    mOffset += 20;
+                    switch (mFlag){
+                        case 3:
+                            Log.d("tag", "Switch case 3");
+                            mStringURL = sIgdbClientSingleton.getGamesOrderedByNewestReleasesURL(mOffset);
+                            ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, mItems);
+                            mCounter++;
+                            Toast.makeText(getContext(), "Page " + mCounter, Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(mOffset);
+                            ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, mItems);
+                            mCounter++;
+                            Log.d(TAG, "Switch case default");
+                            Toast.makeText(getContext(), "Page " + mCounter, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
                 }
             }
         };
         mRecyclerView.addOnScrollListener(mScrollListener);
         mProgressDialog = new ProgressDialog(getContext());
-        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.setMessage(getString(R.string.loading));
         //To avoid showing the progress dialog when the user goes back to the fragment.
         if (mItems.size() < 1){
             mProgressDialog.show();
@@ -135,19 +137,32 @@ public class GamesFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-
         if (savedInstanceState != null){
             mContent = getFragmentManager().getFragment(savedInstanceState, TAG);
             Log.d(TAG, "Recovered");
         }else{
-            Activity activity = (GameDbLauncher)getActivity();
+            Activity activity = getActivity();
             if (activity instanceof GameDbLauncher){
-                mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
-                ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, offset, mItems);
+                mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(mOffset);
+                ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, mItems);
                 Log.d(TAG, "called Activity from Fragment");
                 Log.d(TAG, mStringURL);
             }
         }
+    }
+
+    public void setOffsetAndItemsToZero(){
+
+        mOffset = 0;
+        int size = mItems.size();
+        mItems.clear();
+        mGameListAdapter.notifyDataSetChanged();
+        mRecyclerView.removeAllViewsInLayout();
+        Log.d(TAG, "Cleared items.Size is :" + mItems.size());
+    }
+
+    public void setFlagForOnLoadMore(int flag){
+        mFlag = flag;
     }
 
     public void showsGamesList(List<IgdbGame> items){
@@ -168,49 +183,6 @@ public class GamesFragment extends Fragment {
         mRecyclerView.setAdapter(mGameListAdapter);
     }
 
-    /*public void getGames(int offset){
-        //Standard request
-        mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
-        counter++;
-        Toast.makeText(getContext(), counter + "", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, mStringURL);
-        // Request an Array response from the provided URL.
-        final JsonArrayRequest req = new JsonArrayRequest(
-                mStringURL, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                ObjectMapper mapper = new ObjectMapper();
-                for(int i = 0; i < response.length(); i++){
-                    try {
-                        JSONObject object = response.getJSONObject(i);
-                        String data = object.toString();
-                        IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
-                        mItems.add(igdbGame);
-                    } catch (JSONException e) {
-                        Log.d(TAG, "JSONException: " + e);
-                    } catch (JsonParseException e) {
-                        Log.d(TAG, "JsonParseException: " + e);
-                    } catch (JsonMappingException e) {
-                        Log.d(TAG, "JsonMappingException: " + e);
-                    } catch (IOException e) {
-                        Log.d(TAG, "IOException: " + e);
-                    }
-                }
-                Log.d(TAG, response.toString());
-                mProgressDialog.hide();
-                //Notify that the data changed.
-                mGameListAdapter.notifyDataSetChanged();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, error.toString());
-            }
-        });
-        //req.setShouldCache(true);
-        sIgdbClientSingleton.addToRequestQueue(req);
-    }
-*/
     private class GameHolder extends RecyclerView.ViewHolder{
 
         private GameHolder(View itemView) {
@@ -255,7 +227,7 @@ public class GamesFragment extends Fragment {
                 //I then need to change the parameter in the query url to get the size i need delivered.
                  protocol = URL_COVER_BIG +
                          igdbGame.getIgdbGameCover().getCloudinaryId() + IMAGE_FORMAT_JPG;
-                Log.d(TAG, protocol);
+                //Log.d(TAG, protocol);
             }catch (NullPointerException e){
                 Log.d(TAG, e.toString());
             }

@@ -58,6 +58,7 @@ public class IgdbClientSingleton extends Application{
         return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset + ORDER_BY_POPULARITY;
     }
 
+
     //--> WORKS!!! <--
     //This Method will return a list of game ordered by release date. Offset is 20
     public String getGamesOrderedByNewestReleasesURL(int offset){
