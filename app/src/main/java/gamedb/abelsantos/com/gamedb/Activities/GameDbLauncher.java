@@ -307,14 +307,11 @@ public class GameDbLauncher extends AppCompatActivity {
         });
     }
 
-    public void getGamesFromAPI(int offset, final List<IgdbGame> igdbGames){
+    public void getGamesFromAPI(String url, int offset, final List<IgdbGame> igdbGames){
         //Standard request
-        String mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
-        Log.d(TAG, mStringURL);
-        Log.d(TAG, "Offset " + offset);
         // Request an Array response from the provided URL.
         final JsonArrayRequest req = new JsonArrayRequest(
-                mStringURL, new Response.Listener<JSONArray>() {
+                url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 ObjectMapper mapper = new ObjectMapper();

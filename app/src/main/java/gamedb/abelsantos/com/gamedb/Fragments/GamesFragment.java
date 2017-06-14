@@ -108,31 +108,27 @@ public class GamesFragment extends Fragment {
         mScrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                offset += 20;
-                //Same method as before, just sets the offset to + 20
                 Activity activity = (GameDbLauncher)getActivity();
                 if (activity instanceof GameDbLauncher){
                     //games list is given as parameter so that the activity adds new Games to it
                     //and returns it
-                    ((GameDbLauncher) activity).getGamesFromAPI(offset, mItems);
+                    offset += 20;
+                    //Same url with higher offset
+                    mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
+                    ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, offset, mItems);
                     counter++;
                     Toast.makeText(getContext(), "Page " + counter, Toast.LENGTH_SHORT).show();
                 }
-                mGameListAdapter.notifyDataSetChanged();
             }
         };
         mRecyclerView.addOnScrollListener(mScrollListener);
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage("Loading...");
+        //To avoid showing the progress dialog when the user goes back to the fragment.
         if (mItems.size() < 1){
             mProgressDialog.show();
         }
-
-        //Setting up the adapter to avoid getting -> No adapter attached; skipping layout
-        //When data was gotten then the adapter will be notified
         setupAdapter();
-        //This is how I call a method from the activity on a fragment.
-        //((GameDbLauncher)getActivity()).thisIsAMethod();
         return view;
     }
 
@@ -146,8 +142,10 @@ public class GamesFragment extends Fragment {
         }else{
             Activity activity = (GameDbLauncher)getActivity();
             if (activity instanceof GameDbLauncher){
-                ((GameDbLauncher) activity).getGamesFromAPI(offset, mItems);
+                mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
+                ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, offset, mItems);
                 Log.d(TAG, "called Activity from Fragment");
+                Log.d(TAG, mStringURL);
             }
         }
     }
