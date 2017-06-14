@@ -106,7 +106,6 @@ public class GamesFragment extends Fragment {
                     mOffset += 20;
                     switch (mFlag){
                         case 3:
-                            Log.d("tag", "Switch case 3");
                             mStringURL = sIgdbClientSingleton.getGamesOrderedByNewestReleasesURL(mOffset);
                             ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, mItems);
                             mCounter++;
@@ -116,7 +115,6 @@ public class GamesFragment extends Fragment {
                             mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(mOffset);
                             ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, mItems);
                             mCounter++;
-                            Log.d(TAG, "Switch case default");
                             Toast.makeText(getContext(), "Page " + mCounter, Toast.LENGTH_SHORT).show();
                             break;
                     }
@@ -151,17 +149,11 @@ public class GamesFragment extends Fragment {
         }
     }
 
-    public void setOffsetAndItemsToZero(){
-
+    public void prepareFragmentForNewData(int flag){
         mOffset = 0;
-        int size = mItems.size();
         mItems.clear();
         mGameListAdapter.notifyDataSetChanged();
         mRecyclerView.removeAllViewsInLayout();
-        Log.d(TAG, "Cleared items.Size is :" + mItems.size());
-    }
-
-    public void setFlagForOnLoadMore(int flag){
         mFlag = flag;
     }
 
@@ -169,7 +161,6 @@ public class GamesFragment extends Fragment {
         mItems = items;
         mProgressDialog.hide();
         mGameListAdapter.notifyDataSetChanged();
-        Log.d(TAG, "Size of mItems is " + mItems.size());
     }
 
     @Override
@@ -238,7 +229,7 @@ public class GamesFragment extends Fragment {
             * Else, picasso will do its thing*/
             /*ATTENTION: CHANGE. I will request a higher resolution of the picture and rescale it
             * */
-            if (protocol != ""){
+            if ( !protocol.equals("")){
                 Picasso.with(getContext()).
                         load(protocol).
                         error(R.drawable.ic_error).

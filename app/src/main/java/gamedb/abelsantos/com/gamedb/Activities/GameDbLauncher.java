@@ -180,9 +180,7 @@ public class GameDbLauncher extends AppCompatActivity {
             case R.id.menuGetNewestGames:
                 FragmentManager fm = getSupportFragmentManager();
                 GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
-                fragment.setOffsetAndItemsToZero();
-                Log.d(TAG, "Cleared items");
-                fragment.setFlagForOnLoadMore(FLAG_GAMES_BY_NEWEST_RELEASES);
+                fragment.prepareFragmentForNewData(FLAG_GAMES_BY_NEWEST_RELEASES);
                 String url = sIgdbClientSingleton.getGamesOrderedByNewestReleasesURL(0);
                 List<IgdbGame> igdbGames = new ArrayList<>();
                 getGamesFromAPI(url, igdbGames);
