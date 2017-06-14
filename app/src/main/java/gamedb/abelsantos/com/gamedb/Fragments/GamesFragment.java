@@ -78,7 +78,7 @@ public class GamesFragment extends Fragment {
     private EndlessRecyclerViewScrollListener mScrollListener;
     private String mStringURL;
     private int offset = 0;
-    private int counter = 0;
+    private int counter = 1;
     private Fragment mContent;
 
     public static GamesFragment newInstance() {
@@ -112,7 +112,10 @@ public class GamesFragment extends Fragment {
                 //Same method as before, just sets the offset to + 20
                 Activity activity = (GameDbLauncher)getActivity();
                 if (activity instanceof GameDbLauncher){
-                    ((GameDbLauncher) activity).getGamesFromAPI(offset);
+                    //games list is given as parameter so that the activity adds new Games to it
+                    //and returns it
+                    ((GameDbLauncher) activity).getGamesFromAPI(offset, mItems);
+                    counter++;
                     Toast.makeText(getContext(), "Page " + counter, Toast.LENGTH_SHORT).show();
                 }
                 mGameListAdapter.notifyDataSetChanged();
@@ -127,7 +130,7 @@ public class GamesFragment extends Fragment {
 
         //Setting up the adapter to avoid getting -> No adapter attached; skipping layout
         //When data was gotten then the adapter will be notified
-
+        setupAdapter();
         //This is how I call a method from the activity on a fragment.
         //((GameDbLauncher)getActivity()).thisIsAMethod();
         return view;
@@ -143,14 +146,13 @@ public class GamesFragment extends Fragment {
         }else{
             Activity activity = (GameDbLauncher)getActivity();
             if (activity instanceof GameDbLauncher){
-                ((GameDbLauncher) activity).getGamesFromAPI(offset);
+                ((GameDbLauncher) activity).getGamesFromAPI(offset, mItems);
                 Log.d(TAG, "called Activity from Fragment");
             }
         }
     }
 
-    public void getShitUpAndRunning(List<IgdbGame> items){
-        setupAdapter();
+    public void showsGamesList(List<IgdbGame> items){
         mItems = items;
         mProgressDialog.hide();
         mGameListAdapter.notifyDataSetChanged();

@@ -307,7 +307,7 @@ public class GameDbLauncher extends AppCompatActivity {
         });
     }
 
-    public void getGamesFromAPI(int offset){
+    public void getGamesFromAPI(int offset, final List<IgdbGame> igdbGames){
         //Standard request
         String mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(offset);
         Log.d(TAG, mStringURL);
@@ -323,7 +323,7 @@ public class GameDbLauncher extends AppCompatActivity {
                         JSONObject object = response.getJSONObject(i);
                         String data = object.toString();
                         IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
-                        mItems.add(igdbGame);
+                        igdbGames.add(igdbGame);
                         Log.d(TAG, "Added a new Item to items");
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
@@ -339,7 +339,7 @@ public class GameDbLauncher extends AppCompatActivity {
                 FragmentManager fm = getSupportFragmentManager();
                 GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
                 Log.d(TAG, fragment.getClass().getName());
-                fragment.getShitUpAndRunning(mItems);
+                fragment.showsGamesList(igdbGames);
                 Log.d(TAG, "Called method in Activity");
                 Log.d(TAG, mItems.size() + "");
             }
