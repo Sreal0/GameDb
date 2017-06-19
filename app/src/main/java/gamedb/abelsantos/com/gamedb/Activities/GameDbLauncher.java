@@ -2,6 +2,7 @@ package gamedb.abelsantos.com.gamedb.Activities;
 
 
 
+import android.app.Dialog;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +27,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -228,6 +234,30 @@ public class GameDbLauncher extends AppCompatActivity {
                 Toast.makeText(this, "Could not resolve console names", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void onClickThumbnail(String clourdinaryID) {
+        String protocol = sIgdbClientSingleton.getUrlCoverBig2x() + clourdinaryID + sIgdbClientSingleton.getImageFormatJpg();
+        final Dialog dialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.image_preview);
+        Button btnClose = (Button) dialog.findViewById(R.id.btnIvClose);
+        ImageView ivPreview = (ImageView) dialog.findViewById(R.id.iv_preview_image);
+        Picasso.with(this).
+                load(protocol).
+                error(R.drawable.ic_error).
+                placeholder(R.drawable.ic_img_placeholder).
+                into(ivPreview);
+        Log.d(TAG, protocol);
+
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
     //Method to resolve names of the platforms based on the id that is returned by the API.
     //Uses a JSON file from the Assets folder.

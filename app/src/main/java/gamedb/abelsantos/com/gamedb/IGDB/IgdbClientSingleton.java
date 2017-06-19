@@ -1,6 +1,7 @@
 package gamedb.abelsantos.com.gamedb.IGDB;
 
 import android.app.Application;
+import android.media.Image;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -34,6 +35,11 @@ public class IgdbClientSingleton extends Application{
                                                             "?mashape-key=spjH1mZDLmmsh2xi8l8E4sz5dRFBp1FexQhjsnEsNlSCIqVzS0" +
                                                             "&fields=name,cover,release_dates,aggregated_rating,first_release_date" +
                                                             "&limit=20&offset=";
+    private static final String URL_SCREENSHOT_BIG = "https://images.igdb.com/igdb/image/upload/t_screenshot_big/";
+    private static final String URL_COVER_BIG_2X = "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/";
+    private static final String URL_COVER_BIG = "https://images.igdb.com/igdb/image/upload/t_cover_big/";
+    private static final String IMAGE_FORMAT_PNG = ".png";
+    private static final String IMAGE_FORMAT_JPG = ".jpg";
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
@@ -132,5 +138,25 @@ public class IgdbClientSingleton extends Application{
 
     public static void nextPage(){
         offset += 20;
+    }
+
+    public static String getUrlScreenshotBig() {
+        return URL_SCREENSHOT_BIG;
+    }
+
+    public String getUrlCoverBig2x() {
+        return URL_COVER_BIG_2X;
+    }
+
+    public String getImageFormatJpg() {
+        return IMAGE_FORMAT_JPG;
+    }
+
+    public String getUrlCoverBig(){
+        return URL_COVER_BIG;
+    }
+
+    public String getImageFormatPng(){
+        return IMAGE_FORMAT_PNG;
     }
 }

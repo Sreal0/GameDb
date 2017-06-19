@@ -1,6 +1,7 @@
 package gamedb.abelsantos.com.gamedb.Fragments;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -10,8 +11,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,9 +42,7 @@ public class GamesFragment extends Fragment {
     public static final String TAG = "GamesFragment";
     private static final int TAG_DATABASE = 1;
     private static final int TAG_WISHLIST = 2;
-    private static final String URL_COVER_BIG = "https://images.igdb.com/igdb/image/upload/t_cover_big/";
-    private static final String IMAGE_FORMAT_PNG = ".png";
-    private static final String IMAGE_FORMAT_JPG = ".jpg";
+
     private static final int FLAG_GAMES_BY_RATING = 1;
     private static final int FLAG_GAMES_BY_AGGREGATED_RATING = 2;
     private static final int FLAG_GAMES_BY_NEWEST_RELEASES = 3;
@@ -80,6 +82,7 @@ public class GamesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
     }
 
@@ -130,6 +133,12 @@ public class GamesFragment extends Fragment {
         }
         setupAdapter();
         return view;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu){
+        menu.findItem(R.id.action_sort).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -216,8 +225,8 @@ public class GamesFragment extends Fragment {
             try{
                 //Get the cloudniranyID... this is the id I need to acces the images I need.
                 //I then need to change the parameter in the query url to get the size i need delivered.
-                 protocol = URL_COVER_BIG +
-                         igdbGame.getIgdbGameCover().getCloudinaryId() + IMAGE_FORMAT_JPG;
+                 protocol = sIgdbClientSingleton.getUrlCoverBig() +
+                         igdbGame.getIgdbGameCover().getCloudinaryId() + sIgdbClientSingleton.getImageFormatJpg();
                 //Log.d(TAG, protocol);
             }catch (NullPointerException e){
                 Log.d(TAG, e.toString());
@@ -235,6 +244,12 @@ public class GamesFragment extends Fragment {
                         error(R.drawable.ic_error).
                         placeholder(R.drawable.ic_img_placeholder).
                         into(mThumbnail);
+                mThumbnail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ((GameDbLauncher)getActivity()).onClickThumbnail( igdbGame.getIgdbGameCover().getCloudinaryId());
+                    }
+                });
             }else{
                 mThumbnail.setImageResource(R.drawable.ic_error);
             }
