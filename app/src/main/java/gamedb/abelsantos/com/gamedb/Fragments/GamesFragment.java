@@ -1,7 +1,6 @@
 package gamedb.abelsantos.com.gamedb.Fragments;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -14,8 +13,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -104,23 +101,14 @@ public class GamesFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 Activity activity = (GameDbLauncher)getActivity();
                 if (activity instanceof GameDbLauncher){
-                    //games list is given as parameter so that the activity adds new Games to it
-                    //and returns it
-                    mOffset += 20;
-                    switch (mFlag){
-                        case 3:
-                            mStringURL = sIgdbClientSingleton.getGamesOrderedByNewestReleasesURL(mOffset);
-                            ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, mItems);
-                            mCounter++;
-                            Toast.makeText(getContext(), "Page " + mCounter, Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(mOffset);
-                            ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, mItems);
-                            mCounter++;
-                            Toast.makeText(getContext(), "Page " + mCounter, Toast.LENGTH_SHORT).show();
-                            break;
-                    }
+                    //Updates the offset in the current request to +20
+                    sIgdbClientSingleton.setCurrentOffset(sIgdbClientSingleton.getCurrentOffset() + 20);
+                    sIgdbClientSingleton.updateOffset();
+                    //Request Parameters has already been set
+                    sIgdbClientSingleton.buildFullRequest();
+                    ((GameDbLauncher) activity).getGamesFromAPI(sIgdbClientSingleton.getCurrentRequestFull(), mItems);
+                    Toast.makeText(getContext(), "Page " + mCounter + "", Toast.LENGTH_SHORT).show();
+                    mCounter++;
                 }
             }
         };
@@ -150,10 +138,13 @@ public class GamesFragment extends Fragment {
         }else{
             Activity activity = getActivity();
             if (activity instanceof GameDbLauncher){
-                mStringURL = sIgdbClientSingleton.getGamesOrderedByPopularityURL(mOffset);
-                ((GameDbLauncher) activity).getGamesFromAPI(mStringURL, mItems);
+                sIgdbClientSingleton.setCurrentRequestParameters(sIgdbClientSingleton.
+                        getGamesOrderedByPopularityURL());
+                sIgdbClientSingleton.updateOffset();
+                sIgdbClientSingleton.buildFullRequest();
+                ((GameDbLauncher) activity).getGamesFromAPI(sIgdbClientSingleton.getCurrentRequestFull(), mItems);
                 Log.d(TAG, "called Activity from Fragment");
-                Log.d(TAG, mStringURL);
+                Log.d(TAG, sIgdbClientSingleton.getCurrentRequestParameters());
             }
         }
     }

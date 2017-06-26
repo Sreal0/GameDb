@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -187,9 +186,12 @@ public class GameDbLauncher extends AppCompatActivity {
                 FragmentManager fm = getSupportFragmentManager();
                 GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
                 fragment.prepareFragmentForNewData(FLAG_GAMES_BY_NEWEST_RELEASES);
-                String url = sIgdbClientSingleton.getGamesOrderedByNewestReleasesURL(0);
+                sIgdbClientSingleton.setCurrentOffset(0);
+                sIgdbClientSingleton.updateOffset();
+                sIgdbClientSingleton.setCurrentRequestParameters(sIgdbClientSingleton.getGamesOrderedByNewestReleasesURL());
+                sIgdbClientSingleton.buildFullRequest();
                 List<IgdbGame> igdbGames = new ArrayList<>();
-                getGamesFromAPI(url, igdbGames);
+                getGamesFromAPI(sIgdbClientSingleton.getCurrentRequestFull(), igdbGames);
                 break;
             // action with ID action_settings was selected
             case R.id.menuGetHighestRatings6Months:
@@ -238,11 +240,10 @@ public class GameDbLauncher extends AppCompatActivity {
 
     public void onClickThumbnail(String clourdinaryID) {
         String protocol = sIgdbClientSingleton.getUrlCoverBig2x() + clourdinaryID + sIgdbClientSingleton.getImageFormatJpg();
-        final Dialog dialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar);
+        final Dialog dialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.image_preview);
-        Button btnClose = (Button) dialog.findViewById(R.id.btnIvClose);
         ImageView ivPreview = (ImageView) dialog.findViewById(R.id.iv_preview_image);
         Picasso.with(this).
                 load(protocol).
@@ -250,13 +251,13 @@ public class GameDbLauncher extends AppCompatActivity {
                 placeholder(R.drawable.ic_img_placeholder).
                 into(ivPreview);
         Log.d(TAG, protocol);
-
-        btnClose.setOnClickListener(new View.OnClickListener() {
+        ivPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
             }
         });
+
         dialog.show();
     }
     //Method to resolve names of the platforms based on the id that is returned by the API.

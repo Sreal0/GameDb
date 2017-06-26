@@ -1,7 +1,6 @@
 package gamedb.abelsantos.com.gamedb.IGDB;
 
 import android.app.Application;
-import android.media.Image;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -34,7 +33,7 @@ public class IgdbClientSingleton extends Application{
     private static final String GET_GAMES_KEY_ATTRIBUTES_LIMIT = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/" +
                                                             "?mashape-key=spjH1mZDLmmsh2xi8l8E4sz5dRFBp1FexQhjsnEsNlSCIqVzS0" +
                                                             "&fields=name,cover,release_dates,aggregated_rating,first_release_date" +
-                                                            "&limit=20&offset=";
+                                                            "&limit=20&offset=%d";
     private static final String URL_SCREENSHOT_BIG = "https://images.igdb.com/igdb/image/upload/t_screenshot_big/";
     private static final String URL_COVER_BIG_2X = "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/";
     private static final String URL_COVER_BIG = "https://images.igdb.com/igdb/image/upload/t_cover_big/";
@@ -43,6 +42,11 @@ public class IgdbClientSingleton extends Application{
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
+
+    private String mCurrentRequestHeadAndOffset;
+    private String mCurrentRequestParameters;
+    private String mCurrentRequestFull;
+    private int mCurrentOffset = 0;
 
     @Override
     public void onCreate(){
@@ -60,16 +64,17 @@ public class IgdbClientSingleton extends Application{
     }
     //-->WORKS!!! <---
     //This Method will return a list of games ordered by popularity from the past 6 months. Offset is 20
-    public String getGamesOrderedByPopularityURL(int offset){
-        return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset + ORDER_BY_POPULARITY;
+    public String getGamesOrderedByPopularityURL(){
+        return  ORDER_BY_POPULARITY;
     }
 
 
     //--> WORKS!!! <--
     //This Method will return a list of game ordered by release date. Offset is 20
-    public String getGamesOrderedByNewestReleasesURL(int offset){
+    public String getGamesOrderedByNewestReleasesURL(){
         long timestamp = System.currentTimeMillis();
-        return GET_GAMES_KEY_ATTRIBUTES_LIMIT + offset + FILTER_NEWEST_RELEASES
+
+        return FILTER_NEWEST_RELEASES
                 + timestamp + ORDER_RELEASE_DATES_DATE_DESC ;
     }
 
@@ -82,14 +87,14 @@ public class IgdbClientSingleton extends Application{
         long sixMonthsAgo = calendar.getTimeInMillis();
         //This will return the highest rated games of all times.
         if (months == 0){
+            String.format(GET_GAMES_KEY_ATTRIBUTES_LIMIT, offset);
             return GET_GAMES_KEY_ATTRIBUTES_LIMIT +
-                    offset +
                     FILTER_FIRST_RELEASE_DATE_LOWER_THAN_TODAY +
                     timestamp +
                     ORDER_AGGREGATED_RATING_DESC;
         }
+        String.format(GET_GAMES_KEY_ATTRIBUTES_LIMIT, offset);
         return GET_GAMES_KEY_ATTRIBUTES_LIMIT +
-                offset +
                 FILTER_FIRST_RELEASE_DATE_GREATER_THAN_LAST_X_MONTHS +
                 sixMonthsAgo +
                 FILTER_FIRST_RELEASE_DATE_LOWER_THAN_TODAY +
@@ -158,5 +163,36 @@ public class IgdbClientSingleton extends Application{
 
     public String getImageFormatPng(){
         return IMAGE_FORMAT_PNG;
+    }
+
+    public String getCurrentRequestParameters() {
+        return mCurrentRequestParameters;
+    }
+
+    public void setCurrentRequestParameters(String currentRequestParameters) {
+        //The first part of the request is always the same. What I need is the parameters of the request
+        mCurrentRequestParameters =  currentRequestParameters;
+    }
+
+    public void updateOffset(){
+        //Updates offset to +20
+        String url = String.format(GET_GAMES_KEY_ATTRIBUTES_LIMIT, mCurrentOffset);
+        mCurrentRequestHeadAndOffset =  url;
+    }
+
+    public int getCurrentOffset() {
+        return mCurrentOffset;
+    }
+
+    public void setCurrentOffset(int currentOffset) {
+        mCurrentOffset = currentOffset;
+    }
+
+    public void buildFullRequest(){
+        mCurrentRequestFull = mCurrentRequestHeadAndOffset + mCurrentRequestParameters;
+    }
+
+    public String getCurrentRequestFull() {
+        return mCurrentRequestFull;
     }
 }
