@@ -2,10 +2,12 @@ package gamedb.abelsantos.com.gamedb.Fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -186,9 +188,11 @@ public class GamesFragment extends Fragment {
         mRecyclerView.setAdapter(mGameListAdapter);
     }
 
+
     private class GameHolder extends RecyclerView.ViewHolder{
 
-        private GameHolder(View itemView) {
+
+        private GameHolder(final View itemView) {
             super(itemView);
             mGameAggregatedRating = (TextView)itemView.findViewById(R.id.txt_game_rating);
             mGameTitle = (TextView) itemView.findViewById(R.id.txt_gameTitle);
@@ -198,6 +202,19 @@ public class GamesFragment extends Fragment {
             mThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
             mAddButton = (ImageButton)itemView.findViewById(R.id.button_add_database);
             //mNetworkImageView = (NetworkImageView)itemView.findViewById(R.id.thumbnail);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                    FragmentManager supportFragmentManager = getFragmentManager();
+                    Fragment gameDetails = supportFragmentManager.findFragmentByTag(GameDetailsFragment.TAG);
+                    int id = mItems.get(getLayoutPosition()).getId();
+                        supportFragmentManager.beginTransaction()
+                                .replace(R.id.frame_layout, GameDetailsFragment.newInstance(id), GameDetailsFragment.TAG)
+                                .addToBackStack(GameDetailsFragment.TAG)
+                                .commit();
+                }
+            });
         }
 
         private void bindGameListItem(final IgdbGame igdbGame){
