@@ -108,14 +108,15 @@ public class GamesFragment extends Fragment {
                     //Request Parameters has already been set
                     sIgdbClientSingleton.buildFullRequest();
                     ((GameDbLauncher) activity).getGamesFromAPI(sIgdbClientSingleton.getCurrentRequestFull(), mItems);
-                    Toast.makeText(getContext(), "Page " + mCounter + "", Toast.LENGTH_SHORT).show();
                     mCounter++;
+                    Toast.makeText(getContext(), "Page " + mCounter + "", Toast.LENGTH_SHORT).show();
                 }
             }
         };
         mRecyclerView.addOnScrollListener(mScrollListener);
         showProgressDialog();
         setupAdapter();
+        ((GameDbLauncher)getActivity()).changeToolbarSubtitleText(getString(R.string.get_popular_games));
         return view;
     }
 
