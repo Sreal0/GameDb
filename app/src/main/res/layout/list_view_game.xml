@@ -87,7 +87,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:textColor="@color/colorBlack"
-            android:textSize="30sp"
+            android:textSize="@dimen/game_score_big"
             android:text="95"
             android:paddingTop="5dp"
             android:textAlignment="center"
