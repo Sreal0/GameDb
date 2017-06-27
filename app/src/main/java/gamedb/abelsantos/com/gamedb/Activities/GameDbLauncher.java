@@ -437,7 +437,7 @@ public class GameDbLauncher extends AppCompatActivity {
                         String data = object.toString();
                         IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
                         igdbGames.add(igdbGame);
-                        Log.d(TAG, igdbGames.size() + "");
+                        Log.d(TAG, igdbGames.size()+"");
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
                     } catch (JsonParseException e) {

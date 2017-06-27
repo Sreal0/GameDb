@@ -24,7 +24,9 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
@@ -206,7 +208,8 @@ public class GamesFragment extends Fragment {
                 mGameAggregatedRating.setText(rat + "");
             }
             //Only release year will be shown here. A more detailed date can be shown in the details.
-            mGameReleaseDate.setText(igdbGame.resolveFirstReleaseYear());
+            String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date(igdbGame.getReleaseDate()));
+            mGameReleaseDate.setText(date);
             String consoles = ((GameDbLauncher)getActivity()).resolvePlatformNames(igdbGame.getIgdbReleaseDates(), igdbGame.getName());
             mGamePlatforms.setText(consoles);
             final String genres = ((GameDbLauncher)getActivity()).resolveGenreNames(igdbGame.getGenre());

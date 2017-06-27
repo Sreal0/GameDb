@@ -1,5 +1,6 @@
 package gamedb.abelsantos.com.gamedb.IGDB;
 
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -149,19 +150,25 @@ public class IgdbGame{
     }
 
     public String resolveFirstReleaseYear(){
+        String dateHuman = "";
         //Gets the earliest release date
         if (mIgdbReleaseDates != null){
             int year = mIgdbReleaseDates[0].getYear();
             for(int i = 0; i < mIgdbReleaseDates.length; i++){
                 if (mIgdbReleaseDates[i].getYear() < year){
                     year = mIgdbReleaseDates[i].getYear();
+                    dateHuman = mIgdbReleaseDates[i].getDateHuman();
                 }
             }
+            Log.d("Date", dateHuman);
             return year + "";
         }else{
+            Log.d("NoDate", dateHuman);
             return "N/A";
         }
     }
+
+
 
     public int[] getGenre() {
         return genre;
