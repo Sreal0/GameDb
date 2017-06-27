@@ -3,14 +3,18 @@ package gamedb.abelsantos.com.gamedb.Activities;
 
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -56,19 +60,16 @@ public class GameDbLauncher extends AppCompatActivity {
     private static String TAG = "gamedb.abelsantos";
     public static final String TAG_GAMES_FRAGMENT = "GamesFragment";
     private static final String tag_json_arry = "json_array_req";
-    private static final int FLAG_GAMES_BY_RATING = 1;
-    private static final int FLAG_GAMES_BY_AGGREGATED_RATING = 2;
-    private static final int FLAG_GAMES_BY_NEWEST_RELEASES = 3;
     private Toolbar mToolbar;
     private TextView mToolbarText;
     private BottomNavigationView mBottomNavigationView;
     private String mConsoleFromAssets;
+    private String mGenreFromAssets;
     private Realm mRealm;
     private Game results;
     private RealmResults<Game> mGameRealmQuery;
     private IgdbClientSingleton sIgdbClientSingleton;
     private List<IgdbGame> mItems = new ArrayList<>();
-    private int offset = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +78,12 @@ public class GameDbLauncher extends AppCompatActivity {
         mRealm = Realm.getDefaultInstance();
 
         mToolbar = (Toolbar)findViewById(R.id.toolbar_launcher);
-        mToolbar.setTitle("GameDb");
-        mToolbar.setTitleTextColor(0xffffffff);
+        mToolbarText = (TextView)findViewById(R.id.txt_toolbar_undertitle);
+        mToolbarText.setGravity(Gravity.BOTTOM);
         sIgdbClientSingleton = IgdbClientSingleton.getInstance();
 
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         //Navigation Bar onClickListener
         mBottomNavigationView = (BottomNavigationView)findViewById(R.id.bottom_navigation);
@@ -155,8 +157,8 @@ public class GameDbLauncher extends AppCompatActivity {
                 .add(R.id.frame_layout, MyGamesFragment.newInstance(), MyGamesFragment.TAG)
                 .addToBackStack(null)
                 .commit();
-        //Prepare the Consoles file
-        loadJSONFromAsset();
+        //Prepare the platform and genre files
+        loadJSONAssets();
     }
 
     @Override
@@ -168,6 +170,9 @@ public class GameDbLauncher extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
+        FragmentManager fm = getSupportFragmentManager();
+        GamesFragment gamesFragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
+        List<IgdbGame> igdbGames = new ArrayList<>();
         switch (item.getItemId()) {
             // action with ID action_refresh was selected
             case R.id.menuSortAggregatedRating:
@@ -183,32 +188,61 @@ public class GameDbLauncher extends AppCompatActivity {
                         .show();
                 break;
             case R.id.menuGetNewestGames:
-                FragmentManager fm = getSupportFragmentManager();
-                GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
-                fragment.prepareFragmentForNewData(FLAG_GAMES_BY_NEWEST_RELEASES);
+                gamesFragment.prepareFragmentForNewData();
+                gamesFragment.showProgressDialog();
                 sIgdbClientSingleton.setCurrentOffset(0);
                 sIgdbClientSingleton.updateOffset();
-                sIgdbClientSingleton.setCurrentRequestParameters(sIgdbClientSingleton.getGamesOrderedByNewestReleasesURL());
+                sIgdbClientSingleton.setCurrentRequestParameters(sIgdbClientSingleton.
+                        getGamesOrderedByNewestReleasesURL());
                 sIgdbClientSingleton.buildFullRequest();
-                List<IgdbGame> igdbGames = new ArrayList<>();
                 getGamesFromAPI(sIgdbClientSingleton.getCurrentRequestFull(), igdbGames);
+                changeToolbarSubtitleText(getString(R.string.get_newest_releases));
                 break;
             // action with ID action_settings was selected
             case R.id.menuGetHighestRatings6Months:
-                Toast.makeText(this, "Highest rating last 6 months", Toast.LENGTH_SHORT)
-                        .show();
+                gamesFragment.prepareFragmentForNewData();
+                gamesFragment.showProgressDialog();
+                sIgdbClientSingleton.setCurrentOffset(0);
+                sIgdbClientSingleton.updateOffset();
+                sIgdbClientSingleton.setCurrentRequestParameters(sIgdbClientSingleton.
+                        getGamesHighestRatingLastXMonths(6));
+                sIgdbClientSingleton.buildFullRequest();
+                getGamesFromAPI(sIgdbClientSingleton.getCurrentRequestFull(), igdbGames);
+                changeToolbarSubtitleText(getString(R.string.get_highest_rating_6_months));
                 break;
             case R.id.menuGetHighestRatings12Months:
-                Toast.makeText(this, "Highest rating last 12 months", Toast.LENGTH_SHORT)
-                        .show();
+                gamesFragment.prepareFragmentForNewData();
+                gamesFragment.showProgressDialog();
+                sIgdbClientSingleton.setCurrentOffset(0);
+                sIgdbClientSingleton.updateOffset();
+                sIgdbClientSingleton.setCurrentRequestParameters(sIgdbClientSingleton.
+                        getGamesHighestRatingLastXMonths(12));
+                sIgdbClientSingleton.buildFullRequest();
+                getGamesFromAPI(sIgdbClientSingleton.getCurrentRequestFull(), igdbGames);
+                changeToolbarSubtitleText(getString(R.string.get_highest_rating_12_months));
                 break;
             case R.id.menuGetHighestRatingsAllTime:
-                Toast.makeText(this, "Highest rating all time", Toast.LENGTH_SHORT)
-                        .show();
+                //All time sets the date to 0
+                gamesFragment.prepareFragmentForNewData();
+                gamesFragment.showProgressDialog();
+                sIgdbClientSingleton.setCurrentOffset(0);
+                sIgdbClientSingleton.updateOffset();
+                sIgdbClientSingleton.setCurrentRequestParameters(sIgdbClientSingleton.
+                        getGamesHighestRatingLastXMonths(0));
+                sIgdbClientSingleton.buildFullRequest();
+                getGamesFromAPI(sIgdbClientSingleton.getCurrentRequestFull(), igdbGames);
+                changeToolbarSubtitleText(getString(R.string.get_highest_rating_all_time));
                 break;
             case R.id.menuGetPopularGames:
-                Toast.makeText(this, "Popular games", Toast.LENGTH_SHORT)
-                        .show();
+                gamesFragment.prepareFragmentForNewData();
+                gamesFragment.showProgressDialog();
+                sIgdbClientSingleton.setCurrentOffset(0);
+                sIgdbClientSingleton.updateOffset();
+                sIgdbClientSingleton.setCurrentRequestParameters(sIgdbClientSingleton.
+                        getGamesOrderedByPopularityURL());
+                sIgdbClientSingleton.buildFullRequest();
+                getGamesFromAPI(sIgdbClientSingleton.getCurrentRequestFull(), igdbGames);
+                changeToolbarSubtitleText(getString(R.string.get_popular_games));
                 break;
             default:
                 break;
@@ -221,7 +255,7 @@ public class GameDbLauncher extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public void loadJSONFromAsset(){
+    private void loadJSONAssets(){
         //Loads the assets file with the console names
         if (mConsoleFromAssets == null){
             try{
@@ -234,6 +268,19 @@ public class GameDbLauncher extends AppCompatActivity {
             }catch (IOException e){
                 e.printStackTrace();
                 Toast.makeText(this, "Could not resolve console names", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (mGenreFromAssets == null){
+            try{
+                InputStream is = getAssets().open("genres.json");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                mGenreFromAssets = new String(buffer, "UTF-8");
+            }catch (IOException e){
+                e.printStackTrace();
+                Toast.makeText(this, "Could not resolve genres", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -295,8 +342,43 @@ public class GameDbLauncher extends AppCompatActivity {
         }
         return consoles;
     }
+
+    public  String resolveGenreNames(int[] genres) {
+        String output = "";
+        if (mGenreFromAssets != null){
+            //Converts the variable into a JSON Object - consoles IS an Object
+            JSONArray jsonArray = new JSONArray();
+            try {
+                JSONObject jsonObject = new JSONObject(mGenreFromAssets);
+                //Gets the array inside it
+                jsonArray = jsonObject.getJSONArray("genres");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //Check in the array for the id. If it matches then it will add the name to the to be
+            //returned String
+            if(genres != null){    //To avoid an Exception, some games have no release date yet
+                for (int i = 0; i < genres.length; i++){
+                    for (int j = 0; j < jsonArray.length(); j++){
+                        try{
+                            JSONObject in_obj = jsonArray.getJSONObject(j);
+                            //SHIT... it worked. AWESOME!!!!
+                            if (in_obj.getInt("id") == genres[i]
+                                    && !output.contains(in_obj.getString("name"))) {
+                                output += in_obj.getString("name") + " ";
+                            }
+                        } catch (JSONException e) {
+                            Log.d(TAG, "JSONException: " + e);
+                        }
+                    }
+                }
+            }
+        }
+        return output;
+    }
     //Saves a game to the database from the GamesFragment
-    public void saveGames (final IgdbGame igdbGame, final int tag){
+    public void saveGamesToRealm (final IgdbGame igdbGame, final int tag){
+        //Tags: 0 for database, 1 for wish list
         mRealm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm bgRealm) {
@@ -319,10 +401,10 @@ public class GameDbLauncher extends AppCompatActivity {
             }
         });
     }
-    //Returns games saved in the Database, only MyGames
+    //Returns games saved in the Database, only MyGames - Tag is 0
     public RealmResults<Game> getMyGames(){
         RealmQuery<Game> query = mRealm.where(Game.class);
-        query.equalTo("mDatabaseOrWishlist", 1);
+        query.equalTo("mDatabaseOrWishlist", 0);
         mGameRealmQuery = query.findAll();
         Log.d(TAG, mGameRealmQuery.toString());
         return mGameRealmQuery;
@@ -355,6 +437,7 @@ public class GameDbLauncher extends AppCompatActivity {
                         String data = object.toString();
                         IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
                         igdbGames.add(igdbGame);
+                        Log.d(TAG, igdbGames.size() + "");
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
                     } catch (JsonParseException e) {
@@ -378,4 +461,28 @@ public class GameDbLauncher extends AppCompatActivity {
         //req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
     }
+
+    public void showAddGameDialog(final IgdbGame game){
+        final String[] items = {getString(R.string.text_add_to_database), getString(R.string.text_add_to_wishlist)};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.add_game_alert_dialog_title));
+
+        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                FragmentManager fm = getSupportFragmentManager();
+                GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
+                fragment.showSnackBar(i);
+                saveGamesToRealm(game, i);
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    public void changeToolbarSubtitleText(String text){
+        mToolbarText.setText(text);
+    }
+
 }

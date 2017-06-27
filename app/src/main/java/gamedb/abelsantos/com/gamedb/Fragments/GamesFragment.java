@@ -22,6 +22,8 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +53,7 @@ public class GamesFragment extends Fragment {
 
 
     private TextView mGameTitle;
+    private TextView mGameGenre;
     private TextView mGameAggregatedRating;
     private TextView mGameReleaseDate;
     private TextView mGamePlatforms;
@@ -59,16 +62,12 @@ public class GamesFragment extends Fragment {
     private ImageLoader mImageLoader;
     private NetworkImageView mNetworkImageView;
     private ImageView mThumbnail;
-    private ImageButton mAddToDatabaseButton;
-    private ImageButton mAddToWishlistButton;
+    private ImageButton mAddButton;
     private CoordinatorLayout mCoordinatorLayout;
 
     private List<IgdbGame> mItems = new ArrayList<>();
     private EndlessRecyclerViewScrollListener mScrollListener;
-    private String mStringURL;
-    private int mOffset = 0;
     private int mCounter = 1;
-    private int mFlag = 0;
     private Fragment mContent;
 
     public static GamesFragment newInstance() {
@@ -113,14 +112,27 @@ public class GamesFragment extends Fragment {
             }
         };
         mRecyclerView.addOnScrollListener(mScrollListener);
+        showProgressDialog();
+        setupAdapter();
+        return view;
+    }
+
+    public void showSnackBar(int radioButton){
+        String text = getString(R.string.game_added_to_database);
+        if (radioButton == 1){
+            text = getString(R.string.game_added_to_wishlist);
+        }
+        Snackbar snackbar = Snackbar.make(mCoordinatorLayout, text, Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
+
+    public void showProgressDialog(){
         mProgressDialog = new ProgressDialog(getContext());
         mProgressDialog.setMessage(getString(R.string.loading));
         //To avoid showing the progress dialog when the user goes back to the fragment.
         if (mItems.size() < 1){
             mProgressDialog.show();
         }
-        setupAdapter();
-        return view;
     }
 
     @Override
@@ -143,18 +155,15 @@ public class GamesFragment extends Fragment {
                 sIgdbClientSingleton.updateOffset();
                 sIgdbClientSingleton.buildFullRequest();
                 ((GameDbLauncher) activity).getGamesFromAPI(sIgdbClientSingleton.getCurrentRequestFull(), mItems);
-                Log.d(TAG, "called Activity from Fragment");
                 Log.d(TAG, sIgdbClientSingleton.getCurrentRequestParameters());
             }
         }
     }
 
-    public void prepareFragmentForNewData(int flag){
-        mOffset = 0;
+    public void prepareFragmentForNewData(){
         mItems.clear();
         mGameListAdapter.notifyDataSetChanged();
         mRecyclerView.removeAllViewsInLayout();
-        mFlag = flag;
     }
 
     public void showsGamesList(List<IgdbGame> items){
@@ -179,42 +188,38 @@ public class GamesFragment extends Fragment {
         private GameHolder(View itemView) {
             super(itemView);
             mGameAggregatedRating = (TextView)itemView.findViewById(R.id.txt_game_rating);
-            mGameTitle =  (TextView) itemView.findViewById(R.id.txt_gameTitle);
+            mGameTitle = (TextView) itemView.findViewById(R.id.txt_gameTitle);
+            mGameGenre = (TextView)itemView.findViewById(R.id.txt_game_genre) ;
             mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform);
             mGameReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date);
             mThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
-            mAddToDatabaseButton = (ImageButton)itemView.findViewById(R.id.button_add_database);
-            mAddToWishlistButton = (ImageButton)itemView.findViewById(R.id.button_add_wishlist);
+            mAddButton = (ImageButton)itemView.findViewById(R.id.button_add_database);
             //mNetworkImageView = (NetworkImageView)itemView.findViewById(R.id.thumbnail);
         }
 
         private void bindGameListItem(final IgdbGame igdbGame){
             mGameTitle.setText(igdbGame.getName());
             int rat = ((int) igdbGame.getAggregated_rating());
-            mGameAggregatedRating.setText(getString(R.string.game_rating)+ " " + rat);
+            if(rat == 0){
+                mGameAggregatedRating.setText("-");
+            }else{
+                mGameAggregatedRating.setText(rat + "");
+            }
             //Only release year will be shown here. A more detailed date can be shown in the details.
             mGameReleaseDate.setText(igdbGame.resolveFirstReleaseYear());
             String consoles = ((GameDbLauncher)getActivity()).resolvePlatformNames(igdbGame.getIgdbReleaseDates(), igdbGame.getName());
             mGamePlatforms.setText(consoles);
-            mAddToDatabaseButton.setOnClickListener(new View.OnClickListener() {
+            final String genres = ((GameDbLauncher)getActivity()).resolveGenreNames(igdbGame.getGenre());
+            mGameGenre.setText(genres);
+            mAddButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((GameDbLauncher) getActivity()).saveGames(igdbGame, TAG_DATABASE);
-                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, getString(R.string.game_added_to_database), Snackbar.LENGTH_SHORT);
-                    snackbar.show();
-                }
-            });
-            mAddToWishlistButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ((GameDbLauncher) getActivity()).saveGames(igdbGame, TAG_WISHLIST);
-                    Snackbar snackbar = Snackbar.make(mCoordinatorLayout, getString(R.string.game_added_to_wishlist), Snackbar.LENGTH_SHORT);
-                    snackbar.show();
+                    ((GameDbLauncher)getActivity()).showAddGameDialog(igdbGame);
                 }
             });
             String protocol = "";
             try{
-                //Get the cloudniranyID... this is the id I need to acces the images I need.
+                //Get the cloudniranyID... this is the id I need to access the images I need.
                 //I then need to change the parameter in the query url to get the size i need delivered.
                  protocol = sIgdbClientSingleton.getUrlCoverBig() +
                          igdbGame.getIgdbGameCover().getCloudinaryId() + sIgdbClientSingleton.getImageFormatJpg();

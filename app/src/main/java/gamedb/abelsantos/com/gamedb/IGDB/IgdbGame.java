@@ -24,6 +24,7 @@ public class IgdbGame{
     private double popularity;
     private int[] developers;
     private int[] category;
+    private int[] genre;
     private IgdbGameCover mIgdbGameCover;
     private IgdbReleaseDates[] mIgdbReleaseDates;
 
@@ -110,7 +111,7 @@ public class IgdbGame{
     public int[] getCategory() {
         return category;
     }
-
+    @JsonSetter("category")
     public void setCategory(int[] category) {
         this.category = category;
     }
@@ -160,5 +161,13 @@ public class IgdbGame{
         }else{
             return "N/A";
         }
+    }
+
+    public int[] getGenre() {
+        return genre;
+    }
+    @JsonSetter("genres")
+    public void setGenre(int[] genre) {
+        this.genre = genre;
     }
 }

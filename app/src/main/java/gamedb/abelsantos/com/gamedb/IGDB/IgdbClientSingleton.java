@@ -32,7 +32,7 @@ public class IgdbClientSingleton extends Application{
     private static final String FILTER_FIRST_RELEASE_DATE_LOWER_THAN_TODAY = "&filter[first_release_date][lte]=";
     private static final String GET_GAMES_KEY_ATTRIBUTES_LIMIT = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/" +
                                                             "?mashape-key=spjH1mZDLmmsh2xi8l8E4sz5dRFBp1FexQhjsnEsNlSCIqVzS0" +
-                                                            "&fields=name,cover,release_dates,aggregated_rating,first_release_date" +
+                                                            "&fields=name,cover,genres,release_dates,aggregated_rating,first_release_date" +
                                                             "&limit=20&offset=%d";
     private static final String URL_SCREENSHOT_BIG = "https://images.igdb.com/igdb/image/upload/t_screenshot_big/";
     private static final String URL_COVER_BIG_2X = "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/";
@@ -80,22 +80,18 @@ public class IgdbClientSingleton extends Application{
 
     //--> WORKS!!! <---
     //Get highest rating last 6 months
-    public String getGamesHighestRatingLastXMonths(int offset, int months){
+    public String getGamesHighestRatingLastXMonths(int months){
         long timestamp = System.currentTimeMillis();
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, - 6);
         long sixMonthsAgo = calendar.getTimeInMillis();
         //This will return the highest rated games of all times.
         if (months == 0){
-            String.format(GET_GAMES_KEY_ATTRIBUTES_LIMIT, offset);
-            return GET_GAMES_KEY_ATTRIBUTES_LIMIT +
-                    FILTER_FIRST_RELEASE_DATE_LOWER_THAN_TODAY +
+            return FILTER_FIRST_RELEASE_DATE_LOWER_THAN_TODAY +
                     timestamp +
                     ORDER_AGGREGATED_RATING_DESC;
         }
-        String.format(GET_GAMES_KEY_ATTRIBUTES_LIMIT, offset);
-        return GET_GAMES_KEY_ATTRIBUTES_LIMIT +
-                FILTER_FIRST_RELEASE_DATE_GREATER_THAN_LAST_X_MONTHS +
+        return FILTER_FIRST_RELEASE_DATE_GREATER_THAN_LAST_X_MONTHS +
                 sixMonthsAgo +
                 FILTER_FIRST_RELEASE_DATE_LOWER_THAN_TODAY +
                 timestamp +
@@ -175,7 +171,7 @@ public class IgdbClientSingleton extends Application{
     }
 
     public void updateOffset(){
-        //Updates offset to +20
+        //Updates offset
         String url = String.format(GET_GAMES_KEY_ATTRIBUTES_LIMIT, mCurrentOffset);
         mCurrentRequestHeadAndOffset =  url;
     }
