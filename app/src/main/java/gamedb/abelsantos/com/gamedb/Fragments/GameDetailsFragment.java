@@ -13,6 +13,8 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.util.Arrays;
+
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
@@ -59,7 +61,7 @@ public class GameDetailsFragment extends Fragment {
         sIgdbClientSingleton = IgdbClientSingleton.getInstance();
 
         mGameDeveloper = (TextView)view.findViewById(R.id.txt_developer);
-        mGamePublisher = (TextView)view.findViewById(R.id.txt_publisher);
+        mGamePublisher = (TextView)view.findViewById(R.id.txt_game_publisher);
         mGameCover = (ImageView)view.findViewById(R.id.imageView);
         mGameTitle = (TextView)view.findViewById(R.id.txt_game_title);
         mGameScore = (TextView)view.findViewById(R.id.txt_game_score);
@@ -103,6 +105,8 @@ public class GameDetailsFragment extends Fragment {
         }else{
             mGameCover.setImageResource(R.drawable.ic_error);
         }
+        mGamePublisher.append(Arrays.toString(game.getPublishers()) + "");
+        mGameDeveloper.append(Arrays.toString(game.getDevelopers()) + "");
 
     }
 }
