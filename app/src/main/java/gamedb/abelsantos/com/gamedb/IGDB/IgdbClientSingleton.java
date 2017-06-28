@@ -39,6 +39,8 @@ public class IgdbClientSingleton extends Application{
     private static final String URL_COVER_BIG = "https://images.igdb.com/igdb/image/upload/t_cover_big/";
     private static final String IMAGE_FORMAT_PNG = ".png";
     private static final String IMAGE_FORMAT_JPG = ".jpg";
+    private static final String SINGLE_GAME_DETAILS = "&fields=name,cover,genres,release_dates,aggregated_rating,first_release_date";
+
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
@@ -62,6 +64,12 @@ public class IgdbClientSingleton extends Application{
         }
         return sIgdbClientSingleton;
     }
+
+    //For GameDetailsFragment
+    public String getSingleGameDetails(int id){
+        return GET_GAMES_URL + id + API_KEY + SINGLE_GAME_DETAILS;
+    }
+
     //-->WORKS!!! <---
     //This Method will return a list of games ordered by popularity from the past 6 months. Offset is 20
     public String getGamesOrderedByPopularityURL(){

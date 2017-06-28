@@ -43,6 +43,7 @@ import java.util.List;
 
 
 import gamedb.abelsantos.com.gamedb.Database.Game;
+import gamedb.abelsantos.com.gamedb.Fragments.GameDetailsFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.GamesFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.MyGamesFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.SearchFragment;
@@ -66,10 +67,9 @@ public class GameDbLauncher extends AppCompatActivity {
     private String mConsoleFromAssets;
     private String mGenreFromAssets;
     private Realm mRealm;
-    private Game results;
     private RealmResults<Game> mGameRealmQuery;
     private IgdbClientSingleton sIgdbClientSingleton;
-    private List<IgdbGame> mItems = new ArrayList<>();
+    private IgdbGame igdbGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -458,7 +458,44 @@ public class GameDbLauncher extends AppCompatActivity {
                 Log.d(TAG, error.toString());
             }
         });
-        //req.setShouldCache(true);
+        req.setShouldCache(true);
+        sIgdbClientSingleton.addToRequestQueue(req);
+    }
+
+    public void getASingleGameFromAPI(String url){
+        Log.d(TAG, url);
+        final JsonArrayRequest req = new JsonArrayRequest(
+                url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                ObjectMapper mapper = new ObjectMapper();
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        JSONObject object = response.getJSONObject(i);
+                        String data = object.toString();
+                        igdbGame = mapper.readValue(data, IgdbGame.class);
+
+                    } catch (JSONException e) {
+                        Log.d(TAG, "JSONException: " + e);
+                    } catch (JsonParseException e) {
+                        Log.d(TAG, "JsonParseException: " + e);
+                    } catch (JsonMappingException e) {
+                        Log.d(TAG, "JsonMappingException: " + e);
+                    } catch (IOException e) {
+                        Log.d(TAG, "IOException: " + e);
+                    }
+                }
+                FragmentManager fm = getSupportFragmentManager();
+                GameDetailsFragment gameDetailsFragment = (GameDetailsFragment) fm.findFragmentByTag(GameDetailsFragment.TAG);
+                gameDetailsFragment.showGameDetails(igdbGame);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.toString());
+            }
+        });
+        req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
     }
 
