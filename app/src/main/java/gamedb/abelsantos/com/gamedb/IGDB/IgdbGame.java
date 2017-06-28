@@ -24,10 +24,13 @@ public class IgdbGame{
     private double aggregated_rating;
     private double popularity;
     private int[] developers;
+    private int[] publishers;
     private int[] category;
     private int[] genre;
     private IgdbGameCover mIgdbGameCover;
     private IgdbReleaseDates[] mIgdbReleaseDates;
+    //Both publisher and developer are returned as companies
+    private IgdbCompany[] mIgdbCompanies;
 
     public IgdbGameCover getIgdbGameCover() {
         return mIgdbGameCover;
@@ -101,14 +104,6 @@ public class IgdbGame{
         this.popularity = popularity;
     }
 
-    public int[] getDevelopers() {
-        return developers;
-    }
-    @JsonSetter("developers")
-    public void setDevelopers(int[] developers) {
-        this.developers = developers;
-    }
-
     public int[] getCategory() {
         return category;
     }
@@ -147,6 +142,30 @@ public class IgdbGame{
     @JsonSetter("release_dates")
     public void setIgdbReleaseDates(IgdbReleaseDates[] igdbReleaseDates) {
         mIgdbReleaseDates = igdbReleaseDates;
+    }
+
+    public IgdbCompany[] getIgdbCompanies() {
+        return mIgdbCompanies;
+    }
+
+    public void setIgdbCompanies(IgdbCompany[] igdbCompanies) {
+        mIgdbCompanies = igdbCompanies;
+    }
+
+    public int[] getDevelopers() {
+        return developers;
+    }
+    @JsonSetter("developers")
+    public void setDevelopers(int[] developers) {
+        this.developers = developers;
+    }
+
+    public int[] getPublishers() {
+        return publishers;
+    }
+    @JsonSetter("publishers")
+    public void setPublishers(int[] publishers) {
+        this.publishers = publishers;
     }
 
     public String resolveFirstReleaseYear(){

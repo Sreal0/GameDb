@@ -39,12 +39,12 @@ public class IgdbClientSingleton extends Application{
     private static final String URL_COVER_BIG = "https://images.igdb.com/igdb/image/upload/t_cover_big/";
     private static final String IMAGE_FORMAT_PNG = ".png";
     private static final String IMAGE_FORMAT_JPG = ".jpg";
-    private static final String SINGLE_GAME_DETAILS = "&fields=name,cover,genres,release_dates,aggregated_rating,first_release_date";
+    private static final String SINGLE_GAME_DETAILS = "&fields=name,cover,genres,release_dates,aggregated_rating,first_release_date" +
+            ",developers,publishers";
 
 
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
-
     private String mCurrentRequestHeadAndOffset;
     private String mCurrentRequestParameters;
     private String mCurrentRequestFull;

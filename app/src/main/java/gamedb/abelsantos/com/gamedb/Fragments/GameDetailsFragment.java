@@ -29,6 +29,8 @@ public class GameDetailsFragment extends Fragment {
     private ImageView mGameCover;
     private TextView mGameTitle;
     private TextView mGameScore;
+    private TextView mGameDeveloper;
+    private TextView mGamePublisher;
     private TextView mGameDescription;
     private IgdbClientSingleton sIgdbClientSingleton;
 
@@ -56,10 +58,13 @@ public class GameDetailsFragment extends Fragment {
 
         sIgdbClientSingleton = IgdbClientSingleton.getInstance();
 
+        mGameDeveloper = (TextView)view.findViewById(R.id.txt_developer);
+        mGamePublisher = (TextView)view.findViewById(R.id.txt_publisher);
         mGameCover = (ImageView)view.findViewById(R.id.imageView);
         mGameTitle = (TextView)view.findViewById(R.id.txt_game_title);
         mGameScore = (TextView)view.findViewById(R.id.txt_game_score);
-        mGameDescription =(TextView)view.findViewById(R.id.txt_description);
+
+        //mGameDescription =(TextView)view.findViewById(R.id.txt_description);
         //gets the request from the singleton...
         String url = sIgdbClientSingleton.getSingleGameDetails(mID);
         //gets the game object from the API. GameDbLauncher will call showGameDetails at the end
