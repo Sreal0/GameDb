@@ -5,11 +5,12 @@
     <string name="drawer_closed">Drawer closed</string>
     <string name="action_websearch">Web search</string>
     <string name="game_title">Game Title</string>
-    <string name="game_genre">Genre</string>
-    <string name="game_developer">Developer</string>
-    <string name="game_publisher">Publisher</string>
+    <string name="game_genre">Genre: </string>
+    <string name="game_summary">Summary: </string>
+    <string name="game_developer">Developer: </string>
+    <string name="game_publisher">Publisher: </string>
     <string name="game_rating">Aggregated Rating: </string>
-    <string name="game_release_date">Release date:</string>
+    <string name="game_release_date">Release date: </string>
     <string name="game_platform">Avaliable on: </string>
     <string name="text_games">Games</string>
     <string name="text_my_games">My Games</string>

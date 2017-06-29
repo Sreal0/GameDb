@@ -19,6 +19,7 @@ public class IgdbGame implements Serializable{
     private String slug;
     private String url;
     private String thumbnailUrl;
+    private String summary;
     private long releaseDate;
     private int created_at;
     private int updated_at;
@@ -195,5 +196,13 @@ public class IgdbGame implements Serializable{
     @JsonSetter("genres")
     public void setGenre(int[] genre) {
         this.genre = genre;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+    @JsonSetter("summary")
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }

@@ -1,6 +1,7 @@
 package gamedb.abelsantos.com.gamedb.Fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -53,12 +54,11 @@ public class GameDetailsFragment extends Fragment {
     private TextView mGameDeveloper;
     private TextView mGamePublisher;
     private TextView mGameGenre;
-    private TextView mGameDescription;
+    private TextView mGameSummary;
     private IgdbClientSingleton sIgdbClientSingleton;
     private IgdbGame mIgdbGame;
-    private IgdbCompany mIgdbCompany;
-    private boolean gotDev = false;
     private List<String> mCompanies;
+    private CoordinatorLayout mCoordinatorLayout;
 
     public static GameDetailsFragment newInstance() {
         GameDetailsFragment fragment = new GameDetailsFragment();
@@ -81,14 +81,14 @@ public class GameDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_game_details, container, false);
 
         sIgdbClientSingleton = IgdbClientSingleton.getInstance();
-
+        mCoordinatorLayout = (CoordinatorLayout)view.findViewById(R.id.coordinator_layout_games_detail_fragment);
         mGameDeveloper = (TextView)view.findViewById(R.id.txt_developer);
         mGamePublisher = (TextView)view.findViewById(R.id.txt_game_publisher);
         mGameCover = (ImageView)view.findViewById(R.id.imageView);
         mGameTitle = (TextView)view.findViewById(R.id.txt_game_title);
         mGameScore = (TextView)view.findViewById(R.id.txt_game_score);
         mGameGenre = (TextView)view.findViewById(R.id.txt_game_genre);
-        //mGameDescription =(TextView)view.findViewById(R.id.txt_description);
+        mGameSummary =(TextView)view.findViewById(R.id.txt_summary);
         ((GameDbLauncher)getActivity()).changeToolbarSubtitleText("");
         mIgdbGame = ((GameDbLauncher)getActivity()).getIgdbGame();
         mCompanies = ((GameDbLauncher)getActivity()).getCompanies();
@@ -121,89 +121,14 @@ public class GameDetailsFragment extends Fragment {
         }else{
             mGameCover.setImageResource(R.drawable.ic_error);
         }
+        if(mIgdbGame.getSummary() != null){
+            mGameSummary.append(" " + mIgdbGame.getSummary());
+        }
+        else{
+            mGameSummary.append(" N/A");
+        }
         mGameGenre.setText(((GameDbLauncher)getActivity()).resolveGenreNames(mIgdbGame.getGenre()));
         mGameDeveloper.setText(mCompanies.get(0));
         mGamePublisher.setText(mCompanies.get(1));
     }
-
-    /*public void resolveCompanyNameFromAPI(String url){
-        Log.d(TAG, url);
-        final JsonArrayRequest req = new JsonArrayRequest(
-                url, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                ObjectMapper mapper = new ObjectMapper();
-                for(int i = 0; i < response.length(); i++){
-                    try {
-                        JSONObject object = response.getJSONObject(i);
-                        String data = object.toString();
-                        mIgdbCompany = mapper.readValue(data, IgdbCompany.class);
-                        if (!gotDev){
-                            mGameDeveloper.setText(mIgdbCompany.getName());
-                            gotDev = true;
-                        }else {
-                            mGamePublisher.setText(mIgdbCompany.getName());
-                            showGameDetails();
-                        }
-                    } catch (JSONException e) {
-                        Log.d(TAG, "JSONException: " + e);
-                    } catch (JsonParseException e) {
-                        Log.d(TAG, "JsonParseException: " + e);
-                    } catch (JsonMappingException e) {
-                        Log.d(TAG, "JsonMappingException: " + e);
-                    } catch (IOException e) {
-                        Log.d(TAG, "IOException: " + e);
-                    }
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, error.toString());
-            }
-        });
-        req.setShouldCache(true);
-        sIgdbClientSingleton.addToRequestQueue(req);
-    }*/
-
-    /*public void getASingleGameFromAPI(String url){
-        Log.d("Single", url);
-
-        final JsonArrayRequest req = new JsonArrayRequest(
-                url, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                ObjectMapper mapper = new ObjectMapper();
-                for(int i = 0; i < response.length(); i++){
-                    try {
-                        Log.d("Single", i + "");
-                        JSONObject object = response.getJSONObject(i);
-                        String data = object.toString();
-                        mIgdbGame = mapper.readValue(data, IgdbGame.class);
-                        String url2 = sIgdbClientSingleton.getCompanyNamesURL(mIgdbGame.getDevelopers()[0]);
-                        resolveCompanyNameFromAPI(url2);
-                        url2 = sIgdbClientSingleton.getCompanyNamesURL(mIgdbGame.getPublishers()[0]);
-                        resolveCompanyNameFromAPI(url2);
-
-                    } catch (JSONException e) {
-                        Log.d(TAG, "JSONException: " + e);
-                    } catch (JsonParseException e) {
-                        Log.d(TAG, "JsonParseException: " + e);
-                    } catch (JsonMappingException e) {
-                        Log.d(TAG, "JsonMappingException: " + e);
-                    } catch (IOException e) {
-                        Log.d(TAG, "IOException: " + e);
-                    }
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, error.toString());
-            }
-        });
-        req.setShouldCache(true);
-        sIgdbClientSingleton.addToRequestQueue(req);
-    }*/
 }

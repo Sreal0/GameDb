@@ -506,6 +506,7 @@ public class GameDbLauncher extends AppCompatActivity {
     }
 
     public void resolveCompanyNameFromAPI(int dev, int pub){
+        //One request, 2 objects: one dev and one pub.
         String url = sIgdbClientSingleton.getCompanyNamesURL(dev, pub);
         mCompanies = new ArrayList<>();
         Log.d(TAG, url);
