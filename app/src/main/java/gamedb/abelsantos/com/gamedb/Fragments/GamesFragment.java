@@ -205,14 +205,8 @@ public class GamesFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
-                    FragmentManager supportFragmentManager = getFragmentManager();
-                    Fragment gameDetails = supportFragmentManager.findFragmentByTag(GameDetailsFragment.TAG);
                     int id = mItems.get(getLayoutPosition()).getId();
-                        supportFragmentManager.beginTransaction()
-                                .replace(R.id.frame_layout, GameDetailsFragment.newInstance(id), GameDetailsFragment.TAG)
-                                .addToBackStack(GameDetailsFragment.TAG)
-                                .commit();
+                    ((GameDbLauncher)getActivity()).getASingleGameFromAPI(id);
                 }
             });
         }

@@ -73,8 +73,8 @@ public class IgdbClientSingleton extends Application{
     }
 
     //To resolve company names based on their ids
-    public String getCompanyNamesURL(int id){
-        return GET_COMPANY_URL + id + API_KEY + COMPANY_FIELDS;
+    public String getCompanyNamesURL(int dev, int pub){
+        return GET_COMPANY_URL + dev + "," + pub + API_KEY + COMPANY_FIELDS;
     }
 
     //-->WORKS!!! <---

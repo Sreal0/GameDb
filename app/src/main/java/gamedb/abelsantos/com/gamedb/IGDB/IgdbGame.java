@@ -5,12 +5,14 @@ import android.widget.ImageView;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.io.Serializable;
+
 
 /**
  * Created by Abel Cruz dos Santos on 22.05.2017.
  */
 
-public class IgdbGame{
+public class IgdbGame implements Serializable{
 
     private int id;
     private String name;
@@ -186,8 +188,6 @@ public class IgdbGame{
             return "N/A";
         }
     }
-
-
 
     public int[] getGenre() {
         return genre;

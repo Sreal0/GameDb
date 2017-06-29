@@ -44,7 +44,8 @@ import gamedb.abelsantos.com.gamedb.R;
 
 public class GameDetailsFragment extends Fragment {
     public static final String TAG = "GameDetailsFragment";
-    private static final String ARGS_ID = "id";
+    private static final String ARGS_GAME = "game";
+    private static final String ARGS_COMPANIES = "companies";
     private int mID ;
     private ImageView mGameCover;
     private TextView mGameTitle;
@@ -57,11 +58,11 @@ public class GameDetailsFragment extends Fragment {
     private IgdbGame mIgdbGame;
     private IgdbCompany mIgdbCompany;
     private boolean gotDev = false;
+    private List<String> mCompanies;
 
-    public static GameDetailsFragment newInstance(int gameId) {
+    public static GameDetailsFragment newInstance() {
         GameDetailsFragment fragment = new GameDetailsFragment();
         Bundle args = new Bundle();
-        args.putInt(ARGS_ID, gameId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,7 +71,6 @@ public class GameDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null){
-            mID = getArguments().getInt(ARGS_ID);
         }
     }
 
@@ -88,13 +88,12 @@ public class GameDetailsFragment extends Fragment {
         mGameTitle = (TextView)view.findViewById(R.id.txt_game_title);
         mGameScore = (TextView)view.findViewById(R.id.txt_game_score);
         mGameGenre = (TextView)view.findViewById(R.id.txt_game_genre);
-
         //mGameDescription =(TextView)view.findViewById(R.id.txt_description);
-        //gets the request from the singleton...
-        String url = sIgdbClientSingleton.getSingleGameDetails(mID);
-        //gets the game object from the API. GameDbLauncher will call showGameDetails at the end
-        getASingleGameFromAPI(url);
         ((GameDbLauncher)getActivity()).changeToolbarSubtitleText("");
+        mIgdbGame = ((GameDbLauncher)getActivity()).getIgdbGame();
+        mCompanies = ((GameDbLauncher)getActivity()).getCompanies();
+
+        showGameDetails();
         return view;
     }
 
@@ -123,9 +122,11 @@ public class GameDetailsFragment extends Fragment {
             mGameCover.setImageResource(R.drawable.ic_error);
         }
         mGameGenre.setText(((GameDbLauncher)getActivity()).resolveGenreNames(mIgdbGame.getGenre()));
+        mGameDeveloper.setText(mCompanies.get(0));
+        mGamePublisher.setText(mCompanies.get(1));
     }
 
-    public void resolveCompanyNameFromAPI(String url){
+    /*public void resolveCompanyNameFromAPI(String url){
         Log.d(TAG, url);
         final JsonArrayRequest req = new JsonArrayRequest(
                 url, new Response.Listener<JSONArray>() {
@@ -163,9 +164,9 @@ public class GameDetailsFragment extends Fragment {
         });
         req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
-    }
+    }*/
 
-    public void getASingleGameFromAPI(String url){
+    /*public void getASingleGameFromAPI(String url){
         Log.d("Single", url);
 
         final JsonArrayRequest req = new JsonArrayRequest(
@@ -204,5 +205,5 @@ public class GameDetailsFragment extends Fragment {
         });
         req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
-    }
+    }*/
 }

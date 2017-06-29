@@ -67,6 +67,7 @@ public class MyGamesFragment extends Fragment{
 
         mGames = ((GameDbLauncher) getActivity()).getMyGames();
         setupAdapter();
+        ((GameDbLauncher)getActivity()).changeToolbarSubtitleText("");
         return view;
     }
 

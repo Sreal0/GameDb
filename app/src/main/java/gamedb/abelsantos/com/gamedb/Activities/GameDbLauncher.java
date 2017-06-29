@@ -73,8 +73,8 @@ public class GameDbLauncher extends AppCompatActivity {
     private RealmResults<Game> mGameRealmQuery;
     private IgdbClientSingleton sIgdbClientSingleton;
     private IgdbGame igdbGame;
-    private String mCompanyName;
     private IgdbCompany mIgdbCompany;
+    private List<String> mCompanies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -467,7 +467,8 @@ public class GameDbLauncher extends AppCompatActivity {
         sIgdbClientSingleton.addToRequestQueue(req);
     }
 
-    /*public IgdbGame getASingleGameFromAPI(String url){
+    public IgdbGame getASingleGameFromAPI(int gameId){
+        String url = sIgdbClientSingleton.getSingleGameDetails(gameId);
         Log.d("Single", url);
         final JsonArrayRequest req = new JsonArrayRequest(
                 url, new Response.Listener<JSONArray>() {
@@ -481,7 +482,7 @@ public class GameDbLauncher extends AppCompatActivity {
                         String data = object.toString();
                         IgdbGame game = mapper.readValue(data, IgdbGame.class);
                         igdbGame = game;
-
+                        resolveCompanyNameFromAPI(igdbGame.getDevelopers()[0], igdbGame.getPublishers()[0]);
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
                     } catch (JsonParseException e) {
@@ -492,9 +493,6 @@ public class GameDbLauncher extends AppCompatActivity {
                         Log.d(TAG, "IOException: " + e);
                     }
                 }
-                FragmentManager fm = getSupportFragmentManager();
-                GameDetailsFragment gameDetailsFragment = (GameDetailsFragment) fm.findFragmentByTag(GameDetailsFragment.TAG);
-                gameDetailsFragment.showGameDetails(igdbGame);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -505,9 +503,11 @@ public class GameDbLauncher extends AppCompatActivity {
         req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
         return igdbGame;
-    }*/
+    }
 
-    /*public IgdbCompany resolveCompanyNameFromAPI(String url){
+    public void resolveCompanyNameFromAPI(int dev, int pub){
+        String url = sIgdbClientSingleton.getCompanyNamesURL(dev, pub);
+        mCompanies = new ArrayList<>();
         Log.d(TAG, url);
         final JsonArrayRequest req = new JsonArrayRequest(
                 url, new Response.Listener<JSONArray>() {
@@ -519,7 +519,7 @@ public class GameDbLauncher extends AppCompatActivity {
                         JSONObject object = response.getJSONObject(i);
                         String data = object.toString();
                         mIgdbCompany = mapper.readValue(data, IgdbCompany.class);
-
+                        mCompanies.add(mIgdbCompany.getName());
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
                     } catch (JsonParseException e) {
@@ -530,6 +530,13 @@ public class GameDbLauncher extends AppCompatActivity {
                         Log.d(TAG, "IOException: " + e);
                     }
                 }
+                //Call fragment here
+                FragmentManager supportFragmentManager = getSupportFragmentManager();
+                Fragment gameDetails = supportFragmentManager.findFragmentByTag(GameDetailsFragment.TAG);
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.frame_layout, GameDetailsFragment.newInstance(), GameDetailsFragment.TAG)
+                        .addToBackStack(GameDetailsFragment.TAG)
+                        .commit();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -539,8 +546,15 @@ public class GameDbLauncher extends AppCompatActivity {
         });
         req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
-         return mIgdbCompany;
-    }*/
+    }
+
+    public IgdbGame getIgdbGame(){
+        return igdbGame;
+    }
+
+    public List<String> getCompanies(){
+        return mCompanies;
+    }
 
     public void showAddGameDialog(final IgdbGame game){
         final String[] items = {getString(R.string.text_add_to_database), getString(R.string.text_add_to_wishlist)};
