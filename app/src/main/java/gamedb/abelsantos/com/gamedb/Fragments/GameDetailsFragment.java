@@ -11,10 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,13 +51,12 @@ public class GameDetailsFragment extends Fragment {
     private TextView mGameScore;
     private TextView mGameDeveloper;
     private TextView mGamePublisher;
+    private TextView mGameGenre;
     private TextView mGameDescription;
     private IgdbClientSingleton sIgdbClientSingleton;
-    private String mDev;
-    private String mPub;
     private IgdbGame mIgdbGame;
     private IgdbCompany mIgdbCompany;
-    private List<String> mCompanies;
+    private boolean gotDev = false;
 
     public static GameDetailsFragment newInstance(int gameId) {
         GameDetailsFragment fragment = new GameDetailsFragment();
@@ -86,22 +87,16 @@ public class GameDetailsFragment extends Fragment {
         mGameCover = (ImageView)view.findViewById(R.id.imageView);
         mGameTitle = (TextView)view.findViewById(R.id.txt_game_title);
         mGameScore = (TextView)view.findViewById(R.id.txt_game_score);
-        mCompanies = new ArrayList<>();
+        mGameGenre = (TextView)view.findViewById(R.id.txt_game_genre);
 
         //mGameDescription =(TextView)view.findViewById(R.id.txt_description);
         //gets the request from the singleton...
         String url = sIgdbClientSingleton.getSingleGameDetails(mID);
         //gets the game object from the API. GameDbLauncher will call showGameDetails at the end
         getASingleGameFromAPI(url);
-        String url2 = sIgdbClientSingleton.getCompanyNamesURL(mIgdbGame.getDevelopers()[0]);
-        mDev = resolveCompanyNameFromAPI(url2);
-        url2 = sIgdbClientSingleton.getCompanyNamesURL(mIgdbGame.getPublishers()[0]);
-        mPub = resolveCompanyNameFromAPI(url2);
         ((GameDbLauncher)getActivity()).changeToolbarSubtitleText("");
-        showGameDetails();
         return view;
     }
-
 
     public void showGameDetails(){
         mGameTitle.setText(mIgdbGame.getName());
@@ -127,11 +122,10 @@ public class GameDetailsFragment extends Fragment {
         }else{
             mGameCover.setImageResource(R.drawable.ic_error);
         }
-        mGamePublisher.setText(mCompanies.get(0));
-        mGameDeveloper.setText(mCompanies.get(1));
+        mGameGenre.setText(((GameDbLauncher)getActivity()).resolveGenreNames(mIgdbGame.getGenre()));
     }
 
-    public String resolveCompanyNameFromAPI(String url){
+    public void resolveCompanyNameFromAPI(String url){
         Log.d(TAG, url);
         final JsonArrayRequest req = new JsonArrayRequest(
                 url, new Response.Listener<JSONArray>() {
@@ -143,6 +137,13 @@ public class GameDetailsFragment extends Fragment {
                         JSONObject object = response.getJSONObject(i);
                         String data = object.toString();
                         mIgdbCompany = mapper.readValue(data, IgdbCompany.class);
+                        if (!gotDev){
+                            mGameDeveloper.setText(mIgdbCompany.getName());
+                            gotDev = true;
+                        }else {
+                            mGamePublisher.setText(mIgdbCompany.getName());
+                            showGameDetails();
+                        }
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
                     } catch (JsonParseException e) {
@@ -162,7 +163,6 @@ public class GameDetailsFragment extends Fragment {
         });
         req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
-        return mIgdbCompany.getName();
     }
 
     public void getASingleGameFromAPI(String url){
@@ -179,6 +179,10 @@ public class GameDetailsFragment extends Fragment {
                         JSONObject object = response.getJSONObject(i);
                         String data = object.toString();
                         mIgdbGame = mapper.readValue(data, IgdbGame.class);
+                        String url2 = sIgdbClientSingleton.getCompanyNamesURL(mIgdbGame.getDevelopers()[0]);
+                        resolveCompanyNameFromAPI(url2);
+                        url2 = sIgdbClientSingleton.getCompanyNamesURL(mIgdbGame.getPublishers()[0]);
+                        resolveCompanyNameFromAPI(url2);
 
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
