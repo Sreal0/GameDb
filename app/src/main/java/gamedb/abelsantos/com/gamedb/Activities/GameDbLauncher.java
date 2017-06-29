@@ -24,9 +24,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,6 +51,7 @@ import gamedb.abelsantos.com.gamedb.Fragments.MyGamesFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.SearchFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.WishlistFragment;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
+import gamedb.abelsantos.com.gamedb.IGDB.IgdbCompany;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbReleaseDates;
 import gamedb.abelsantos.com.gamedb.R;
@@ -70,6 +73,8 @@ public class GameDbLauncher extends AppCompatActivity {
     private RealmResults<Game> mGameRealmQuery;
     private IgdbClientSingleton sIgdbClientSingleton;
     private IgdbGame igdbGame;
+    private String mCompanyName;
+    private IgdbCompany mIgdbCompany;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -462,8 +467,8 @@ public class GameDbLauncher extends AppCompatActivity {
         sIgdbClientSingleton.addToRequestQueue(req);
     }
 
-    public void getASingleGameFromAPI(String url){
-        Log.d(TAG, url);
+    /*public IgdbGame getASingleGameFromAPI(String url){
+        Log.d("Single", url);
         final JsonArrayRequest req = new JsonArrayRequest(
                 url, new Response.Listener<JSONArray>() {
             @Override
@@ -471,9 +476,11 @@ public class GameDbLauncher extends AppCompatActivity {
                 ObjectMapper mapper = new ObjectMapper();
                 for(int i = 0; i < response.length(); i++){
                     try {
+                        Log.d("Single", i + "");
                         JSONObject object = response.getJSONObject(i);
                         String data = object.toString();
-                        igdbGame = mapper.readValue(data, IgdbGame.class);
+                        IgdbGame game = mapper.readValue(data, IgdbGame.class);
+                        igdbGame = game;
 
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
@@ -497,7 +504,43 @@ public class GameDbLauncher extends AppCompatActivity {
         });
         req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
-    }
+        return igdbGame;
+    }*/
+
+    /*public IgdbCompany resolveCompanyNameFromAPI(String url){
+        Log.d(TAG, url);
+        final JsonArrayRequest req = new JsonArrayRequest(
+                url, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                ObjectMapper mapper = new ObjectMapper();
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        JSONObject object = response.getJSONObject(i);
+                        String data = object.toString();
+                        mIgdbCompany = mapper.readValue(data, IgdbCompany.class);
+
+                    } catch (JSONException e) {
+                        Log.d(TAG, "JSONException: " + e);
+                    } catch (JsonParseException e) {
+                        Log.d(TAG, "JsonParseException: " + e);
+                    } catch (JsonMappingException e) {
+                        Log.d(TAG, "JsonMappingException: " + e);
+                    } catch (IOException e) {
+                        Log.d(TAG, "IOException: " + e);
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, error.toString());
+            }
+        });
+        req.setShouldCache(true);
+        sIgdbClientSingleton.addToRequestQueue(req);
+         return mIgdbCompany;
+    }*/
 
     public void showAddGameDialog(final IgdbGame game){
         final String[] items = {getString(R.string.text_add_to_database), getString(R.string.text_add_to_wishlist)};

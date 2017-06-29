@@ -24,6 +24,7 @@ public class IgdbClientSingleton extends Application{
     private static final String TAG = "IgdbClientSingleton";
     private static final String API_KEY = "?mashape-key=spjH1mZDLmmsh2xi8l8E4sz5dRFBp1FexQhjsnEsNlSCIqVzS0";
     private static final String GET_GAMES_URL = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/";
+    private static final String GET_COMPANY_URL = "https://igdbcom-internet-game-database-v1.p.mashape.com/companies/";
     private static final String ORDER_RELEASE_DATES_DATE_DESC = "&order=first_release_date:desc";
     private static final String ORDER_AGGREGATED_RATING_DESC = "&order=aggregated_rating:desc";
     private static final String ORDER_BY_POPULARITY = "&order=popularity:desc";
@@ -41,6 +42,7 @@ public class IgdbClientSingleton extends Application{
     private static final String IMAGE_FORMAT_JPG = ".jpg";
     private static final String SINGLE_GAME_DETAILS = "&fields=name,cover,genres,release_dates,aggregated_rating,first_release_date" +
             ",developers,publishers";
+    private static final String COMPANY_FIELDS = "&fields=name,slug,url";
 
 
     private RequestQueue mRequestQueue;
@@ -68,6 +70,11 @@ public class IgdbClientSingleton extends Application{
     //For GameDetailsFragment
     public String getSingleGameDetails(int id){
         return GET_GAMES_URL + id + API_KEY + SINGLE_GAME_DETAILS;
+    }
+
+    //To resolve company names based on their ids
+    public String getCompanyNamesURL(int id){
+        return GET_COMPANY_URL + id + API_KEY + COMPANY_FIELDS;
     }
 
     //-->WORKS!!! <---
