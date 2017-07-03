@@ -33,6 +33,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
@@ -69,6 +70,7 @@ public class GameDetailsFragment extends Fragment {
     private GameDetailsAdapter mGameDetailsAdapter;
     private List<Integer> mItemsList = new ArrayList<>();
     private JSONArray mJSONArray;
+    private HashMap<String, String > mStringStringHashMap;
 
     public static GameDetailsFragment newInstance() {
         GameDetailsFragment fragment = new GameDetailsFragment();
@@ -109,16 +111,19 @@ public class GameDetailsFragment extends Fragment {
     private void populateList(){
         mItemsList = new ArrayList<>();
         mJSONArray = ((GameDbLauncher)getActivity()).getJSONArraySingleGame();
+
         mItemsList.add(TOP);
         for (int i = 0; i < mJSONArray.length(); i++){
             mItemsList.add(DETAIL);
         }
+
+        mStringStringHashMap = ((GameDbLauncher)getActivity()).getItemsHashMap();
     }
 
     private void initialiseAdapter(){
-        mGameDetailsAdapter = new GameDetailsAdapter(mIgdbGame, getContext(), mJSONArray, mItemsList);
+        mGameDetailsAdapter = new GameDetailsAdapter(mIgdbGame, getContext(), mJSONArray, mItemsList, mStringStringHashMap);
         mRecyclerView.setAdapter(mGameDetailsAdapter);
         mGameDetailsAdapter.notifyDataSetChanged();
     }
-    
+
 }

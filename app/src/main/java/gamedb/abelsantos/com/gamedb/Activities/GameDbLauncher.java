@@ -78,6 +78,7 @@ public class GameDbLauncher extends AppCompatActivity {
     private IgdbCompany mIgdbCompany;
     private List<String> mCompanies;
     private JSONArray mJSONArraySingleGame;
+    private HashMap<String, String > mItemsHashMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -472,6 +473,7 @@ public class GameDbLauncher extends AppCompatActivity {
 
     public IgdbGame getASingleGameFromAPI(int gameId){
         String url = sIgdbClientSingleton.getSingleGameDetails(gameId);
+        mItemsHashMap = new HashMap<>();
         Log.d("Single", url);
         final JsonArrayRequest req = new JsonArrayRequest(
                 url, new Response.Listener<JSONArray>() {
@@ -483,6 +485,8 @@ public class GameDbLauncher extends AppCompatActivity {
                     try {
                         Log.d("Single", i + "");
                         JSONObject object = response.getJSONObject(i);
+                        String key = object.keys().next();
+                        mItemsHashMap.put(key, object.getString(key));
                         String data = object.toString();
                         IgdbGame game = mapper.readValue(data, IgdbGame.class);
                         igdbGame = game;
@@ -511,6 +515,10 @@ public class GameDbLauncher extends AppCompatActivity {
 
     public JSONArray getJSONArraySingleGame(){
         return mJSONArraySingleGame;
+    }
+
+    public HashMap<String, String> getItemsHashMap(){
+        return mItemsHashMap;
     }
 
     public void resolveCompanyNameFromAPI(int dev, int pub){

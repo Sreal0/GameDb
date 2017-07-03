@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
@@ -39,12 +40,14 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context mContext;
     private List<Integer> mListItems;
     private JSONArray mJSONArray;
+    private HashMap<String, String > mStringStringHashMap;
 
-    public GameDetailsAdapter(IgdbGame game, Context context, JSONArray array, List<Integer> list) {
+    public GameDetailsAdapter(IgdbGame game, Context context, JSONArray array, List<Integer> list, HashMap<String, String > items) {
         mIgdbGame = game;
         mContext = context;
         mJSONArray = array;
         mListItems = list;
+        mStringStringHashMap = items;
     }
 
     @Override
@@ -69,8 +72,6 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
         return viewHolder;
     }
-
-
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
