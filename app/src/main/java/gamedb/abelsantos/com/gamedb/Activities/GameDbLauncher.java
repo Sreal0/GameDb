@@ -40,7 +40,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -75,6 +77,7 @@ public class GameDbLauncher extends AppCompatActivity {
     private IgdbGame igdbGame;
     private IgdbCompany mIgdbCompany;
     private List<String> mCompanies;
+    private JSONArray mJSONArraySingleGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -475,6 +478,7 @@ public class GameDbLauncher extends AppCompatActivity {
             @Override
             public void onResponse(JSONArray response) {
                 ObjectMapper mapper = new ObjectMapper();
+                mJSONArraySingleGame = response;
                 for(int i = 0; i < response.length(); i++){
                     try {
                         Log.d("Single", i + "");
@@ -503,6 +507,10 @@ public class GameDbLauncher extends AppCompatActivity {
         req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
         return igdbGame;
+    }
+
+    public JSONArray getJSONArraySingleGame(){
+        return mJSONArraySingleGame;
     }
 
     public void resolveCompanyNameFromAPI(int dev, int pub){

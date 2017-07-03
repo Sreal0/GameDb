@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +40,7 @@ import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbCompany;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
 import gamedb.abelsantos.com.gamedb.R;
+import gamedb.abelsantos.com.gamedb.RecyclerView.GameDetailsAdapter;
 
 /**
  * Created by Abel Cruz dos Santos on 27.06.2017.
@@ -47,6 +50,9 @@ public class GameDetailsFragment extends Fragment {
     public static final String TAG = "GameDetailsFragment";
     private static final String ARGS_GAME = "game";
     private static final String ARGS_COMPANIES = "companies";
+    private static final int TOP = 0;
+    private static final int DETAIL = 2;
+
     private int mID ;
     private ImageView mGameCover;
     private TextView mGameTitle;
@@ -59,6 +65,10 @@ public class GameDetailsFragment extends Fragment {
     private IgdbGame mIgdbGame;
     private List<String> mCompanies;
     private CoordinatorLayout mCoordinatorLayout;
+    private RecyclerView mRecyclerView;
+    private GameDetailsAdapter mGameDetailsAdapter;
+    private List<Integer> mItemsList = new ArrayList<>();
+    private JSONArray mJSONArray;
 
     public static GameDetailsFragment newInstance() {
         GameDetailsFragment fragment = new GameDetailsFragment();
@@ -80,24 +90,38 @@ public class GameDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_game_details, container, false);
 
+        //RV
+        mRecyclerView = (RecyclerView)view.findViewById(R.id.recyclerViewGameDetails);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
         sIgdbClientSingleton = IgdbClientSingleton.getInstance();
         mCoordinatorLayout = (CoordinatorLayout)view.findViewById(R.id.coordinator_layout_games_detail_fragment);
-        mGameDeveloper = (TextView)view.findViewById(R.id.txt_developer);
-        mGamePublisher = (TextView)view.findViewById(R.id.txt_game_publisher);
-        mGameCover = (ImageView)view.findViewById(R.id.imageView);
-        mGameTitle = (TextView)view.findViewById(R.id.txt_game_title);
-        mGameScore = (TextView)view.findViewById(R.id.txt_game_score);
-        mGameGenre = (TextView)view.findViewById(R.id.txt_game_genre);
-        mGameSummary =(TextView)view.findViewById(R.id.txt_summary);
         ((GameDbLauncher)getActivity()).changeToolbarSubtitleText("");
         mIgdbGame = ((GameDbLauncher)getActivity()).getIgdbGame();
         mCompanies = ((GameDbLauncher)getActivity()).getCompanies();
 
-        showGameDetails();
+        populateList();
+        initialiseAdapter();
         return view;
     }
 
-    public void showGameDetails(){
+    private void populateList(){
+        mItemsList = new ArrayList<>();
+        mJSONArray = ((GameDbLauncher)getActivity()).getJSONArraySingleGame();
+        mItemsList.add(TOP);
+        for (int i = 0; i < mJSONArray.length(); i++){
+            mItemsList.add(DETAIL);
+        }
+    }
+
+    private void initialiseAdapter(){
+        mGameDetailsAdapter = new GameDetailsAdapter(mIgdbGame, getContext(), mJSONArray, mItemsList);
+        mRecyclerView.setAdapter(mGameDetailsAdapter);
+        mGameDetailsAdapter.notifyDataSetChanged();
+    }
+
+    /*public void showGameDetails(){
         mGameTitle.setText(mIgdbGame.getName());
         int rat = ((int) mIgdbGame.getAggregated_rating());
         if(rat == 0){
@@ -130,5 +154,5 @@ public class GameDetailsFragment extends Fragment {
         mGameGenre.setText(((GameDbLauncher)getActivity()).resolveGenreNames(mIgdbGame.getGenre()));
         mGameDeveloper.setText(mCompanies.get(0));
         mGamePublisher.setText(mCompanies.get(1));
-    }
+    }*/
 }
