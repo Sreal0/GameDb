@@ -120,39 +120,5 @@ public class GameDetailsFragment extends Fragment {
         mRecyclerView.setAdapter(mGameDetailsAdapter);
         mGameDetailsAdapter.notifyDataSetChanged();
     }
-
-    /*public void showGameDetails(){
-        mGameTitle.setText(mIgdbGame.getName());
-        int rat = ((int) mIgdbGame.getAggregated_rating());
-        if(rat == 0){
-            mGameScore.setText("-");
-        }else{
-            mGameScore.setText(rat + "");
-        }
-        String protocol = "";
-        try{
-            protocol = sIgdbClientSingleton.getUrlCoverBig() +
-                    mIgdbGame.getIgdbGameCover().getCloudinaryId() + sIgdbClientSingleton.getImageFormatJpg();
-        }catch (NullPointerException e){
-            Log.d(TAG, e.toString());
-        }
-        if ( !protocol.equals("")){
-            Picasso.with(getContext()).
-                    load(protocol).
-                    error(R.drawable.ic_error).
-                    placeholder(R.drawable.ic_img_placeholder).
-                    into(mGameCover);
-        }else{
-            mGameCover.setImageResource(R.drawable.ic_error);
-        }
-        if(mIgdbGame.getSummary() != null){
-            mGameSummary.append(" " + mIgdbGame.getSummary());
-        }
-        else{
-            mGameSummary.append(" N/A");
-        }
-        mGameGenre.setText(((GameDbLauncher)getActivity()).resolveGenreNames(mIgdbGame.getGenre()));
-        mGameDeveloper.setText(mCompanies.get(0));
-        mGamePublisher.setText(mCompanies.get(1));
-    }*/
+    
 }

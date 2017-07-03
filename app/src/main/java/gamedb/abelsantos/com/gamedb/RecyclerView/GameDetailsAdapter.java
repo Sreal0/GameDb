@@ -50,9 +50,9 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        LayoutInflater inflater = LayoutInflater.from(mContext);
         sIgdbClientSingleton = IgdbClientSingleton.getInstance();
-
+        Log.d(TAG, "Oncreate called");
 
         switch (viewType){
             case TOP:
@@ -136,7 +136,7 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mListItems.size();
     }
 
     public class TopHolder extends RecyclerView.ViewHolder{
