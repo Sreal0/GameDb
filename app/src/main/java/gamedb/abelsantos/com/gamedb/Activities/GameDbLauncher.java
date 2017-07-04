@@ -480,13 +480,9 @@ public class GameDbLauncher extends AppCompatActivity {
             @Override
             public void onResponse(JSONArray response) {
                 ObjectMapper mapper = new ObjectMapper();
-                mJSONArraySingleGame = response;
                 for(int i = 0; i < response.length(); i++){
                     try {
-                        Log.d("Single", i + "");
                         JSONObject object = response.getJSONObject(i);
-                        String key = object.keys().next();
-                        mItemsHashMap.put(key, object.getString(key));
                         String data = object.toString();
                         IgdbGame game = mapper.readValue(data, IgdbGame.class);
                         igdbGame = game;

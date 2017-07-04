@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import gamedb.abelsantos.com.gamedb.Database.GameDetailsPair;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
 import gamedb.abelsantos.com.gamedb.R;
@@ -39,15 +40,13 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private IgdbClientSingleton sIgdbClientSingleton;
     private Context mContext;
     private List<Integer> mListItems;
-    private JSONArray mJSONArray;
-    private HashMap<String, String > mStringStringHashMap;
+    private List<GameDetailsPair> mGameDetailsPairs;
 
-    public GameDetailsAdapter(IgdbGame game, Context context, JSONArray array, List<Integer> list, HashMap<String, String > items) {
+    public GameDetailsAdapter(IgdbGame game, Context context, List<Integer> list, List<GameDetailsPair> gameDetailsPairs ) {
         mIgdbGame = game;
         mContext = context;
-        mJSONArray = array;
         mListItems = list;
-        mStringStringHashMap = items;
+        mGameDetailsPairs = gameDetailsPairs;
     }
 
     @Override
@@ -55,16 +54,16 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(mContext);
         sIgdbClientSingleton = IgdbClientSingleton.getInstance();
-        Log.d(TAG, "Oncreate called");
-
         switch (viewType){
             case TOP:
                 View viewTop = inflater.inflate(R.layout.list_view_game_detail_header, parent, false);
                 viewHolder = new TopHolder(viewTop);
+                Log.d("Top", "Top");
                 break;
             case DETAIL:
                 View viewDetail = inflater.inflate(R.layout.list_view_game_info_item, parent, false);
                 viewHolder = new DetailsHolder(viewDetail);
+                Log.d("Detail", "detail");
                 break;
             default:
                 Log.d("GameDetailHolder", "nothing");
@@ -91,19 +90,13 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public void configureDetailsHolder(int position, DetailsHolder detailsHolder){
-        try {
-            JSONObject object = mJSONArray.getJSONObject(position);
-            String key = object.keys().next();
-            detailsHolder.getTitle().setText(key);
-            detailsHolder.getDetails().setText(object.getString(key));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+    private void configureDetailsHolder(int position, DetailsHolder detailsHolder){
+        Log.d(TAG, "Position confi detal " + position + "");
+        detailsHolder.getTitle().setText(mGameDetailsPairs.get(position).getTitle());
+        detailsHolder.getDetails().setText(mGameDetailsPairs.get(position).getDetail());
     }
 
-    public void configureTopHolder(TopHolder topHolder){
+    private void configureTopHolder(TopHolder topHolder){
         String protocol = "";
         try{
             protocol = sIgdbClientSingleton.getUrlCoverBig() +
@@ -111,7 +104,6 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }catch (NullPointerException e){
             Log.d(TAG, e.toString());
         }
-
         if ( !protocol.equals("")){
             Picasso.with(mContext).
                     load(protocol).
@@ -128,8 +120,8 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }else{
             topHolder.getGameScore().setText(rat + "");
         }
-
     }
+
     @Override
     public int getItemViewType(int position){
         return mListItems.get(position);
@@ -140,19 +132,19 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return mListItems.size();
     }
 
-    public class TopHolder extends RecyclerView.ViewHolder{
+    private class TopHolder extends RecyclerView.ViewHolder{
         private TextView mGameTitle;
         private TextView mGameScore;
         private ImageView mGameCover;
 
-        public TopHolder(View itemView) {
+        private TopHolder(View itemView) {
             super(itemView);
             mGameCover = (ImageView)itemView.findViewById(R.id.imageView);
             mGameTitle = (TextView)itemView.findViewById(R.id.txt_game_title);
             mGameScore = (TextView)itemView.findViewById(R.id.txt_game_score);
         }
 
-        public TextView getGameTitle() {
+        private TextView getGameTitle() {
             return mGameTitle;
         }
 
@@ -160,7 +152,7 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mGameTitle = gameTitle;
         }
 
-        public TextView getGameScore() {
+        private TextView getGameScore() {
             return mGameScore;
         }
 
@@ -168,7 +160,7 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mGameScore = gameScore;
         }
 
-        public ImageView getGameCover() {
+        private ImageView getGameCover() {
             return mGameCover;
         }
 
@@ -183,7 +175,7 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public DetailsHolder(View itemView) {
             super(itemView);
-            mTitle = (TextView)itemView.findViewById(R.id.txt_game_title);
+            mTitle = (TextView)itemView.findViewById(R.id.txt_game_detail_title);
             mDetails = (TextView)itemView.findViewById(R.id.txt_game_detail_content);
         }
 

@@ -31,12 +31,15 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
+import gamedb.abelsantos.com.gamedb.Database.GameDetailsPair;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbCompany;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
@@ -54,14 +57,6 @@ public class GameDetailsFragment extends Fragment {
     private static final int TOP = 0;
     private static final int DETAIL = 2;
 
-    private int mID ;
-    private ImageView mGameCover;
-    private TextView mGameTitle;
-    private TextView mGameScore;
-    private TextView mGameDeveloper;
-    private TextView mGamePublisher;
-    private TextView mGameGenre;
-    private TextView mGameSummary;
     private IgdbClientSingleton sIgdbClientSingleton;
     private IgdbGame mIgdbGame;
     private List<String> mCompanies;
@@ -69,8 +64,7 @@ public class GameDetailsFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private GameDetailsAdapter mGameDetailsAdapter;
     private List<Integer> mItemsList = new ArrayList<>();
-    private JSONArray mJSONArray;
-    private HashMap<String, String > mStringStringHashMap;
+    private List<GameDetailsPair> mGameDetailsPairs;
 
     public static GameDetailsFragment newInstance() {
         GameDetailsFragment fragment = new GameDetailsFragment();
@@ -102,28 +96,58 @@ public class GameDetailsFragment extends Fragment {
         ((GameDbLauncher)getActivity()).changeToolbarSubtitleText("");
         mIgdbGame = ((GameDbLauncher)getActivity()).getIgdbGame();
         mCompanies = ((GameDbLauncher)getActivity()).getCompanies();
+        mGameDetailsPairs = new ArrayList<>();
 
-        populateList();
-        initialiseAdapter();
+        resolveGame();
+
         return view;
     }
 
-    private void populateList(){
+
+    private void resolveGame(){
+        GameDetailsPair pair = new GameDetailsPair();
         mItemsList = new ArrayList<>();
-        mJSONArray = ((GameDbLauncher)getActivity()).getJSONArraySingleGame();
-
         mItemsList.add(TOP);
-        for (int i = 0; i < mJSONArray.length(); i++){
-            mItemsList.add(DETAIL);
-        }
 
-        mStringStringHashMap = ((GameDbLauncher)getActivity()).getItemsHashMap();
+        if (mIgdbGame != null){
+            pair.setTitle("NotUsable");
+            pair.setDetail("Something went wrong if this is seen");
+            mGameDetailsPairs.add(pair);
+            pair = new GameDetailsPair();
+            pair.setTitle("Genre");
+            pair.setDetail(((GameDbLauncher)getActivity()).resolveGenreNames(mIgdbGame.getGenre()));
+            mItemsList.add(DETAIL);
+            mGameDetailsPairs.add(pair);
+            pair = new GameDetailsPair();
+            pair.setTitle("Release date");
+            String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date(mIgdbGame.getReleaseDate()));
+            pair.setDetail(date);
+            mItemsList.add(DETAIL);
+            mGameDetailsPairs.add(pair);
+            pair = new GameDetailsPair();
+            pair.setTitle("Developer");
+            pair.setDetail(mCompanies.get(0));
+            mItemsList.add(DETAIL);
+            mGameDetailsPairs.add(pair);
+            pair = new GameDetailsPair();
+            pair.setTitle("Publisher");
+            pair.setDetail(mCompanies.get(1));
+            mItemsList.add(DETAIL);
+            mGameDetailsPairs.add(pair);
+            pair = new GameDetailsPair();
+            pair.setTitle("Summary");
+            pair.setDetail(mIgdbGame.getSummary());
+            mItemsList.add(DETAIL);
+            mGameDetailsPairs.add(pair);
+            pair = new GameDetailsPair();
+            Log.d("Sizes", mItemsList.size() + " " + mGameDetailsPairs.size() + "");
+        }
+        initialiseAdapter();
     }
 
     private void initialiseAdapter(){
-        mGameDetailsAdapter = new GameDetailsAdapter(mIgdbGame, getContext(), mJSONArray, mItemsList, mStringStringHashMap);
+        mGameDetailsAdapter = new GameDetailsAdapter(mIgdbGame, getContext(), mItemsList, mGameDetailsPairs);
         mRecyclerView.setAdapter(mGameDetailsAdapter);
         mGameDetailsAdapter.notifyDataSetChanged();
     }
-
 }
