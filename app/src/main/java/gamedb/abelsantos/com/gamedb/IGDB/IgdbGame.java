@@ -34,6 +34,7 @@ public class IgdbGame implements Serializable{
     private IgdbReleaseDates[] mIgdbReleaseDates;
     //Both publisher and developer are returned as companies
     private IgdbCompany[] mIgdbCompanies;
+    private IgdbGameMode[] mIgdbGameModes;
 
     public IgdbGameCover getIgdbGameCover() {
         return mIgdbGameCover;
@@ -204,5 +205,13 @@ public class IgdbGame implements Serializable{
     @JsonSetter("summary")
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public IgdbGameMode[] getIgdbGameModes() {
+        return mIgdbGameModes;
+    }
+    @JsonSetter("game_modes")
+    public void setIgdbGameModes(IgdbGameMode[] igdbGameModes) {
+        mIgdbGameModes = igdbGameModes;
     }
 }

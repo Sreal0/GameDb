@@ -116,7 +116,7 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         topHolder.getGameTitle().setText(mIgdbGame.getName());
         int rat = ((int) mIgdbGame.getAggregated_rating());
         if(rat == 0){
-            topHolder.getGameScore().setText("-");
+            topHolder.getGameScore().setText("N/A");
         }else{
             topHolder.getGameScore().setText(rat + "");
         }

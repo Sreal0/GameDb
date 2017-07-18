@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -24,11 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +37,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +70,7 @@ public class GameDbLauncher extends AppCompatActivity {
     private Realm mRealm;
     private RealmResults<Game> mGameRealmQuery;
     private IgdbClientSingleton sIgdbClientSingleton;
-    private IgdbGame igdbGame;
+    private IgdbGame mIgdbGame;
     private IgdbCompany mIgdbCompany;
     private List<String> mCompanies;
     private JSONArray mJSONArraySingleGame;
@@ -485,8 +481,9 @@ public class GameDbLauncher extends AppCompatActivity {
                         JSONObject object = response.getJSONObject(i);
                         String data = object.toString();
                         IgdbGame game = mapper.readValue(data, IgdbGame.class);
-                        igdbGame = game;
-                        resolveCompanyNameFromAPI(igdbGame.getDevelopers()[0], igdbGame.getPublishers()[0]);
+                        mIgdbGame = game;
+                        resolveCompanyNameFromAPI();
+
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
                     } catch (JsonParseException e) {
@@ -506,7 +503,7 @@ public class GameDbLauncher extends AppCompatActivity {
         });
         req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
-        return igdbGame;
+        return mIgdbGame;
     }
 
     public JSONArray getJSONArraySingleGame(){
@@ -517,56 +514,77 @@ public class GameDbLauncher extends AppCompatActivity {
         return mItemsHashMap;
     }
 
-    public void resolveCompanyNameFromAPI(int dev, int pub){
-        //One request, 2 objects: one dev and one pub.
-        String url = sIgdbClientSingleton.getCompanyNamesURL(dev, pub);
-        mCompanies = new ArrayList<>();
-        Log.d(TAG, url);
-        final JsonArrayRequest req = new JsonArrayRequest(
-                url, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                ObjectMapper mapper = new ObjectMapper();
-                for(int i = 0; i < response.length(); i++){
-                    try {
-                        JSONObject object = response.getJSONObject(i);
-                        String data = object.toString();
-                        mIgdbCompany = mapper.readValue(data, IgdbCompany.class);
-                        mCompanies.add(mIgdbCompany.getName());
-                    } catch (JSONException e) {
-                        Log.d(TAG, "JSONException: " + e);
-                    } catch (JsonParseException e) {
-                        Log.d(TAG, "JsonParseException: " + e);
-                    } catch (JsonMappingException e) {
-                        Log.d(TAG, "JsonMappingException: " + e);
-                    } catch (IOException e) {
-                        Log.d(TAG, "IOException: " + e);
+    //One request, 2 objects: one dev and one pub.
+    public void resolveCompanyNameFromAPI(){
+        String url = "";
+        /*Some new releases have no dev or pub
+        * If, then start fragment without any dev or pub*/
+        if (mIgdbGame.getDevelopers() == null) {
+            FragmentManager supportFragmentManager = getSupportFragmentManager();
+            Fragment gameDetails = supportFragmentManager.findFragmentByTag(GameDetailsFragment.TAG);
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame_layout, GameDetailsFragment.newInstance(), GameDetailsFragment.TAG)
+                    .addToBackStack(GameDetailsFragment.TAG)
+                    .commit();
+        }else{
+            url = sIgdbClientSingleton.getCompanyNamesURL(mIgdbGame.getDevelopers()[0], mIgdbGame.getPublishers()[0]);
+        }
+            mCompanies = new ArrayList<>();
+            Log.d("resolveCompanyName", url);
+            final JsonArrayRequest req = new JsonArrayRequest(
+                    url, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+
+                    ObjectMapper mapper = new ObjectMapper();
+                    for (int i = 0; i < response.length(); i++) {
+                        try {
+                            JSONObject object = response.getJSONObject(i);
+                            String data = object.toString();
+                            mIgdbCompany = mapper.readValue(data, IgdbCompany.class);
+                            mCompanies.add(mIgdbCompany.getName());
+                        } catch (JSONException e) {
+                            Log.d(TAG, "JSONException: " + e);
+                        } catch (JsonParseException e) {
+                            Log.d(TAG, "JsonParseException: " + e);
+                        } catch (JsonMappingException e) {
+                            Log.d(TAG, "JsonMappingException: " + e);
+                        } catch (IOException e) {
+                            Log.d(TAG, "IOException: " + e);
+                        }
                     }
+                    //Call fragment here
+                    FragmentManager supportFragmentManager = getSupportFragmentManager();
+                    Fragment gameDetails = supportFragmentManager.findFragmentByTag(GameDetailsFragment.TAG);
+                    supportFragmentManager.beginTransaction()
+                            .replace(R.id.frame_layout, GameDetailsFragment.newInstance(), GameDetailsFragment.TAG)
+                            .addToBackStack(GameDetailsFragment.TAG)
+                            .commit();
                 }
-                //Call fragment here
-                FragmentManager supportFragmentManager = getSupportFragmentManager();
-                Fragment gameDetails = supportFragmentManager.findFragmentByTag(GameDetailsFragment.TAG);
-                supportFragmentManager.beginTransaction()
-                        .replace(R.id.frame_layout, GameDetailsFragment.newInstance(), GameDetailsFragment.TAG)
-                        .addToBackStack(GameDetailsFragment.TAG)
-                        .commit();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, error.toString());
-            }
-        });
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d(TAG, error.toString());
+                }
+            });
         req.setShouldCache(true);
         sIgdbClientSingleton.addToRequestQueue(req);
     }
 
     public IgdbGame getIgdbGame(){
-        return igdbGame;
+        return mIgdbGame;
     }
 
     public List<String> getCompanies(){
-        return mCompanies;
+        if (mCompanies.size() > 0){
+            return mCompanies;
+        }
+        else{
+            List<String> noCompanies = new ArrayList<>();
+            noCompanies.add("N/A");
+            noCompanies.add("None");
+            return noCompanies;
+        }
     }
 
     public void showAddGameDialog(final IgdbGame game){
