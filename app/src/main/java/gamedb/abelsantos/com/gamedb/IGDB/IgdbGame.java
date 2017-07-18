@@ -1,7 +1,6 @@
 package gamedb.abelsantos.com.gamedb.IGDB;
 
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.fasterxml.jackson.annotation.JsonSetter;
 
@@ -37,6 +36,7 @@ public class IgdbGame implements Serializable{
     //Both publisher and developer are returned as companies
     private IgdbCompany[] mIgdbCompanies;
     private int[] mIgdbGameModes;
+    private IgdbWebsite[] mIgbdWebsites;
 
     public IgdbGameCover getIgdbGameCover() {
         return mIgdbGameCover;
@@ -222,4 +222,13 @@ public class IgdbGame implements Serializable{
     public void setIgdbGameModes(int[] igdbGameModes) {
         mIgdbGameModes = igdbGameModes;
     }
+
+    public IgdbWebsite[] getIgbdWebsites() {
+        return mIgbdWebsites;
+    }
+    @JsonSetter("Website")
+    public void setIgbdWebsites(IgdbWebsite[] igbdWebsites) {
+        mIgbdWebsites = igbdWebsites;
+    }
+
 }

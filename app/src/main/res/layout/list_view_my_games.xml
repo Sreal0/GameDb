@@ -10,7 +10,7 @@
 
     <!-- Thumbnail Image -->
     <ImageView
-        android:id="@+id/thumbnail"
+        android:category="@+category/thumbnail"
         android:layout_width="75dp"
         android:layout_height="100dp"
         android:layout_alignParentLeft="true"
@@ -29,50 +29,50 @@
         android:textSize="@dimen/game_title_text"
         android:textColor="@color/colorPrimaryDark"
         android:text="@string/game_title"
-        android:id="@+id/txt_gameTitle"
+        android:category="@+category/txt_gameTitle"
         android:ellipsize="end"
         android:maxLines="1"
         android:layout_marginLeft="3dp"
         android:layout_marginStart="3dp"
         android:layout_marginTop="2dp"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:layout_toEndOf="@+id/thumbnail"
+        android:layout_toRightOf="@+category/thumbnail"
+        android:layout_toEndOf="@+category/thumbnail"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_game_genre"
+        android:category="@+category/txt_game_genre"
         android:text="@string/game_genre"
         android:textColor="@color/colorBlack"
         android:textSize="13sp"
         android:layout_marginLeft="3dp"
-        android:layout_below="@+id/txt_gameTitle"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:layout_toEndOf="@+id/thumbnail"/>
+        android:layout_below="@+category/txt_gameTitle"
+        android:layout_toRightOf="@+category/thumbnail"
+        android:layout_toEndOf="@+category/thumbnail"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_game_release_date"
+        android:category="@+category/txt_game_release_date"
         android:text="@string/game_release_date"
         android:textColor="@color/colorBlack"
         android:textSize="13sp"
         android:layout_marginLeft="3dp"
-        android:layout_below="@+id/txt_game_genre"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:layout_toEndOf="@+id/thumbnail"/>
+        android:layout_below="@+category/txt_game_genre"
+        android:layout_toRightOf="@+category/thumbnail"
+        android:layout_toEndOf="@+category/thumbnail"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_game_platform"
+        android:category="@+category/txt_game_platform"
         android:text="@string/game_platform"
         android:textSize="13sp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/colorBlack"
-        android:layout_below="@+id/txt_game_release_date"
-        android:layout_alignLeft="@+id/txt_game_genre"
-        android:layout_alignStart="@+id/txt_game_genre"/>
+        android:layout_below="@+category/txt_game_release_date"
+        android:layout_alignLeft="@+category/txt_game_genre"
+        android:layout_alignStart="@+category/txt_game_genre"/>
 
     <LinearLayout
         android:layout_width="70dp"
@@ -83,7 +83,7 @@
         android:weightSum="1"
         >
         <TextView
-            android:id="@+id/txt_game_rating"
+            android:category="@+category/txt_game_rating"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:textColor="@color/colorBlack"
@@ -96,7 +96,7 @@
     <ImageButton
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:id="@+id/button_remove_game"
+        android:category="@+category/button_remove_game"
         android:src="@mipmap/ic_remove_game"
         android:layout_gravity="center|bottom"/>
     </LinearLayout>

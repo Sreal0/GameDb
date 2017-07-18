@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +38,7 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static final int TOP = 0;
     private static final int DETAIL = 2;
+    private static final int WEBSITE = 4;
     private IgdbGame mIgdbGame;
     private IgdbClientSingleton sIgdbClientSingleton;
     private Context mContext;
@@ -65,6 +68,9 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 viewHolder = new DetailsHolder(viewDetail);
                 Log.d("Detail", "detail");
                 break;
+            case WEBSITE:
+                View viewWebsite = inflater.inflate(R.layout.list_view_game_info_web_links, parent, false);
+                viewHolder = new WebHolder(viewWebsite);
             default:
                 Log.d("GameDetailHolder", "nothing");
                 return null;
@@ -87,6 +93,8 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 detailsHolder = (DetailsHolder)holder;
                 configureDetailsHolder(position, detailsHolder);
                 break;
+            case WEBSITE:
+
         }
     }
 
@@ -193,6 +201,23 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public void setDetails(TextView details) {
             mDetails = details;
+        }
+    }
+
+    public class WebHolder extends RecyclerView.ViewHolder{
+        private TextView mLink;
+
+        public WebHolder(View itemView){
+            super(itemView);
+            mLink = (TextView)itemView.findViewById(R.id.txt_link);
+        }
+
+        public TextView getLink() {
+            return mLink;
+        }
+
+        public void setLink(TextView link) {
+            mLink = link;
         }
     }
 

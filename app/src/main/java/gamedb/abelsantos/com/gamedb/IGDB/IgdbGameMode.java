@@ -13,7 +13,6 @@ public class IgdbGameMode {
 
     private int mId;
     private String mModeName;
-    private List<String> mGameModes;
 
     public IgdbGameMode() {
     }

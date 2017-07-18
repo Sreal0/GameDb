@@ -57,6 +57,7 @@ public class GameDetailsFragment extends Fragment {
     private static final String ARGS_COMPANIES = "companies";
     private static final int TOP = 0;
     private static final int DETAIL = 2;
+    private static final int WEBSITE = 4;
 
     private IgdbClientSingleton sIgdbClientSingleton;
     private IgdbGame mIgdbGame;
@@ -157,8 +158,16 @@ public class GameDetailsFragment extends Fragment {
             mItemsList.add(DETAIL);
             mGameDetailsPairs.add(pair);
             pair = new GameDetailsPair();
-
-            Log.d("Sizes", mItemsList.size() + " " + mGameDetailsPairs.size() + "");
+            //Website
+            if (mIgdbGame.getIgbdWebsites() != null){
+                for(int i = 0; i < mIgdbGame.getIgbdWebsites().length; i++){
+                    pair.setTitle("Website");
+                    pair.setDetail("Has website");
+                    mItemsList.add(WEBSITE);
+                    mGameDetailsPairs.add(pair);
+                }
+            }
+            pair = new GameDetailsPair();
         }
         initialiseAdapter();
     }
