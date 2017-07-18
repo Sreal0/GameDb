@@ -6,6 +6,8 @@ import android.widget.ImageView;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -34,7 +36,7 @@ public class IgdbGame implements Serializable{
     private IgdbReleaseDates[] mIgdbReleaseDates;
     //Both publisher and developer are returned as companies
     private IgdbCompany[] mIgdbCompanies;
-    private IgdbGameMode[] mIgdbGameModes;
+    private int[] mIgdbGameModes;
 
     public IgdbGameCover getIgdbGameCover() {
         return mIgdbGameCover;
@@ -207,11 +209,17 @@ public class IgdbGame implements Serializable{
         this.summary = summary;
     }
 
-    public IgdbGameMode[] getIgdbGameModes() {
-        return mIgdbGameModes;
+    public List<String> getIgdbGameModes() {
+        List<String> modes = new ArrayList<>();
+        IgdbGameMode gamemode = new IgdbGameMode();
+        for (int i = 0; i < mIgdbGameModes.length; i++){
+            int id = mIgdbGameModes[i];
+            modes.add(gamemode.gameModeResolver(id));
+        }
+        return modes;
     }
     @JsonSetter("game_modes")
-    public void setIgdbGameModes(IgdbGameMode[] igdbGameModes) {
+    public void setIgdbGameModes(int[] igdbGameModes) {
         mIgdbGameModes = igdbGameModes;
     }
 }

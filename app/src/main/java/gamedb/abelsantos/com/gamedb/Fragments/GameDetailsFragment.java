@@ -43,6 +43,7 @@ import gamedb.abelsantos.com.gamedb.Database.GameDetailsPair;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbCompany;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
+import gamedb.abelsantos.com.gamedb.IGDB.IgdbGameMode;
 import gamedb.abelsantos.com.gamedb.R;
 import gamedb.abelsantos.com.gamedb.RecyclerView.GameDetailsAdapter;
 
@@ -110,36 +111,53 @@ public class GameDetailsFragment extends Fragment {
         mItemsList.add(TOP);
 
         if (mIgdbGame != null){
+            //Header
             pair.setTitle("NotUsable");
             pair.setDetail("Something went wrong if this is seen");
             mGameDetailsPairs.add(pair);
             pair = new GameDetailsPair();
+            //Genre
             pair.setTitle("Genre");
             pair.setDetail(((GameDbLauncher)getActivity()).resolveGenreNames(mIgdbGame.getGenre()));
             mItemsList.add(DETAIL);
             mGameDetailsPairs.add(pair);
             pair = new GameDetailsPair();
+            //Game mode
+            pair.setTitle("Game modes:");
+            List<String>  igdbGameModes = mIgdbGame.getIgdbGameModes();
+            String modes = igdbGameModes.toString();
+            String cleanedUp = modes.replace("[", "");
+            cleanedUp = cleanedUp.replace("]", "");
+            pair.setDetail(cleanedUp);
+            mItemsList.add(DETAIL);
+            mGameDetailsPairs.add(pair);
+            pair = new GameDetailsPair();
+            //Release Date
             pair.setTitle("Release date");
             String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date(mIgdbGame.getReleaseDate()));
             pair.setDetail(date);
             mItemsList.add(DETAIL);
             mGameDetailsPairs.add(pair);
             pair = new GameDetailsPair();
+            //Dev
             pair.setTitle("Developer");
             pair.setDetail(mCompanies.get(0));
             mItemsList.add(DETAIL);
             mGameDetailsPairs.add(pair);
             pair = new GameDetailsPair();
+            //Pub
             pair.setTitle("Publisher");
             pair.setDetail(mCompanies.get(1));
             mItemsList.add(DETAIL);
             mGameDetailsPairs.add(pair);
             pair = new GameDetailsPair();
+            //Summary
             pair.setTitle("Summary");
             pair.setDetail(mIgdbGame.getSummary());
             mItemsList.add(DETAIL);
             mGameDetailsPairs.add(pair);
             pair = new GameDetailsPair();
+
             Log.d("Sizes", mItemsList.size() + " " + mGameDetailsPairs.size() + "");
         }
         initialiseAdapter();

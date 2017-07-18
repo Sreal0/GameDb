@@ -1,5 +1,7 @@
 package gamedb.abelsantos.com.gamedb.IGDB;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +15,13 @@ public class IgdbGameMode {
     private String mModeName;
     private List<String> mGameModes;
 
+    public IgdbGameMode() {
+    }
 
     public int getId() {
         return mId;
     }
-
+    @JsonSetter("id")
     public void setId(int id) {
         mId = id;
     }
@@ -30,29 +34,28 @@ public class IgdbGameMode {
         mModeName = modeName;
     }
 
-    public List<String> gameModeResolver(int[] ids){
-        mGameModes = new ArrayList<>();
-        for (int id : ids) {
-            switch (id){
+    public String gameModeResolver(int ids){
+        String mode = "";
+            switch (ids){
                 case 1:
-                    mGameModes.add("Single player");
+                    mode = "Single player";
                     break;
                 case 2:
-                    mGameModes.add("Multiplayer");
+                    mode = "Multiplayer";
                     break;
                 case 3:
-                    mGameModes.add("Co-op");
+                    mode = "Co-op";
                     break;
                 case 4:
-                    mGameModes.add("Split screen");
+                    mode = "Split screen";
                     break;
                 case 5:
-                    mGameModes.add("Massively Multiplayer Online (MMO)");
+                    mode =  "Massively Multiplayer Online (MMO)";
                     break;
                 default:
                     break;
+
             }
-        }
-        return mGameModes;
+            return mode;
     }
 }
