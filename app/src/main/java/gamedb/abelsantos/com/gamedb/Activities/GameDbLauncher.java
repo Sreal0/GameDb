@@ -97,7 +97,7 @@ public class GameDbLauncher extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 final FragmentManager supportFragmentManager = getSupportFragmentManager();
                 switch (item.getItemId()) {
-                    case R.id.action_mygames:
+                    case R.category.action_mygames:
                         final Fragment myGamesFragment = supportFragmentManager.findFragmentByTag(MyGamesFragment.TAG);
                         if (myGamesFragment == null) {
                             supportFragmentManager.beginTransaction()

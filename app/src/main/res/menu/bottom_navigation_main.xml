@@ -4,26 +4,26 @@
 
 
     <item
-        android:category="@+category/action_mygames"
+        android:id="@+id/action_mygames"
         android:enabled="true"
         android:icon="@drawable/database_img_button_64x64"
         android:title="@string/text_my_games"
         app:showAsAction="ifRoom" />
     <item
-        android:category="@+category/action_games"
+        android:id="@+id/action_games"
         android:enabled="true"
         android:icon="@drawable/games_64x64"
         android:title="@string/text_games"
         app:showAsAction="ifRoom" />
 
     <item
-        android:category="@+category/action_search"
+        android:id="@+id/action_search"
         android:enabled="true"
         android:icon="@drawable/search_64x64"
         android:title="@string/text_search"
         app:showAsAction="ifRoom" />
     <item
-        android:category="@+category/action_wishlist"
+        android:id="@+id/action_wishlist"
         android:enabled="true"
         android:icon="@drawable/star64x64"
         android:title="@string/text_wishlist"

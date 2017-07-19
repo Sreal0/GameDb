@@ -6,7 +6,7 @@
                 android:paddingBottom="10dp">
 
     <ImageView
-        android:category="@+category/icon"
+        android:id="@+id/icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/app_icon"
@@ -18,7 +18,7 @@
         />
 
     <TextView
-        android:category="@+category/title"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
@@ -27,15 +27,15 @@
         android:text="Line 1"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+category/icon"
-        android:layout_toEndOf="@+category/icon" />
+        android:layout_toRightOf="@+id/icon"
+        android:layout_toEndOf="@+id/icon" />
 
-    <TextView android:category="@+category/subTitle"
+    <TextView android:id="@+id/subTitle"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="Line 2"
-              android:layout_toRightOf="@+category/icon"
-              android:layout_below="@+category/title"
+              android:layout_toRightOf="@+id/icon"
+              android:layout_below="@+id/title"
               android:layout_alignParentRight="true"
               android:layout_alignParentEnd="true" />
 

@@ -32,5 +32,51 @@ public class IgdbWebsite {
         mUrl = url;
     }
 
-    
+    public String resolveWebsiteCategoryToName(int category){
+        String name;
+        switch (category){
+            case 1:
+                name = "Official";
+                break;
+            case 2:
+                name = "Wikia";
+                break;
+            case 3:
+                name = "Wikipedia";
+                break;
+            case 4:
+                name = "Facebook";
+                break;
+            case 5:
+                name = "Twitter";
+                break;
+            case 6:
+                name = "Twitch";
+                break;
+            case 8:
+                name = "Instagram";
+                break;
+            case 9:
+                name = "Youtube";
+                break;
+            case 10:
+                name = "Iphone";
+                break;
+            case 11:
+                name = "Ipad";
+                break;
+            case 12:
+                name = "Android";
+                break;
+            case 13:
+                name = "Steam";
+                break;
+            default:
+                name = "No Websites";
+                break;
+        }
+        return name;
+    }
+
+
 }

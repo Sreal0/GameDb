@@ -2,46 +2,46 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:category="@+category/action_sort"
+        android:id="@+id/action_sort"
         android:icon="@drawable/ic_sort"
         app:showAsAction="always"
         android:title="@string/title_action_sort"
         >
         <menu>
             <item
-                android:category="@+category/menuSortRating"
+                android:id="@+id/menuSortRating"
                 android:title="@string/sort_rating" />
             <item
-                android:category="@+category/menuSortAggregatedRating"
+                android:id="@+id/menuSortAggregatedRating"
                 android:title="@string/sort_aggregated_rating" />
             <item
-                android:category="@+category/menuSortReleaseDate"
+                android:id="@+id/menuSortReleaseDate"
                 android:title="@string/sort_release_date_newest" />
             <item
-                android:category="@+category/menuSortPopularity"
+                android:id="@+id/menuSortPopularity"
                 android:title="@string/sort_popularity"/>
         </menu>
     </item>
     <item
-        android:category="@+category/action_settings"
+        android:id="@+id/action_settings"
         app:showAsAction="always"
         android:icon="@drawable/ic_overflow"
         android:title="@string/title_action_overflow">
         <menu>
             <item
-                android:category="@+category/menuGetNewestGames"
+                android:id="@+id/menuGetNewestGames"
                 android:title="@string/get_newest_releases" />
             <item
-                android:category="@+category/menuGetHighestRatings6Months"
+                android:id="@+id/menuGetHighestRatings6Months"
                 android:title="@string/get_highest_rating_6_months" />
             <item
-                android:category="@+category/menuGetHighestRatings12Months"
+                android:id="@+id/menuGetHighestRatings12Months"
                 android:title="@string/get_highest_rating_12_months" />
             <item
-                android:category="@+category/menuGetHighestRatingsAllTime"
+                android:id="@+id/menuGetHighestRatingsAllTime"
                 android:title="@string/get_highest_rating_all_time" />
             <item
-                android:category="@+category/menuGetPopularGames"
+                android:id="@+id/menuGetPopularGames"
                 android:title="@string/get_popular_games" />
         </menu>
     </item>
