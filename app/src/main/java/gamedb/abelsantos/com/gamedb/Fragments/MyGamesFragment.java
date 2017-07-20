@@ -32,11 +32,12 @@ public class MyGamesFragment extends Fragment{
     private static final String URL_COVER_BIG = "https://images.igdb.com/igdb/image/upload/t_cover_big/";
     private static final String IMAGE_FORMAT_PNG = ".png";
     private static final String IMAGE_FORMAT_JPG = ".jpg";
+    private static final int TAG_DATABASE = 0;
+    private static final int TAG_WISHLIST = 1;
+
 
     private RecyclerView mRecyclerView;
     private MyGamesAdapter mMyGamesAdapter;
-    private static final int TAG_DATABASE = 1;
-    private static final int TAG_WISHLIST = 2;
     private List<Game> mGames;
     private ImageView mThumbnail;
     private TextView mGameName;
@@ -65,7 +66,7 @@ public class MyGamesFragment extends Fragment{
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        mGames = ((GameDbLauncher) getActivity()).getMyGames();
+        mGames = ((GameDbLauncher) getActivity()).getGamesFromRealm(TAG_DATABASE);
         setupAdapter();
         ((GameDbLauncher)getActivity()).changeToolbarSubtitleText("");
         return view;
@@ -86,9 +87,9 @@ public class MyGamesFragment extends Fragment{
 
         public MyGamesHolder(View itemView) {
             super(itemView);
-            mGameName = (TextView)itemView.findViewById(R.id.txt_gameTitle);
-            mScore = (TextView)itemView.findViewById(R.id.txt_game_rating);
-            mThumbnail = (ImageView)itemView.findViewById(R.id.thumbnail);
+            mGameName = (TextView)itemView.findViewById(R.id.txt_gameTitle_wishlist);
+            mScore = (TextView)itemView.findViewById(R.id.txt_game_rating_wishlist);
+            mThumbnail = (ImageView)itemView.findViewById(R.id.thumbnail_wishlist);
             mRemoveGame = (ImageButton)itemView.findViewById(R.id.button_remove_game);
         }
 
@@ -111,14 +112,13 @@ public class MyGamesFragment extends Fragment{
             }else{
                 mThumbnail.setImageResource(R.drawable.ic_error);
             }
-            int flag = 0;
             mRemoveGame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //Removes the game from the database, reloads the games list and
                     //notifies the recycler view about the changes.
                     ((GameDbLauncher) getActivity()).removeGameFromDatabase(game.getId());
-                    mGames = ((GameDbLauncher)getActivity()).getMyGames();
+                    mGames = ((GameDbLauncher)getActivity()).getGamesFromRealm(TAG_DATABASE);
                     mMyGamesAdapter.notifyItemRemoved(getAdapterPosition());
                     mMyGamesAdapter.notifyItemRangeChanged(getAdapterPosition(), mGames.size());
                     /*Snackbar allows the User to UNDO the delete action.*/

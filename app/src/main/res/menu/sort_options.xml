@@ -10,16 +10,20 @@
         <menu>
             <item
                 android:id="@+id/menuSortRating"
-                android:key="@string/sort_rating" />
+                android:key="@string/sort_rating"
+                android:title="@string/sort_rating"/>
             <item
                 android:id="@+id/menuSortAggregatedRating"
-                android:key="@string/sort_aggregated_rating" />
+                android:key="@string/sort_aggregated_rating"
+                android:title="@string/sort_aggregated_rating"/>
             <item
                 android:id="@+id/menuSortReleaseDate"
-                android:key="@string/sort_release_date_newest" />
+                android:key="@string/sort_release_date_newest"
+                android:title="@string/sort_release_date_newest"/>
             <item
                 android:id="@+id/menuSortPopularity"
-                android:key="@string/sort_popularity"/>
+                android:key="@string/sort_popularity"
+                android:title="@string/sort_popularity"/>
         </menu>
     </item>
     <item
@@ -30,19 +34,24 @@
         <menu>
             <item
                 android:id="@+id/menuGetNewestGames"
-                android:key="@string/get_newest_releases" />
+                android:key="@string/get_newest_releases"
+                android:title="@string/get_newest_releases"/>
             <item
                 android:id="@+id/menuGetHighestRatings6Months"
-                android:key="@string/get_highest_rating_6_months" />
+                android:key="@string/get_highest_rating_6_months"
+                android:title="@string/get_highest_rating_6_months"/>
             <item
                 android:id="@+id/menuGetHighestRatings12Months"
-                android:key="@string/get_highest_rating_12_months" />
+                android:key="@string/get_highest_rating_12_months"
+                android:title="@string/get_highest_rating_12_months"/>
             <item
                 android:id="@+id/menuGetHighestRatingsAllTime"
-                android:key="@string/get_highest_rating_all_time" />
+                android:key="@string/get_highest_rating_all_time"
+                android:title="@string/get_highest_rating_all_time"/>
             <item
                 android:id="@+id/menuGetPopularGames"
-                android:key="@string/get_popular_games" />
+                android:key="@string/get_popular_games"
+                android:title="@string/get_popular_games"/>
         </menu>
     </item>
 </menu>

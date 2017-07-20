@@ -190,12 +190,12 @@ public class GamesFragment extends Fragment {
 
         private GameHolder(final View itemView) {
             super(itemView);
-            mGameAggregatedRating = (TextView)itemView.findViewById(R.id.txt_game_rating);
-            mGameTitle = (TextView) itemView.findViewById(R.id.txt_gameTitle);
-            mGameGenre = (TextView)itemView.findViewById(R.id.txt_game_genre) ;
-            mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform);
-            mGameReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date);
-            mThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
+            mGameAggregatedRating = (TextView)itemView.findViewById(R.id.txt_game_rating_wishlist);
+            mGameTitle = (TextView) itemView.findViewById(R.id.txt_gameTitle_wishlist);
+            mGameGenre = (TextView)itemView.findViewById(R.id.txt_game_genre_wishlist) ;
+            mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform_wishlist);
+            mGameReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date_wishlist);
+            mThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail_wishlist);
             mAddButton = (ImageButton)itemView.findViewById(R.id.button_add_database);
             //mNetworkImageView = (NetworkImageView)itemView.findViewById(R.id.thumbnail);
             itemView.setOnClickListener(new View.OnClickListener() {

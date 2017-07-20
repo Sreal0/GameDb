@@ -25,8 +25,6 @@ public class Game extends RealmObject {
     private double  mRating;
     private double  mAggregated_rating;
     private int     mRatingCount;
-    //private IgdbGameCover mIgdbGameCover;
-    //private IgdbGameGenre mIgdbGameGenre;
     private int     mDatabaseOrWishlist;
 
     //Default empty Constructor must be declared
@@ -121,22 +119,6 @@ public class Game extends RealmObject {
     public void setRatingCount(int ratingCount) {
         mRatingCount = ratingCount;
     }
-
-    /*public IgdbGameCover getIgdbGameCover() {
-        return mIgdbGameCover;
-    }
-
-    public void setIgdbGameCover(IgdbGameCover igdbGameCover) {
-        mIgdbGameCover = igdbGameCover;
-    }
-
-    public IgdbGameGenre getIgdbGameGenre() {
-        return mIgdbGameGenre;
-    }
-
-    public void setIgdbGameGenre(IgdbGameGenre igdbGameGenre) {
-        mIgdbGameGenre = igdbGameGenre;
-    }*/
 
     public int getDatabaseOrWishlist() {
         return mDatabaseOrWishlist;

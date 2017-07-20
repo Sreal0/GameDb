@@ -140,7 +140,7 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if(rat == 0){
             topHolder.getGameScore().setText("N/A");
         }else{
-            topHolder.getGameScore().setText(rat + "");
+            topHolder.getGameScore().setText(String.valueOf(rat));
         }
     }
 

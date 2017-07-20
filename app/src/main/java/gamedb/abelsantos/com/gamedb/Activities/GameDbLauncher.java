@@ -59,7 +59,7 @@ import io.realm.RealmResults;
 
 public class GameDbLauncher extends AppCompatActivity {
 
-    private static String TAG = "gamedb.abelsantos";
+    private static String TAG = "GameDbLauncer";
     public static final String TAG_GAMES_FRAGMENT = "GamesFragment";
     private static final String tag_json_arry = "json_array_req";
     private Toolbar mToolbar;
@@ -383,6 +383,7 @@ public class GameDbLauncher extends AppCompatActivity {
     }
     //Saves a game to the database from the GamesFragment
     public void saveGamesToRealm (final IgdbGame igdbGame, final int tag){
+
         //Tags: 0 for database, 1 for wish list
         mRealm.executeTransactionAsync(new Realm.Transaction() {
             @Override
@@ -390,26 +391,30 @@ public class GameDbLauncher extends AppCompatActivity {
                 Game game = bgRealm.createObject(Game.class, igdbGame.getId());
                 game.setGameName(igdbGame.getName());
                 game.setAggregated_rating(igdbGame.getAggregated_rating());
-                game.setCloudinaryId(igdbGame.getIgdbGameCover().getCloudinaryId());
+                if (igdbGame.getIgdbGameCover() != null){
+                    game.setCloudinaryId(igdbGame.getIgdbGameCover().getCloudinaryId());
+                }else{
+                    game.setCloudinaryId("");
+                }
                 game.setDatabaseOrWishlist(tag);
             }
         }, new Realm.Transaction.OnSuccess() {
             @Override
             public void onSuccess() {
-                Log.d(TAG, igdbGame.getName() + " saved to database");
+                Log.d("Realm Sucess", igdbGame.getName() + " saved to database");
             }
         }, new Realm.Transaction.OnError() {
             @Override
             public void onError(Throwable error) {
-                Log.d(TAG, igdbGame.getName() + " not saved to database");
-                Log.d(TAG, error.toString());
+                Log.d("Realm Error", igdbGame.getName() + " not saved to database");
+                Log.d("Realm Error", error.toString());
             }
         });
     }
     //Returns games saved in the Database, only MyGames - Tag is 0
-    public RealmResults<Game> getMyGames(){
+    public RealmResults<Game> getGamesFromRealm(int tag){
         RealmQuery<Game> query = mRealm.where(Game.class);
-        query.equalTo("mDatabaseOrWishlist", 0);
+        query.equalTo("mDatabaseOrWishlist", tag);
         mGameRealmQuery = query.findAll();
         Log.d(TAG, mGameRealmQuery.toString());
         return mGameRealmQuery;
@@ -575,6 +580,7 @@ public class GameDbLauncher extends AppCompatActivity {
         return mIgdbGame;
     }
 
+    //Devs and Publishers
     public List<String> getCompanies(){
         if (mCompanies.size() > 0){
             return mCompanies;
@@ -587,6 +593,7 @@ public class GameDbLauncher extends AppCompatActivity {
         }
     }
 
+    //Alert Dialog where the game will be saved
     public void showAddGameDialog(final IgdbGame game){
         final String[] items = {getString(R.string.text_add_to_database), getString(R.string.text_add_to_wishlist)};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
