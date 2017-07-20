@@ -1,27 +1,18 @@
 package gamedb.abelsantos.com.gamedb.RecyclerView;
 
 import android.content.Context;
-import android.os.Parcelable;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Database.GameDetailsPair;
@@ -45,11 +36,11 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<Integer> mListItems;
     private List<GameDetailsPair> mGameDetailsPairs;
 
-    public GameDetailsAdapter(IgdbGame game, Context context, List<Integer> list, List<GameDetailsPair> gameDetailsPairs ) {
+    public GameDetailsAdapter(IgdbGame game, Context context, List<GameDetailsPair> gameDetails, List<Integer> listItems) {
         mIgdbGame = game;
         mContext = context;
-        mListItems = list;
-        mGameDetailsPairs = gameDetailsPairs;
+        mListItems = listItems;
+        mGameDetailsPairs = gameDetails;
     }
 
     @Override
@@ -71,6 +62,8 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             case WEBSITE:
                 View viewWebsite = inflater.inflate(R.layout.list_view_game_info_web_links, parent, false);
                 viewHolder = new WebHolder(viewWebsite);
+                Log.d("Web", "Web");
+                break;
             default:
                 Log.d("GameDetailHolder", "nothing");
                 return null;
@@ -83,6 +76,7 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         final int itemPosition = holder.getItemViewType();
         final TopHolder topHolder;
         final DetailsHolder detailsHolder;
+        final WebHolder webHolder;
 
         switch (itemPosition){
             case TOP:
@@ -94,14 +88,34 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 configureDetailsHolder(position, detailsHolder);
                 break;
             case WEBSITE:
+                webHolder = (WebHolder)holder;
+                configureWebHolder(position, webHolder);
 
         }
     }
 
+    private void configureWebHolder(final int position, WebHolder webHolder){
+        webHolder.getLink().setText(mGameDetailsPairs.get(position).getKey());
+        webHolder.getLink().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url;
+                if (!mGameDetailsPairs.get(position).getValue().startsWith("http://") &&
+                        !mGameDetailsPairs.get(position).getValue().startsWith("https://") ){
+                    url = "http://" + mGameDetailsPairs.get(position).getValue();
+                }else {
+                    url = mGameDetailsPairs.get(position).getValue();
+                }
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                mContext.startActivity(browserIntent);
+            }
+        });
+    }
+
     private void configureDetailsHolder(int position, DetailsHolder detailsHolder){
         Log.d(TAG, "Position confi detal " + position + "");
-        detailsHolder.getTitle().setText(mGameDetailsPairs.get(position).getTitle());
-        detailsHolder.getDetails().setText(mGameDetailsPairs.get(position).getDetail());
+        detailsHolder.getTitle().setText(mGameDetailsPairs.get(position).getKey());
+        detailsHolder.getDetails().setText(mGameDetailsPairs.get(position).getValue());
     }
 
     private void configureTopHolder(TopHolder topHolder){
@@ -156,25 +170,14 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             return mGameTitle;
         }
 
-        public void setGameTitle(TextView gameTitle) {
-            mGameTitle = gameTitle;
-        }
-
         private TextView getGameScore() {
             return mGameScore;
-        }
-
-        public void setGameScore(TextView gameScore) {
-            mGameScore = gameScore;
         }
 
         private ImageView getGameCover() {
             return mGameCover;
         }
 
-        public void setGameCover(ImageView gameCover) {
-            mGameCover = gameCover;
-        }
     }
 
     public class DetailsHolder extends RecyclerView.ViewHolder {
@@ -191,17 +194,10 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             return mTitle;
         }
 
-        public void setTitle(TextView title) {
-            mTitle = title;
-        }
-
         public TextView getDetails() {
             return mDetails;
         }
 
-        public void setDetails(TextView details) {
-            mDetails = details;
-        }
     }
 
     public class WebHolder extends RecyclerView.ViewHolder{

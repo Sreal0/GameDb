@@ -6,7 +6,7 @@
     <string name="action_websearch">Web search</string>
     <string name="game_title">Game Title</string>
     <string name="game_genre">Genre: </string>
-    <string name="title">Title</string>
+    <string name="key">Title</string>
     <string name="content">Content</string>
     <string name="game_summary">Summary: </string>
     <string name="game_developer">Developer: </string>

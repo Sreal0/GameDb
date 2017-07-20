@@ -31,15 +31,18 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
 import gamedb.abelsantos.com.gamedb.Database.GameDetailsPair;
+import gamedb.abelsantos.com.gamedb.IGDB.GameDetailsResolver;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbCompany;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
@@ -67,6 +70,8 @@ public class GameDetailsFragment extends Fragment {
     private GameDetailsAdapter mGameDetailsAdapter;
     private List<Integer> mItemsList = new ArrayList<>();
     private List<GameDetailsPair> mGameDetailsPairs;
+    private List<GameDetailsPair> gameDetails;
+    private GameDetailsResolver mGameDetailsResolver;
 
     public static GameDetailsFragment newInstance() {
         GameDetailsFragment fragment = new GameDetailsFragment();
@@ -100,80 +105,15 @@ public class GameDetailsFragment extends Fragment {
         mCompanies = ((GameDbLauncher)getActivity()).getCompanies();
         mGameDetailsPairs = new ArrayList<>();
 
-        resolveGame();
-
+        mGameDetailsResolver = new GameDetailsResolver(mIgdbGame, getContext());
+        gameDetails = mGameDetailsResolver.resolveGameDetails();
+        mItemsList = mGameDetailsResolver.getViewTypeItems();
+        initialiseAdapter();
         return view;
     }
 
-
-    private void resolveGame(){
-        GameDetailsPair pair = new GameDetailsPair();
-        mItemsList = new ArrayList<>();
-        mItemsList.add(TOP);
-
-        if (mIgdbGame != null){
-            //Header
-            pair.setTitle("NotUsable");
-            pair.setDetail("Something went wrong if this is seen");
-            mGameDetailsPairs.add(pair);
-            pair = new GameDetailsPair();
-            //Genre
-            pair.setTitle("Genre");
-            pair.setDetail(((GameDbLauncher)getActivity()).resolveGenreNames(mIgdbGame.getGenre()));
-            mItemsList.add(DETAIL);
-            mGameDetailsPairs.add(pair);
-            pair = new GameDetailsPair();
-            //Game mode
-            pair.setTitle("Game modes:");
-            List<String>  igdbGameModes = mIgdbGame.getIgdbGameModes();
-            String modes = igdbGameModes.toString();
-            String cleanedUp = modes.replace("[", "");
-            cleanedUp = cleanedUp.replace("]", "");
-            pair.setDetail(cleanedUp);
-            mItemsList.add(DETAIL);
-            mGameDetailsPairs.add(pair);
-            pair = new GameDetailsPair();
-            //Release Date
-            pair.setTitle("Release date");
-            String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date(mIgdbGame.getReleaseDate()));
-            pair.setDetail(date);
-            mItemsList.add(DETAIL);
-            mGameDetailsPairs.add(pair);
-            pair = new GameDetailsPair();
-            //Dev
-            pair.setTitle("Developer");
-            pair.setDetail(mCompanies.get(0));
-            mItemsList.add(DETAIL);
-            mGameDetailsPairs.add(pair);
-            pair = new GameDetailsPair();
-            //Pub
-            pair.setTitle("Publisher");
-            pair.setDetail(mCompanies.get(1));
-            mItemsList.add(DETAIL);
-            mGameDetailsPairs.add(pair);
-            pair = new GameDetailsPair();
-            //Summary
-            pair.setTitle("Summary");
-            pair.setDetail(mIgdbGame.getSummary());
-            mItemsList.add(DETAIL);
-            mGameDetailsPairs.add(pair);
-            pair = new GameDetailsPair();
-            //Website
-            if (mIgdbGame.getIgbdWebsites() != null){
-                for(int i = 0; i < mIgdbGame.getIgbdWebsites().length; i++){
-                    pair.setTitle("Website");
-                    pair.setDetail("Has website");
-                    mItemsList.add(WEBSITE);
-                    mGameDetailsPairs.add(pair);
-                }
-            }
-            pair = new GameDetailsPair();
-        }
-        initialiseAdapter();
-    }
-
     private void initialiseAdapter(){
-        mGameDetailsAdapter = new GameDetailsAdapter(mIgdbGame, getContext(), mItemsList, mGameDetailsPairs);
+        mGameDetailsAdapter = new GameDetailsAdapter(mIgdbGame, getContext(), gameDetails, mItemsList);
         mRecyclerView.setAdapter(mGameDetailsAdapter);
         mGameDetailsAdapter.notifyDataSetChanged();
     }

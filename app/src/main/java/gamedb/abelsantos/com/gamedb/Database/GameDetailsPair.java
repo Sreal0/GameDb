@@ -5,22 +5,27 @@ package gamedb.abelsantos.com.gamedb.Database;
  */
 
 public class GameDetailsPair {
-    String mTitle;
-    String mDetail;
+    String key;
+    String value;
 
-    public String getTitle() {
-        return mTitle;
+    public String getKey() {
+        return key;
     }
 
-    public void setTitle(String title) {
-        mTitle = title;
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    public String getDetail() {
-        return mDetail;
+    public String getValue() {
+        return value;
     }
 
-    public void setDetail(String detail) {
-        mDetail = detail;
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void put(String key, String value){
+        this.key = key;
+        this.value = value;
     }
 }

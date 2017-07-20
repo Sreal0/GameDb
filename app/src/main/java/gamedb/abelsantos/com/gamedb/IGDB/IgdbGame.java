@@ -226,7 +226,7 @@ public class IgdbGame implements Serializable{
     public IgdbWebsite[] getIgbdWebsites() {
         return mIgbdWebsites;
     }
-    @JsonSetter("Website")
+    @JsonSetter("websites")
     public void setIgbdWebsites(IgdbWebsite[] igbdWebsites) {
         mIgbdWebsites = igbdWebsites;
     }

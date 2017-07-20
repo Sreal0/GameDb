@@ -12,7 +12,7 @@
         android:id="@+id/txt_game_detail_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title"
+        android:text="@string/key"
         android:textStyle="bold"
         android:textColor="@color/colorBlack"
         android:layout_marginLeft="16dp"
