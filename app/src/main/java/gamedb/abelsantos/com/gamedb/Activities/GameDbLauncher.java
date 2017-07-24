@@ -415,31 +415,16 @@ public class GameDbLauncher extends AppCompatActivity {
     //Saves a Game Object to the datase
     public void saveGamesToRealm(final long id, final int tag){
         //Tags: 0 for database, 1 for wish list
-        mRealm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm bgRealm) {
-                //Accessing it from a different thread
-                RealmQuery<Game> query = bgRealm.where(Game.class);
-                query.equalTo("id", id);
-                mGameQueryResult = query.findAll();
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-                mRealm.beginTransaction();
-                Game game = mGameRealmQuery.first();
-                game.setDatabaseOrWishlist(tag);
-                Toast.makeText(getApplicationContext(), game.getGameName(), Toast.LENGTH_SHORT).show();
-                mRealm.commitTransaction();
-            }
-        }, new Realm.Transaction.OnError() {
-            @Override
-            public void onError(Throwable error) {
-                Log.d("Realm Error", id + " not saved to database");
-                Log.d("Realm Error", error.toString());
-            }
-        });
+        mRealm.beginTransaction();
+        RealmQuery<Game> query = mRealm.where(Game.class);
+        query.equalTo("id", id);
+        mGameQueryResult = query.findAll();
+        Game game = mGameRealmQuery.first();
+        game.setDatabaseOrWishlist(tag);
+        Toast.makeText(getApplicationContext(), game.getGameName() +  " changed", Toast.LENGTH_SHORT).show();
+        mRealm.commitTransaction();
     }
+
     //Returns games saved in the Database, only MyGames - Tag is 0
     public RealmResults<Game> getGamesFromRealm(int tag){
         RealmQuery<Game> query = mRealm.where(Game.class);

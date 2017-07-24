@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -113,12 +114,8 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
                 public void onClick(View view) {
                     //Show the alert dialog where the user can choose to either move
                     //a game to the database or to remove it from the wish list
-                    Log.d("Before", String.valueOf(mGames.size()));
                     showAlertDialog(game.getId());
                     mGames = ((GameDbLauncher)mContext).getGamesFromRealm(TAG_WISHLIST);
-                    Log.d("After", String.valueOf(mGames.size()));
-                    notifyItemRemoved(getAdapterPosition());
-                    notifyDataSetChanged();
                 }
             });
         }
@@ -126,17 +123,19 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
 
     public void showAlertDialog(final long id){
         String[] items = {mContext.getString(R.string.text_move_game_to_database), mContext.getString(R.string.text_remove_game_from_wishlist)};
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext.getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext.getApplicationContext(), R.style.MyDialogTheme);
         builder.setTitle(mContext.getString(R.string.add_game_alert_dialog_title));
         builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == 0){
                     ((GameDbLauncher)mContext).saveGamesToRealm(id, i);
+                    notifyDataSetChanged();
                     dialogInterface.dismiss();
                 }//Removes game from wishlist
                 else{
                     ((GameDbLauncher)mContext).removeGameFromDatabase(id);
+                    notifyDataSetChanged();
                     dialogInterface.dismiss();
                 }
             }
