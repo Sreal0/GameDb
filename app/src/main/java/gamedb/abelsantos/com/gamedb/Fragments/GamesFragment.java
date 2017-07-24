@@ -225,7 +225,6 @@ public class GamesFragment extends Fragment {
             mAddButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     ((GameDbLauncher)getActivity()).showSaveGameToTheDatabaseDialog(igdbGame);
                 }
             });

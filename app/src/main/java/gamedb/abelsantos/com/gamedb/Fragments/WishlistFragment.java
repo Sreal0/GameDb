@@ -68,6 +68,7 @@ public class WishlistFragment extends Fragment {
         mWishlistAdapter.notifyDataSetChanged();
     }
 
+
     public void showAlertDialog(final long id){
         String[] items = {getString(R.string.text_move_game_to_database), getString(R.string.text_remove_game_from_wishlist)};
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

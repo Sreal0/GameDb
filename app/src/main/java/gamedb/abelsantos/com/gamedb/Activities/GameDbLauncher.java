@@ -618,40 +618,48 @@ public class GameDbLauncher extends AppCompatActivity {
         builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //Int i is what defines if a game is saved to the database or to the wish list.
-                FragmentManager fm = getSupportFragmentManager();
-                GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
-                fragment.showSnackBar(i);
-                convertAndSaveIGDBGamesToRealm(game, i);
-                dialogInterface.dismiss();
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
 
-    //Alert Dialog where the game will be saved
-    public void showMoveGameFromWishListToDatabase(final long id){
-        String[] items = {getString(R.string.text_move_game_to_database), getString(R.string.text_remove_game_from_wishlist)};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.add_game_alert_dialog_title));
-
-        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //Int i is what defines if a game is saved to the database or to the wish list.
-                FragmentManager fm = getSupportFragmentManager();
-                WishlistFragment fragment = (WishlistFragment) fm.findFragmentByTag(WishlistFragment.TAG);
-                //User chooses to move a game to the library
+                //User chooses first radio button
                 if (i == 0){
-                    saveGamesToRealm(id, i);
-                    dialogInterface.dismiss();
-                    fragment.initialiseAdapter();
-                }//Removes game from wishlist
-                else{
-                    removeGameFromDatabase(id);
-                    dialogInterface.dismiss();
-                    fragment.initialiseAdapter();
+                    if (isGameAlreadyInDatabase(game.getId()) == 0){
+                        //User has game -> notify user
+                        Toast.makeText(getApplicationContext(), getString(R.string.game_already_in_database),
+                                Toast.LENGTH_SHORT).show();
+                        dialogInterface.dismiss();
+                    }else if (isGameAlreadyInDatabase(game.getId()) == 1){
+                        //User has game in the wish list -> notify user
+                        Toast.makeText(getApplicationContext(), getString(R.string.game_already_in_wishlist),
+                                Toast.LENGTH_SHORT).show();
+                        dialogInterface.dismiss();
+                    }else{
+                        //User does not has the game -> add it to the database
+                        FragmentManager fm = getSupportFragmentManager();
+                        GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
+                        fragment.showSnackBar(i);
+                        convertAndSaveIGDBGamesToRealm(game, i);
+                        dialogInterface.dismiss();
+                    }
+                }
+                //User chooses second radio button
+                if (i == 1){
+                    if (isGameAlreadyInDatabase(game.getId()) == 0){
+                        //User has game and tries to move it to the wishlist
+                        Toast.makeText(getApplicationContext(), getString(R.string.cannot_move_from_db_to_wishlist),
+                                Toast.LENGTH_SHORT).show();
+                        dialogInterface.dismiss();
+                    }else if(isGameAlreadyInDatabase(game.getId()) == 1){
+                        //User has game in the wishlist already ->
+                        Toast.makeText(getApplicationContext(), getString(R.string.game_already_in_wishlist),
+                                Toast.LENGTH_SHORT).show();
+                        dialogInterface.dismiss();
+                    }else {
+                        //Game is not in the wishlist -> add it
+                        FragmentManager fm = getSupportFragmentManager();
+                        GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
+                        fragment.showSnackBar(i);
+                        convertAndSaveIGDBGamesToRealm(game, i);
+                        dialogInterface.dismiss();
+                    }
                 }
             }
         });
@@ -661,6 +669,20 @@ public class GameDbLauncher extends AppCompatActivity {
 
     public void changeToolbarSubtitleText(String text){
         mToolbarText.setText(text);
+    }
+
+    public int isGameAlreadyInDatabase(long id){
+        RealmQuery<Game> query = mRealm.where(Game.class);
+        query.equalTo("id", id);
+        RealmResults<Game> realmResults = query.findAll();
+        if (realmResults.size() > 0){
+            Log.d(TAG, realmResults.toString());
+            Game game = realmResults.first();
+            return game.getDatabaseOrWishlist();
+        }else{
+            Log.d(TAG, realmResults.toString());
+            return 2;
+        }
     }
 
 }
