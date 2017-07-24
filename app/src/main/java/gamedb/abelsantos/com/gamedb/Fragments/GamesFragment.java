@@ -225,8 +225,8 @@ public class GamesFragment extends Fragment {
             mAddButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String[] items = {getString(R.string.text_add_to_database), getString(R.string.text_add_to_wishlist)};
-                    ((GameDbLauncher)getActivity()).showSaveGameToTheDatabaseDialog(igdbGame, items);
+
+                    ((GameDbLauncher)getActivity()).showSaveGameToTheDatabaseDialog(igdbGame);
                 }
             });
             String protocol = "";

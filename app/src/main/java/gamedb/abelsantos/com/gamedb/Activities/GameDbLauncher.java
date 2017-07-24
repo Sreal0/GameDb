@@ -421,8 +421,10 @@ public class GameDbLauncher extends AppCompatActivity {
         mGameQueryResult = query.findAll();
         Game game = mGameRealmQuery.first();
         game.setDatabaseOrWishlist(tag);
-        Toast.makeText(getApplicationContext(), game.getGameName() +  " changed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), game.toString() +  " changed", Toast.LENGTH_SHORT).show();
+        mRealm.copyToRealmOrUpdate(game);
         mRealm.commitTransaction();
+
     }
 
     //Returns games saved in the Database, only MyGames - Tag is 0
@@ -608,12 +610,12 @@ public class GameDbLauncher extends AppCompatActivity {
     }
 
     //Alert Dialog where the game will be saved
-    public void showSaveGameToTheDatabaseDialog(final IgdbGame game, String[] options){
-
+    public void showSaveGameToTheDatabaseDialog(final IgdbGame game){
+        String[] items = {getString(R.string.text_add_to_database), getString(R.string.text_add_to_wishlist)};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.add_game_alert_dialog_title));
 
-        builder.setSingleChoiceItems(options, -1, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //Int i is what defines if a game is saved to the database or to the wish list.
