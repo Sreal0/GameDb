@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -112,6 +113,7 @@ public class MyGamesFragment extends Fragment{
             }else{
                 mThumbnail.setImageResource(R.drawable.ic_error);
             }
+
             mRemoveGame.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -119,19 +121,7 @@ public class MyGamesFragment extends Fragment{
                     //notifies the recycler view about the changes.
                     ((GameDbLauncher) getActivity()).removeGameFromDatabase(game.getId());
                     mGames = ((GameDbLauncher)getActivity()).getGamesFromRealm(TAG_DATABASE);
-                    mMyGamesAdapter.notifyItemRemoved(getAdapterPosition());
-                    mMyGamesAdapter.notifyItemRangeChanged(getAdapterPosition(), mGames.size());
-                    /*Snackbar allows the User to UNDO the delete action.*/
-                    mSnackbar = Snackbar.make(mCoordinatorLayout, getString(R.string.game_was_removed),
-                            Snackbar.LENGTH_LONG).setAction(getString(R.string.undo), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Snackbar snackbar = Snackbar.make(mCoordinatorLayout, getString(R.string.game_was_restored),
-                                    Snackbar.LENGTH_SHORT);
-                            snackbar.show();
-                        }
-                    });
-                    mSnackbar.show();
+                    setupAdapter();
                 }
             });
         }

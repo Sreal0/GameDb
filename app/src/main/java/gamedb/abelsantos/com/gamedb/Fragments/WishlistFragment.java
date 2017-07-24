@@ -49,9 +49,7 @@ public class WishlistFragment extends Fragment {
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
         ((GameDbLauncher)getActivity()).changeToolbarSubtitleText("");
-
         mGames = ((GameDbLauncher) getActivity()).getGamesFromRealm(TAG_WISHLIST);
-
         initialiseAdapter();
 
         return view;
@@ -62,11 +60,10 @@ public class WishlistFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
     }
 
-    private void initialiseAdapter(){
+    public void initialiseAdapter(){
         mWishlistAdapter = new WishlistAdapter(mGames, getContext());
         mRecyclerView.setAdapter(mWishlistAdapter);
         mWishlistAdapter.notifyDataSetChanged();
     }
-
 
 }

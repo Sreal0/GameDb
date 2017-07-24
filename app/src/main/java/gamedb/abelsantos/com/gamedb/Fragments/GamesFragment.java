@@ -197,7 +197,7 @@ public class GamesFragment extends Fragment {
             mGameReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date_wishlist);
             mThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail_wishlist);
             mAddButton = (ImageButton)itemView.findViewById(R.id.button_add_database);
-            //mNetworkImageView = (NetworkImageView)itemView.findViewById(R.id.thumbnail);
+            //To view details of a game - starts GameDetailsFragment
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -225,7 +225,8 @@ public class GamesFragment extends Fragment {
             mAddButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((GameDbLauncher)getActivity()).showAddGameDialog(igdbGame);
+                    String[] items = {getString(R.string.text_add_to_database), getString(R.string.text_add_to_wishlist)};
+                    ((GameDbLauncher)getActivity()).showSaveGameToTheDatabaseDialog(igdbGame, items);
                 }
             });
             String protocol = "";
@@ -238,8 +239,6 @@ public class GamesFragment extends Fragment {
             }catch (NullPointerException e){
                 Log.d(TAG, e.toString());
             }
-            //mImageLoader = sIgdbClientSingleton.getImageLoader();
-            //mNetworkImageView.setImageUrl(protocol, mImageLoader);
             /*Picasso needs a valid url. If the returned url is not valid
             * then I will set the thumbnail with the default error image.
             * Else, picasso will do its thing*/

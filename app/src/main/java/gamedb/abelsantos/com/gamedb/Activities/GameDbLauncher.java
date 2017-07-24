@@ -75,6 +75,7 @@ public class GameDbLauncher extends AppCompatActivity {
     private List<String> mCompanies;
     private JSONArray mJSONArraySingleGame;
     private HashMap<String, String > mItemsHashMap;
+    private RealmResults<Game> mGameQueryResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -302,7 +303,7 @@ public class GameDbLauncher extends AppCompatActivity {
                 error(R.drawable.ic_error).
                 placeholder(R.drawable.ic_img_placeholder).
                 into(ivPreview);
-        Log.d(TAG, protocol);
+        //Log.d(TAG, protocol);
         ivPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -382,7 +383,7 @@ public class GameDbLauncher extends AppCompatActivity {
         return output;
     }
     //Saves a game to the database from the GamesFragment
-    public void saveGamesToRealm (final IgdbGame igdbGame, final int tag){
+    public void convertAndSaveIGDBGamesToRealm(final IgdbGame igdbGame, final int tag){
 
         //Tags: 0 for database, 1 for wish list
         mRealm.executeTransactionAsync(new Realm.Transaction() {
@@ -411,12 +412,40 @@ public class GameDbLauncher extends AppCompatActivity {
             }
         });
     }
+    //Saves a Game Object to the datase
+    public void saveGamesToRealm(final long id, final int tag){
+        //Tags: 0 for database, 1 for wish list
+        mRealm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm bgRealm) {
+                //Accessing it from a different thread
+                RealmQuery<Game> query = bgRealm.where(Game.class);
+                query.equalTo("id", id);
+                mGameQueryResult = query.findAll();
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                mRealm.beginTransaction();
+                Game game = mGameRealmQuery.first();
+                game.setDatabaseOrWishlist(tag);
+                Toast.makeText(getApplicationContext(), game.getGameName(), Toast.LENGTH_SHORT).show();
+                mRealm.commitTransaction();
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+                Log.d("Realm Error", id + " not saved to database");
+                Log.d("Realm Error", error.toString());
+            }
+        });
+    }
     //Returns games saved in the Database, only MyGames - Tag is 0
     public RealmResults<Game> getGamesFromRealm(int tag){
         RealmQuery<Game> query = mRealm.where(Game.class);
         query.equalTo("mDatabaseOrWishlist", tag);
         mGameRealmQuery = query.findAll();
-        Log.d(TAG, mGameRealmQuery.toString());
+        //Log.d(TAG, mGameRealmQuery.toString());
         return mGameRealmQuery;
     }
 
@@ -427,7 +456,9 @@ public class GameDbLauncher extends AppCompatActivity {
                 RealmResults<Game> games = mRealm.where(Game.class)
                         .equalTo("id", id)
                         .findAll();
+                Toast.makeText(getApplicationContext(), "Game removed is: " + games.get(0).getGameName(), Toast.LENGTH_SHORT).show();
                 games.deleteFirstFromRealm();
+
             }
         });
     }
@@ -435,7 +466,6 @@ public class GameDbLauncher extends AppCompatActivity {
     public void getGamesFromAPI(String url, final List<IgdbGame> igdbGames){
         //Standard request
         // Request an Array response from the provided URL.
-        Log.d(TAG, url);
         final JsonArrayRequest req = new JsonArrayRequest(
                 url, new Response.Listener<JSONArray>() {
             @Override
@@ -447,7 +477,6 @@ public class GameDbLauncher extends AppCompatActivity {
                         String data = object.toString();
                         IgdbGame igdbGame = mapper.readValue(data, IgdbGame.class);
                         igdbGames.add(igdbGame);
-                        Log.d(TAG, igdbGames.size()+"");
                     } catch (JSONException e) {
                         Log.d(TAG, "JSONException: " + e);
                     } catch (JsonParseException e) {
@@ -475,7 +504,7 @@ public class GameDbLauncher extends AppCompatActivity {
     public IgdbGame getASingleGameFromAPI(int gameId){
         String url = sIgdbClientSingleton.getSingleGameDetails(gameId);
         mItemsHashMap = new HashMap<>();
-        Log.d("Single", url);
+        //Log.d("Single", url);
         final JsonArrayRequest req = new JsonArrayRequest(
                 url, new Response.Listener<JSONArray>() {
             @Override
@@ -535,7 +564,7 @@ public class GameDbLauncher extends AppCompatActivity {
             url = sIgdbClientSingleton.getCompanyNamesURL(mIgdbGame.getDevelopers()[0], mIgdbGame.getPublishers()[0]);
         }
             mCompanies = new ArrayList<>();
-            Log.d("resolveCompanyName", url);
+            //Log.d("resolveCompanyName", url);
             final JsonArrayRequest req = new JsonArrayRequest(
                     url, new Response.Listener<JSONArray>() {
                 @Override
@@ -594,19 +623,49 @@ public class GameDbLauncher extends AppCompatActivity {
     }
 
     //Alert Dialog where the game will be saved
-    public void showAddGameDialog(final IgdbGame game){
-        final String[] items = {getString(R.string.text_add_to_database), getString(R.string.text_add_to_wishlist)};
+    public void showSaveGameToTheDatabaseDialog(final IgdbGame game, String[] options){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.add_game_alert_dialog_title));
+
+        builder.setSingleChoiceItems(options, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //Int i is what defines if a game is saved to the database or to the wish list.
+                FragmentManager fm = getSupportFragmentManager();
+                GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
+                fragment.showSnackBar(i);
+                convertAndSaveIGDBGamesToRealm(game, i);
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    //Alert Dialog where the game will be saved
+    public void showMoveGameFromWishListToDatabase(final long id){
+        String[] items = {getString(R.string.text_move_game_to_database), getString(R.string.text_remove_game_from_wishlist)};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.add_game_alert_dialog_title));
 
         builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                //Int i is what defines if a game is saved to the database or to the wish list.
                 FragmentManager fm = getSupportFragmentManager();
-                GamesFragment fragment = (GamesFragment)fm.findFragmentByTag(GamesFragment.TAG);
-                fragment.showSnackBar(i);
-                saveGamesToRealm(game, i);
-                dialogInterface.dismiss();
+                WishlistFragment fragment = (WishlistFragment) fm.findFragmentByTag(WishlistFragment.TAG);
+                //User chooses to move a game to the library
+                if (i == 0){
+                    saveGamesToRealm(id, i);
+                    dialogInterface.dismiss();
+                    fragment.initialiseAdapter();
+                }//Removes game from wishlist
+                else{
+                    removeGameFromDatabase(id);
+                    dialogInterface.dismiss();
+                    fragment.initialiseAdapter();
+                }
             }
         });
         AlertDialog alertDialog = builder.create();

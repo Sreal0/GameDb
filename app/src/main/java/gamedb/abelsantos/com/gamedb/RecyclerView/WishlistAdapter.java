@@ -1,6 +1,9 @@
 package gamedb.abelsantos.com.gamedb.RecyclerView;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +17,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
 import gamedb.abelsantos.com.gamedb.Database.Game;
+import gamedb.abelsantos.com.gamedb.Fragments.WishlistFragment;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
-import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
 import gamedb.abelsantos.com.gamedb.R;
 
 /**
@@ -73,6 +77,7 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
 
     public class WishListHolder extends RecyclerView.ViewHolder{
 
+
         public WishListHolder(View itemView) {
             super(itemView);
             mThumbnail = (ImageView)itemView.findViewById(R.id.thumbnail_wishlist);
@@ -83,13 +88,13 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
             mRemoveOrMoveOptions = (ImageButton)itemView.findViewById(R.id.button_wishlist_options);
         }
 
-        private void bindItem(Game game){
+        private void bindItem(final Game game){
             mGameName.setText(game.getGameName());
             int rating = ((int)game.getAggregated_rating());
             mScore.setText(String.valueOf(rating));
             String protocol = "";
             try{
-                protocol = URL_COVER_BIG + game.getCloudinaryId() + IMAGE_FORMAT_PNG;
+                protocol = URL_COVER_BIG + game.getCloudinaryId() + IMAGE_FORMAT_JPG;
                 Log.d(TAG, protocol);
             }catch (NullPointerException e){
                 Log.d(TAG, e.toString());
@@ -103,7 +108,41 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
             }else{
                 mThumbnail.setImageResource(R.drawable.ic_error);
             }
+            mRemoveOrMoveOptions.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Show the alert dialog where the user can choose to either move
+                    //a game to the database or to remove it from the wish list
+                    Log.d("Before", String.valueOf(mGames.size()));
+                    showAlertDialog(game.getId());
+                    mGames = ((GameDbLauncher)mContext).getGamesFromRealm(TAG_WISHLIST);
+                    Log.d("After", String.valueOf(mGames.size()));
+                    notifyItemRemoved(getAdapterPosition());
+                    notifyDataSetChanged();
+                }
+            });
         }
+    }
+
+    public void showAlertDialog(final long id){
+        String[] items = {mContext.getString(R.string.text_move_game_to_database), mContext.getString(R.string.text_remove_game_from_wishlist)};
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext.getApplicationContext());
+        builder.setTitle(mContext.getString(R.string.add_game_alert_dialog_title));
+        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (i == 0){
+                    ((GameDbLauncher)mContext).saveGamesToRealm(id, i);
+                    dialogInterface.dismiss();
+                }//Removes game from wishlist
+                else{
+                    ((GameDbLauncher)mContext).removeGameFromDatabase(id);
+                    dialogInterface.dismiss();
+                }
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
 }
