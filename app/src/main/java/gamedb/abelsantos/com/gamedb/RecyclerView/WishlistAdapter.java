@@ -2,6 +2,7 @@ package gamedb.abelsantos.com.gamedb.RecyclerView;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,9 +30,10 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
     private static String TAG = "WishlistAdapter";
     private ImageView mThumbnail;
     private TextView mGameName;
-    private TextView mScore;
+    private TextView mGameAggregatedRating;
     private TextView mPlatforms;
     private TextView mReleaseDate;
+    private TextView mGameGenre;
     private ImageButton mRemoveOrMoveOptions;
     private List<Game> mGames;
     private Context mContext;
@@ -43,6 +45,7 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
     private static final String IMAGE_FORMAT_JPG = ".jpg";
     private static final int TAG_DATABASE = 0;
     private static final int TAG_WISHLIST = 1;
+    private static final String NOT_AVALIABLE = "n/a";
 
     public WishlistAdapter(List<Game> games, Context context) {
         mGames = games;
@@ -78,18 +81,56 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
 
         public WishListHolder(View itemView) {
             super(itemView);
-            mThumbnail = (ImageView)itemView.findViewById(R.id.thumbnail_Games);
             mGameName = (TextView)itemView.findViewById(R.id.txt_gameTitle_Games);
-            mScore = (TextView)itemView.findViewById(R.id.txt_game_rating_Games);
+            mThumbnail = (ImageView)itemView.findViewById(R.id.thumbnail_Games);
+            mGameAggregatedRating = (TextView)itemView.findViewById(R.id.txt_game_rating_Games);
             mPlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform_wishlist);
             mReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date_Games);
             mRemoveOrMoveOptions = (ImageButton)itemView.findViewById(R.id.button_wishlist_options);
+            mGameGenre = (TextView)itemView.findViewById(R.id.txt_game_genre_Games);
         }
 
         private void bindItem(final Game game){
+            //Platform
+            if (game.getPlatforms() != null){
+                mPlatforms.setText(game.getPlatforms());
+            }else{
+                mPlatforms.setText(NOT_AVALIABLE);
+            }
+            //Release date
+            if (game.getReleasedate() != null){
+                mReleaseDate.setText(game.getReleasedate());
+            }else{
+                mReleaseDate.setText(NOT_AVALIABLE);
+            }
+            //Platforms
+            if (game.getGenre() != null){
+                mGameGenre.setText(game.getGenre());
+            }else{
+                mGameGenre.setText(NOT_AVALIABLE);
+            }
+            //Name
             mGameName.setText(game.getGameName());
+            //Rating
             int rating = ((int)game.getAggregated_rating());
-            mScore.setText(String.valueOf(rating));
+            if(rating == 0){
+                mGameAggregatedRating.setText("n/a");
+            }else{
+                //Changes text color based on score.
+                if(rating < 50){
+                    mGameAggregatedRating.setTextColor(ContextCompat.getColor(mContext, R.color.color_review_5));
+                }else if(rating < 65){
+                    mGameAggregatedRating.setTextColor(ContextCompat.getColor(mContext, R.color.color_review_4));
+                }else if(rating < 80){
+                    mGameAggregatedRating.setTextColor(ContextCompat.getColor(mContext, R.color.color_review_3));
+                }else if(rating < 91){
+                    mGameAggregatedRating.setTextColor(ContextCompat.getColor(mContext, R.color.color_review_2));
+                }else{
+                    mGameAggregatedRating.setTextColor(ContextCompat.getColor(mContext, R.color.color_review_1));
+                }
+                mGameAggregatedRating.setText(String.valueOf(rating));
+            }
+            //Cover
             String protocol = "";
             try{
                 protocol = URL_COVER_BIG + game.getCloudinaryId() + IMAGE_FORMAT_JPG;
@@ -117,6 +158,7 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
 
                 }
             });
+
         }
     }
 
