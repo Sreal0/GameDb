@@ -402,7 +402,7 @@ public class GameDbLauncher extends AppCompatActivity {
         }, new Realm.Transaction.OnSuccess() {
             @Override
             public void onSuccess() {
-                Log.d("Realm Sucess", igdbGame.getName() + " saved to database");
+                Log.d("Realm Success", igdbGame.getName() + " saved to database");
             }
         }, new Realm.Transaction.OnError() {
             @Override

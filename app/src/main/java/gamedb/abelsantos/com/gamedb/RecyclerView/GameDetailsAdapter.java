@@ -1,8 +1,10 @@
 package gamedb.abelsantos.com.gamedb.RecyclerView;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -140,6 +142,18 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if(rat == 0){
             topHolder.getGameScore().setText("N/A");
         }else{
+            //Changes text color based on score.
+            if(rat < 50){
+                topHolder.getGameScore().setTextColor(ContextCompat.getColor(mContext, R.color.color_review_5));
+            }else if(rat < 65){
+                topHolder.getGameScore().setTextColor(ContextCompat.getColor(mContext, R.color.color_review_4));
+            }else if(rat < 80){
+                topHolder.getGameScore().setTextColor(ContextCompat.getColor(mContext, R.color.color_review_3));
+            }else if(rat < 91){
+                topHolder.getGameScore().setTextColor(ContextCompat.getColor(mContext, R.color.color_review_2));
+            }else{
+                topHolder.getGameScore().setTextColor(ContextCompat.getColor(mContext, R.color.color_review_1));
+            }
             topHolder.getGameScore().setText(String.valueOf(rat));
         }
     }

@@ -44,25 +44,31 @@ public class GameDetailsResolver {
             mGameDetailsPairs.add(detailsPair);
             mViewTypeItems.add(TOP);
             //Genre -> using mContext to get a access to GameDbLauncher Instance
-            detailsPair = new GameDetailsPair();
-            detailsPair.put("Genre", ((GameDbLauncher)mContext).resolveGenreNames(mIgdbGame.getGenre()));
-            mGameDetailsPairs.add(detailsPair);
-            mViewTypeItems.add(DETAIL);
+            if(mIgdbGame.getGenre() != null){
+                detailsPair = new GameDetailsPair();
+                detailsPair.put("Genre", ((GameDbLauncher)mContext).resolveGenreNames(mIgdbGame.getGenre()));
+                mGameDetailsPairs.add(detailsPair);
+                mViewTypeItems.add(DETAIL);
+            }
             //GameMode
-            detailsPair = new GameDetailsPair();
-            List<String>  igdbGameModes = mIgdbGame.getIgdbGameModes();
-            String modes = igdbGameModes.toString();
-            String cleanedUp = modes.replace("[", "");
-            cleanedUp = cleanedUp.replace("]", "");
-            detailsPair.put("Game modes", cleanedUp);
-            mGameDetailsPairs.add(detailsPair);
-            mViewTypeItems.add(DETAIL);
+            if(mIgdbGame.getIgdbGameModes() != null){
+                detailsPair = new GameDetailsPair();
+                List<String>  igdbGameModes = mIgdbGame.getIgdbGameModes();
+                String modes = igdbGameModes.toString();
+                String cleanedUp = modes.replace("[", "");
+                cleanedUp = cleanedUp.replace("]", "");
+                detailsPair.put("Game modes", cleanedUp);
+                mGameDetailsPairs.add(detailsPair);
+                mViewTypeItems.add(DETAIL);
+            }
             //Release date
-            detailsPair = new GameDetailsPair();
-            String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date(mIgdbGame.getReleaseDate()));
-            detailsPair.put("Release date", date);
-            mGameDetailsPairs.add(detailsPair);
-            mViewTypeItems.add(DETAIL);
+            if(mIgdbGame.getReleaseDate() > 0){
+                detailsPair = new GameDetailsPair();
+                String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date(mIgdbGame.getReleaseDate()));
+                detailsPair.put("Release date", date);
+                mGameDetailsPairs.add(detailsPair);
+                mViewTypeItems.add(DETAIL);
+            }
             //Developers - If there is no dev or pub it won´t show anything
             mCompanies = ((GameDbLauncher)mContext).getCompanies();
             if (mCompanies.size() > 0){
@@ -79,10 +85,12 @@ public class GameDetailsResolver {
                 mViewTypeItems.add(DETAIL);
             }
             //Summary
-            detailsPair = new GameDetailsPair();
-            detailsPair.put("Summary", mIgdbGame.getSummary());
-            mGameDetailsPairs.add(detailsPair);
-            mViewTypeItems.add(DETAIL);
+            if(mIgdbGame.getSummary() != null){
+                detailsPair = new GameDetailsPair();
+                detailsPair.put("Summary", mIgdbGame.getSummary());
+                mGameDetailsPairs.add(detailsPair);
+                mViewTypeItems.add(DETAIL);
+            }
             //Websites
             if (mIgdbGame.getIgbdWebsites() != null){
                 for (int i = 0; i < mIgdbGame.getIgbdWebsites().length; i++){

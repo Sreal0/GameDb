@@ -9,4 +9,9 @@
     <color name="colorBabyBlue">#AEE1F4</color>
     <color name="colorLightGreen">#E9FAD5</color>
     <color name="weblink"> #0000EE</color>
+    <color name="color_review_1">#27C527</color>
+    <color name="color_review_2">#134291</color>
+    <color name="color_review_3">#FFD825</color>
+    <color name="color_review_4">#B84600</color>
+    <color name="color_review_5">#FF3525</color>
 </resources>
