@@ -15,11 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -38,6 +35,7 @@ public class MyGamesFragment extends Fragment{
     private static final String IMAGE_FORMAT_JPG = ".jpg";
     private static final int TAG_DATABASE = 0;
     private static final int TAG_WISHLIST = 1;
+    private static final String NOT_AVALIABLE = "n/a";
 
 
     private RecyclerView mRecyclerView;
@@ -45,7 +43,7 @@ public class MyGamesFragment extends Fragment{
     private List<Game> mGames;
     private ImageView mThumbnail;
     private TextView mGameName;
-    private TextView mScore;
+    private TextView mAggregatedRating;
     private TextView mGameGenre;
     private TextView mGamePlatforms;
     private TextView mReleaseDate;
@@ -94,37 +92,39 @@ public class MyGamesFragment extends Fragment{
 
         public MyGamesHolder(View itemView) {
             super(itemView);
-            mGameName = (TextView)itemView.findViewById(R.id.txt_gameTitle_wishlist);
-            mScore = (TextView)itemView.findViewById(R.id.txt_game_rating_wishlist);
-            mThumbnail = (ImageView)itemView.findViewById(R.id.thumbnail_wishlist);
+            mGameName = (TextView)itemView.findViewById(R.id.txt_gameTitle_Games);
+            mAggregatedRating = (TextView)itemView.findViewById(R.id.txt_game_rating_Games);
+            mThumbnail = (ImageView)itemView.findViewById(R.id.thumbnail_Games);
             mRemoveGame = (ImageButton)itemView.findViewById(R.id.button_remove_game);
-            mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform_wishlist);
-            mGameGenre = (TextView)itemView.findViewById(R.id.txt_game_genre_wishlist) ;
-            mReleaseDate = (TextView) itemView.findViewById(R.id.txt_game_release_date_wishlist);
+            mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform_myGames);
+            mGameGenre = (TextView)itemView.findViewById(R.id.txt_game_genre_Games) ;
+            mReleaseDate = (TextView) itemView.findViewById(R.id.txt_game_release_date_Games);
 
         }
 
         private void bingGameListItem(final Game game){
+            //Name
             mGameName.setText(game.getGameName());
+            //Rating
             int rating = (int) game.getAggregated_rating();
-            if(rating == 0){
-                mScore.setText("N/A");
+            if(rating < 1){
+                mAggregatedRating.setText(NOT_AVALIABLE);
             }else{
                 //Changes text color based on score.
                 if(rating < 50){
-                    mScore.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_5));
+                    mAggregatedRating.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_5));
                 }else if(rating < 65){
-                    mScore.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_4));
+                    mAggregatedRating.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_4));
                 }else if(rating < 80){
-                    mScore.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_3));
+                    mAggregatedRating.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_3));
                 }else if(rating < 91){
-                    mScore.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_2));
+                    mAggregatedRating.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_2));
                 }else{
-                    mScore.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_1));
+                    mAggregatedRating.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_1));
                 }
-                mScore.setText(String.valueOf(rating));
+                mAggregatedRating.setText(String.valueOf(rating));
             }
-            mScore.setText(String.valueOf(rating));
+            //Cover
             String protocol = "";
             try{
                 protocol = URL_COVER_BIG + game.getCloudinaryId() + IMAGE_FORMAT_JPG;
@@ -141,6 +141,25 @@ public class MyGamesFragment extends Fragment{
             }else{
                 mThumbnail.setImageResource(R.drawable.ic_error);
             }
+            //Genre
+            if (game.getGenre() != null){
+                mGameGenre.setText(game.getGenre());
+            }else{
+                mGameGenre.setText(NOT_AVALIABLE);
+            }
+            //Release date
+            if (game.getReleasedate() != null){
+                mReleaseDate.setText(game.getReleasedate());
+            }else{
+                mReleaseDate.setText(NOT_AVALIABLE);
+            }
+            //Platforms
+            if (game.getPlatforms() != null){
+                mGamePlatforms.setText(game.getPlatforms());
+            }else{
+                mGamePlatforms.setText(NOT_AVALIABLE);
+            }
+
             //Not final - games should only be removed from inside the details fragment.
             mRemoveGame.setOnClickListener(new View.OnClickListener() {
                 @Override

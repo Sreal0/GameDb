@@ -1,5 +1,8 @@
 package gamedb.abelsantos.com.gamedb.Database;
 
+import java.util.List;
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -26,10 +29,14 @@ public class Game extends RealmObject {
     private double  mAggregated_rating;
     private int     mRatingCount;
     private int     mDatabaseOrWishlist;
+    private RealmList<RealmString> mResolvedDevsPubs;
+    private String mPlatforms;
+    private String mReleasedate;
+    private String mGenre;
+
 
     //Default empty Constructor must be declared
     public Game(){
-
     }
 
     public long getId() {
@@ -126,5 +133,37 @@ public class Game extends RealmObject {
 
     public void setDatabaseOrWishlist(int databaseOrWishlist) {
         mDatabaseOrWishlist = databaseOrWishlist;
+    }
+
+    public RealmList<RealmString> getResolvedDevsPubs() {
+        return mResolvedDevsPubs;
+    }
+
+    public void setResolvedDevsPubs(RealmList<RealmString> resolvedDevsPubs) {
+        mResolvedDevsPubs = resolvedDevsPubs;
+    }
+
+    public String getPlatforms() {
+        return mPlatforms;
+    }
+
+    public void setPlatforms(String platforms) {
+        mPlatforms = platforms;
+    }
+
+    public String getReleasedate() {
+        return mReleasedate;
+    }
+
+    public void setReleasedate(String releasedate) {
+        mReleasedate = releasedate;
+    }
+
+    public String getGenre() {
+        return mGenre;
+    }
+
+    public void setGenre(String genre) {
+        mGenre = genre;
     }
 }

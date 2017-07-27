@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="110dp"
     android:background="@color/colorLightGreen"
@@ -10,94 +12,116 @@
 
     <!-- Thumbnail Image -->
     <ImageView
-        android:id="@+id/thumbnail_wishlist"
+        android:id="@+id/thumbnail_Games"
         android:layout_width="75dp"
-        android:layout_height="100dp"
+        android:layout_height="0dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:layout_marginLeft="5dp"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="5dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
-        android:layout_width="210dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/game_title_text"
         android:textColor="@color/colorPrimaryDark"
         android:text="@string/game_title"
-        android:id="@+id/txt_gameTitle_wishlist"
+        android:id="@+id/txt_gameTitle_Games"
         android:ellipsize="end"
         android:maxLines="1"
-        android:layout_marginLeft="3dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="2dp"
-        android:layout_toRightOf="@+id/thumbnail_wishlist"
-        android:layout_toEndOf="@+id/thumbnail_wishlist"
-        />
+        android:layout_toRightOf="@+id/thumbnail_Games"
+        android:layout_toEndOf="@+id/thumbnail_Games"
+        app:layout_constraintLeft_toRightOf="@+id/thumbnail_Games"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/txt_game_rating_Games"
+        android:layout_marginRight="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_game_genre_wishlist"
+        android:id="@+id/txt_game_genre_Games"
         android:text="@string/game_genre"
+        android:maxLines="1"
         android:textColor="@color/colorBlack"
         android:textSize="13sp"
-        android:layout_marginLeft="3dp"
-        android:layout_below="@+id/txt_gameTitle_wishlist"
-        android:layout_toRightOf="@+id/thumbnail_wishlist"
-        android:layout_toEndOf="@+id/thumbnail_wishlist"/>
+        android:layout_below="@+id/txt_gameTitle_Games"
+        android:layout_toRightOf="@+id/thumbnail_Games"
+        android:layout_toEndOf="@+id/thumbnail_Games"
+        android:layout_marginTop="2dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_gameTitle_Games"
+        app:layout_constraintLeft_toRightOf="@+id/thumbnail_Games"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/txt_game_rating_Games"
+        android:layout_marginRight="8dp"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_game_release_date_wishlist"
+        android:id="@+id/txt_game_release_date_Games"
         android:text="@string/game_release_date"
         android:textColor="@color/colorBlack"
         android:textSize="13sp"
-        android:layout_marginLeft="3dp"
-        android:layout_below="@+id/txt_game_genre_wishlist"
-        android:layout_toRightOf="@+id/thumbnail_wishlist"
-        android:layout_toEndOf="@+id/thumbnail_wishlist"/>
+        android:layout_below="@+id/txt_game_genre_Games"
+        android:layout_toRightOf="@+id/thumbnail_Games"
+        android:layout_toEndOf="@+id/thumbnail_Games"
+        app:layout_constraintLeft_toRightOf="@+id/thumbnail_Games"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/txt_game_rating_Games"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_game_genre_Games"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:category="@+id/txt_game_platform_wishlist"
+        android:id="@+id/txt_game_platform_myGames"
         android:text="@string/game_platform"
         android:textSize="13sp"
         android:ellipsize="end"
-        android:maxLines="1"
+        android:maxLines="2"
         android:textColor="@color/colorBlack"
-        android:layout_below="@+id/txt_game_release_date_wishlist"
-        android:layout_alignLeft="@+id/txt_game_genre_wishlist"
-        android:layout_alignStart="@+id/txt_game_genre_wishlist"/>
+        android:layout_below="@+id/txt_game_release_date_Games"
+        android:layout_alignLeft="@+id/txt_game_genre_Games"
+        android:layout_alignStart="@+id/txt_game_genre_Games"
+        app:layout_constraintLeft_toRightOf="@+id/thumbnail_Games"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/txt_game_rating_Games"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_game_release_date_Games"
+        app:layout_constraintHorizontal_bias="0.0"/>
 
-    <LinearLayout
-        android:layout_width="70dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:weightSum="1"
-        >
-        <TextView
-            android:id="@+id/txt_game_rating_wishlist"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:textColor="@color/colorBlack"
-            android:textSize="30sp"
-            android:text="95"
-            android:paddingTop="5dp"
-            android:textAlignment="center"
-            android:layout_gravity="center"/>
+    <TextView
+        android:id="@+id/txt_game_rating_Games"
+        android:layout_width="55dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:paddingTop="5dp"
+        android:text="95"
+        android:textAlignment="center"
+        android:textColor="@color/colorBlack"
+        android:textSize="30sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <ImageButton
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:id="@+id/button_remove_game"
-        android:src="@mipmap/ic_remove_game"
-        android:layout_gravity="center|bottom"/>
-    </LinearLayout>
-</RelativeLayout>
+        <ImageButton
+            android:id="@+id/button_remove_game"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center|bottom"
+            android:src="@mipmap/ic_remove_game"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/txt_game_rating_Games"
+            android:layout_marginRight="18dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"/>
+</android.support.constraint.ConstraintLayout>

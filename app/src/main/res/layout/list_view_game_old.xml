@@ -11,7 +11,7 @@
 
     <!-- Thumbnail Image -->
     <ImageView
-        android:id="@+id/thumbnail_wishlist"
+        android:id="@+id/thumbnail_Games"
         android:layout_width="75dp"
         android:layout_height="100dp"
         android:scaleType="fitCenter"
@@ -30,36 +30,36 @@
         android:textSize="@dimen/game_title_text"
         android:textColor="@color/colorPrimaryDark"
         android:text="@string/game_title"
-        android:id="@+id/txt_gameTitle_wishlist"
+        android:id="@+id/txt_gameTitle_Games"
         android:ellipsize="end"
         android:maxLines="1"
         android:layout_marginLeft="3dp"
         android:layout_marginStart="3dp"
         android:layout_marginTop="2dp"
-        android:layout_toRightOf="@+id/thumbnail_wishlist"
+        android:layout_toRightOf="@+id/thumbnail_Games"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_game_genre_wishlist"
+        android:id="@+id/txt_game_genre_Games"
         android:text="@string/game_genre"
         android:textColor="@color/colorBlack"
         android:textSize="13sp"
         android:layout_marginLeft="3dp"
-        android:layout_below="@+id/txt_gameTitle_wishlist"
-        android:layout_toRightOf="@+id/thumbnail_wishlist"
-        android:layout_toEndOf="@+id/thumbnail_wishlist"/>
+        android:layout_below="@+id/txt_gameTitle_Games"
+        android:layout_toRightOf="@+id/thumbnail_Games"
+        android:layout_toEndOf="@+id/thumbnail_Games"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_game_release_date_wishlist"
+        android:id="@+id/txt_game_release_date_Games"
         android:text="@string/game_release_date"
         android:textColor="@color/colorBlack"
         android:textSize="13sp"
         android:layout_marginLeft="3dp"
-        android:layout_below="@+id/txt_game_genre_wishlist"
-        android:layout_toRightOf="@+id/thumbnail_wishlist"
-        android:layout_toEndOf="@+id/thumbnail_wishlist"/>
+        android:layout_below="@+id/txt_game_genre_Games"
+        android:layout_toRightOf="@+id/thumbnail_Games"
+        android:layout_toEndOf="@+id/thumbnail_Games"/>
 
     <TextView
         android:layout_width="220dp"
@@ -70,9 +70,9 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/colorBlack"
-        android:layout_below="@+id/txt_game_release_date_wishlist"
-        android:layout_alignLeft="@+id/txt_game_release_date_wishlist"
-        android:layout_alignStart="@+id/txt_game_release_date_wishlist"/>
+        android:layout_below="@+id/txt_game_release_date_Games"
+        android:layout_alignLeft="@+id/txt_game_release_date_Games"
+        android:layout_alignStart="@+id/txt_game_release_date_Games"/>
     <LinearLayout
         android:layout_width="70dp"
         android:layout_height="match_parent"
@@ -83,7 +83,7 @@
         >
 
         <TextView
-            android:id="@+id/txt_game_rating_wishlist"
+            android:id="@+id/txt_game_rating_Games"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:textColor="@color/colorBlack"
@@ -94,7 +94,7 @@
             android:layout_gravity="center"/>
 
         <ImageButton
-            android:id="@+id/button_add_database"
+            android:id="@+id/button_add_database_Games"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center|bottom"

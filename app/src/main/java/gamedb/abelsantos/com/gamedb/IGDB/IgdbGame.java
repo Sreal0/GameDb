@@ -37,6 +37,16 @@ public class IgdbGame implements Serializable{
     private IgdbCompany[] mIgdbCompanies;
     private int[] mIgdbGameModes;
     private IgdbWebsite[] mIgbdWebsites;
+    //Resolved Genres
+    private String mResolvedGenre;
+    //Resolved platforms
+    private String mResolvedPlatforms;
+    //Resolved Pubs and Dev
+    private List<String> mResolvedPubsANdDevs;
+    //Resolved Game modes
+    private List<String> mResolvedGameModes;
+    private String mResolvedReleaseDate;
+
 
     public IgdbGameCover getIgdbGameCover() {
         return mIgdbGameCover;
@@ -215,6 +225,7 @@ public class IgdbGame implements Serializable{
         for (int i = 0; i < mIgdbGameModes.length; i++){
             int id = mIgdbGameModes[i];
             modes.add(gamemode.gameModeResolver(id));
+            mResolvedGameModes.add(gamemode.gameModeResolver(id));
         }
         return modes;
     }
@@ -231,4 +242,43 @@ public class IgdbGame implements Serializable{
         mIgbdWebsites = igbdWebsites;
     }
 
+    public String getResolvedGenre() {
+        return mResolvedGenre;
+    }
+
+    public void setResolvedGenre(String resolvedGenre) {
+        mResolvedGenre = resolvedGenre;
+    }
+
+    public String getResolvedPlatforms() {
+        return mResolvedPlatforms;
+    }
+
+    public void setResolvedPlatforms(String resolvedPlatforms) {
+        mResolvedPlatforms = resolvedPlatforms;
+    }
+
+    public List<String> getResolvedPubsANdDevs() {
+        return mResolvedPubsANdDevs;
+    }
+
+    public void setResolvedPubsANdDevs(List<String> resolvedPubsANdDevs) {
+        mResolvedPubsANdDevs = resolvedPubsANdDevs;
+    }
+
+    public List<String> getResolvedGameModes() {
+        return mResolvedGameModes;
+    }
+
+    public void setResolvedGameModes(List<String> resolvedGameModes) {
+        mResolvedGameModes = resolvedGameModes;
+    }
+
+    public String getResolvedReleaseDate() {
+        return mResolvedReleaseDate;
+    }
+
+    public void setResolvedReleaseDate(String resolvedReleaseDate) {
+        mResolvedReleaseDate = resolvedReleaseDate;
+    }
 }

@@ -1,9 +1,7 @@
 package gamedb.abelsantos.com.gamedb.RecyclerView;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -81,11 +78,11 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.WishLi
 
         public WishListHolder(View itemView) {
             super(itemView);
-            mThumbnail = (ImageView)itemView.findViewById(R.id.thumbnail_wishlist);
-            mGameName = (TextView)itemView.findViewById(R.id.txt_gameTitle_wishlist);
-            mScore = (TextView)itemView.findViewById(R.id.txt_game_rating_wishlist);
+            mThumbnail = (ImageView)itemView.findViewById(R.id.thumbnail_Games);
+            mGameName = (TextView)itemView.findViewById(R.id.txt_gameTitle_Games);
+            mScore = (TextView)itemView.findViewById(R.id.txt_game_rating_Games);
             mPlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform_wishlist);
-            mReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date_wishlist);
+            mReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date_Games);
             mRemoveOrMoveOptions = (ImageButton)itemView.findViewById(R.id.button_wishlist_options);
         }
 

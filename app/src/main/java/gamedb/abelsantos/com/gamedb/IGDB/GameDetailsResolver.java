@@ -46,7 +46,9 @@ public class GameDetailsResolver {
             //Genre -> using mContext to get a access to GameDbLauncher Instance
             if(mIgdbGame.getGenre() != null){
                 detailsPair = new GameDetailsPair();
-                detailsPair.put("Genre", ((GameDbLauncher)mContext).resolveGenreNames(mIgdbGame.getGenre()));
+                String genres = ((GameDbLauncher)mContext).resolveGenreNames(mIgdbGame.getGenre());
+                detailsPair.put("Genre", genres);
+
                 mGameDetailsPairs.add(detailsPair);
                 mViewTypeItems.add(DETAIL);
             }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -190,13 +191,13 @@ public class GamesFragment extends Fragment {
 
         private GameHolder(final View itemView) {
             super(itemView);
-            mGameAggregatedRating = (TextView)itemView.findViewById(R.id.txt_game_rating_wishlist);
-            mGameTitle = (TextView) itemView.findViewById(R.id.txt_gameTitle_wishlist);
-            mGameGenre = (TextView)itemView.findViewById(R.id.txt_game_genre_wishlist) ;
-            mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform_wishlist);
-            mGameReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date_wishlist);
-            mThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail_wishlist);
-            mAddButton = (ImageButton)itemView.findViewById(R.id.button_add_database);
+            mGameAggregatedRating = (TextView)itemView.findViewById(R.id.txt_game_rating_Games);
+            mGameTitle = (TextView) itemView.findViewById(R.id.txt_gameTitle_Games);
+            mGameGenre = (TextView)itemView.findViewById(R.id.txt_game_genre_Games) ;
+            mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform_Games);
+            mGameReleaseDate = (TextView)itemView.findViewById(R.id.txt_game_release_date_Games);
+            mThumbnail = (ImageView) itemView.findViewById(R.id.thumbnail_Games);
+            mAddButton = (ImageButton)itemView.findViewById(R.id.button_add_database_Games);
             //To view details of a game - starts GameDetailsFragment
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -209,19 +210,37 @@ public class GamesFragment extends Fragment {
 
         private void bindGameListItem(final IgdbGame igdbGame){
             mGameTitle.setText(igdbGame.getName());
-            int rat = ((int) igdbGame.getAggregated_rating());
-            if(rat == 0){
-                mGameAggregatedRating.setText("-");
+            int rating = ((int) igdbGame.getAggregated_rating());
+            if(rating == 0){
+                mGameAggregatedRating.setText("n/a");
             }else{
-                mGameAggregatedRating.setText(rat + "");
+                //Changes text color based on score.
+                if(rating < 50){
+                    mGameAggregatedRating.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_5));
+                }else if(rating < 65){
+                    mGameAggregatedRating.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_4));
+                }else if(rating < 80){
+                    mGameAggregatedRating.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_3));
+                }else if(rating < 91){
+                    mGameAggregatedRating.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_2));
+                }else{
+                    mGameAggregatedRating.setTextColor(ContextCompat.getColor(getContext(), R.color.color_review_1));
+                }
+                mGameAggregatedRating.setText(String.valueOf(rating));
             }
-            //Only release year will be shown here. A more detailed date can be shown in the details.
+
             String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date(igdbGame.getReleaseDate()));
             mGameReleaseDate.setText(date);
+            //Resolved release date
+            igdbGame.setResolvedReleaseDate(date);
             String consoles = ((GameDbLauncher)getActivity()).resolvePlatformNames(igdbGame.getIgdbReleaseDates(), igdbGame.getName());
             mGamePlatforms.setText(consoles);
+            //Set Resolved Consoles
+            igdbGame.setResolvedPlatforms(consoles);
             final String genres = ((GameDbLauncher)getActivity()).resolveGenreNames(igdbGame.getGenre());
             mGameGenre.setText(genres);
+            //Set resolved genres
+            igdbGame.setResolvedGenre(genres);
             mAddButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

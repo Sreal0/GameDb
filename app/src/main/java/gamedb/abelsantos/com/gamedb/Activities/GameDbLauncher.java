@@ -391,13 +391,33 @@ public class GameDbLauncher extends AppCompatActivity {
             public void execute(Realm bgRealm) {
                 Game game = bgRealm.createObject(Game.class, igdbGame.getId());
                 game.setGameName(igdbGame.getName());
-                game.setAggregated_rating(igdbGame.getAggregated_rating());
+                //Rating
+                if (igdbGame.getAggregated_rating() > 0){
+                    game.setAggregated_rating(igdbGame.getAggregated_rating());
+                }
+                //Cover
                 if (igdbGame.getIgdbGameCover() != null){
                     game.setCloudinaryId(igdbGame.getIgdbGameCover().getCloudinaryId());
                 }else{
                     game.setCloudinaryId("");
                 }
+                //Tag DB or WL
                 game.setDatabaseOrWishlist(tag);
+                //Summary
+                if(igdbGame.getSummary() != null){
+                    game.setSummary(igdbGame.getSummary());
+                }
+                //Game genre
+                if (igdbGame.getResolvedGenre() != null){
+                    game.setGenre(igdbGame.getResolvedGenre());
+                }
+                //Release date
+                if (igdbGame.getResolvedReleaseDate() != null){
+                    game.setReleasedate(igdbGame.getResolvedReleaseDate());
+                }
+                if(igdbGame.getResolvedPlatforms() != null){
+                    game.setPlatforms(igdbGame.getResolvedPlatforms());
+                }
             }
         }, new Realm.Transaction.OnSuccess() {
             @Override
@@ -412,7 +432,7 @@ public class GameDbLauncher extends AppCompatActivity {
             }
         });
     }
-    //Saves a Game Object to the datase
+    //Saves a Game Object to the database
     public void saveGamesToRealm(final long id, final int tag){
         //Tags: 0 for database, 1 for wish list
         mRealm.beginTransaction();
