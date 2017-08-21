@@ -36,6 +36,7 @@ public class GameDetailsResolver {
         mIgdbGame = igdbGame;
     }
 
+    //FIXME -> if a dataset is avaliable, add it to the list. Else, don´t
     public List<GameDetailsPair> resolveGameDetails(){
         GameDetailsPair detailsPair = new GameDetailsPair();
         if (mIgdbGame != null){
@@ -48,7 +49,6 @@ public class GameDetailsResolver {
                 detailsPair = new GameDetailsPair();
                 String genres = ((GameDbLauncher)mContext).resolveGenreNames(mIgdbGame.getGenre());
                 detailsPair.put("Genre", genres);
-
                 mGameDetailsPairs.add(detailsPair);
                 mViewTypeItems.add(DETAIL);
             }

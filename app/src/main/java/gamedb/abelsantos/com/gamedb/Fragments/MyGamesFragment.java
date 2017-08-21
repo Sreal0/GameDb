@@ -3,8 +3,11 @@ package gamedb.abelsantos.com.gamedb.Fragments;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +25,8 @@ import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
 import gamedb.abelsantos.com.gamedb.Database.Game;
+import gamedb.abelsantos.com.gamedb.Fragments.ViewPagerAdapter.BaseFragmentMyGames;
+import gamedb.abelsantos.com.gamedb.Fragments.ViewPagerAdapter.ViewPagerAdapter;
 import gamedb.abelsantos.com.gamedb.R;
 
 /**
@@ -74,8 +79,11 @@ public class MyGamesFragment extends Fragment{
         mGames = ((GameDbLauncher) getActivity()).getGamesFromRealm(TAG_DATABASE);
         setupAdapter();
         ((GameDbLauncher)getActivity()).changeToolbarSubtitleText("");
+
         return view;
     }
+
+
 
     @Override
     public void onPrepareOptionsMenu(Menu menu){
@@ -99,6 +107,18 @@ public class MyGamesFragment extends Fragment{
             mGamePlatforms = (TextView)itemView.findViewById(R.id.txt_game_platform_myGames);
             mGameGenre = (TextView)itemView.findViewById(R.id.txt_game_genre_Games) ;
             mReleaseDate = (TextView) itemView.findViewById(R.id.txt_game_release_date_Games);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Starts base fragment where tabs are
+                    FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
+                    Fragment gameDetails = supportFragmentManager.findFragmentByTag(BaseFragmentMyGames.TAG);
+                    supportFragmentManager.beginTransaction()
+                            .replace(R.id.frame_layout, BaseFragmentMyGames.newInstance(), BaseFragmentMyGames.TAG)
+                            .addToBackStack(GameDetailsFragment.TAG)
+                            .commit();
+                }
+            });
 
         }
 

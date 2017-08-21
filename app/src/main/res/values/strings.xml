@@ -49,6 +49,8 @@
     <string name="title_action_sort">Sort</string>
     <string name="title_action_overflow">Filter</string>
     <string name="weblink"><u>Link</u></string>
+    <string name="details">Details</string>
+    <string name="my_info">My Info</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

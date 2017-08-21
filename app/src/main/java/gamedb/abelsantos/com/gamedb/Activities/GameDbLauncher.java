@@ -6,8 +6,10 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,6 +49,7 @@ import gamedb.abelsantos.com.gamedb.Fragments.GameDetailsFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.GamesFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.MyGamesFragment;
 import gamedb.abelsantos.com.gamedb.Fragments.SearchFragment;
+import gamedb.abelsantos.com.gamedb.Fragments.ViewPagerAdapter.ViewPagerAdapter;
 import gamedb.abelsantos.com.gamedb.Fragments.WishlistFragment;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbCompany;
@@ -77,6 +80,8 @@ public class GameDbLauncher extends AppCompatActivity {
     private HashMap<String, String > mItemsHashMap;
     private RealmResults<Game> mGameQueryResult;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +92,7 @@ public class GameDbLauncher extends AppCompatActivity {
         mToolbarText = (TextView)findViewById(R.id.txt_toolbar_undertitle);
         mToolbarText.setGravity(Gravity.BOTTOM);
         sIgdbClientSingleton = IgdbClientSingleton.getInstance();
+
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -470,7 +476,7 @@ public class GameDbLauncher extends AppCompatActivity {
         });
     }
 
-    public void getGamesFromAPI(String url, final List<IgdbGame> igdbGames){
+    public void getGamesFromAPI(final String url, final List<IgdbGame> igdbGames){
         //Standard request
         // Request an Array response from the provided URL.
         final JsonArrayRequest req = new JsonArrayRequest(
@@ -478,6 +484,7 @@ public class GameDbLauncher extends AppCompatActivity {
             @Override
             public void onResponse(JSONArray response) {
                 ObjectMapper mapper = new ObjectMapper();
+                Log.d(TAG, url);
                 for(int i = 0; i < response.length(); i++){
                     try {
                         JSONObject object = response.getJSONObject(i);
@@ -560,15 +567,15 @@ public class GameDbLauncher extends AppCompatActivity {
         String url = "";
         /*Some new releases have no dev or pub
         * If, then start fragment without any dev or pub*/
-        if (mIgdbGame.getDevelopers() == null) {
+        if (mIgdbGame.getDevelopers() != null && mIgdbGame.getPublishers() != null) {
+            url = sIgdbClientSingleton.getCompanyNamesURL(mIgdbGame.getDevelopers()[0], mIgdbGame.getPublishers()[0]);
+            }else{
             FragmentManager supportFragmentManager = getSupportFragmentManager();
             Fragment gameDetails = supportFragmentManager.findFragmentByTag(GameDetailsFragment.TAG);
             supportFragmentManager.beginTransaction()
                     .replace(R.id.frame_layout, GameDetailsFragment.newInstance(), GameDetailsFragment.TAG)
                     .addToBackStack(GameDetailsFragment.TAG)
                     .commit();
-        }else{
-            url = sIgdbClientSingleton.getCompanyNamesURL(mIgdbGame.getDevelopers()[0], mIgdbGame.getPublishers()[0]);
         }
             mCompanies = new ArrayList<>();
             //Log.d("resolveCompanyName", url);

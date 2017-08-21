@@ -42,9 +42,9 @@ public class IgdbGame implements Serializable{
     //Resolved platforms
     private String mResolvedPlatforms;
     //Resolved Pubs and Dev
-    private List<String> mResolvedPubsANdDevs;
+    private List<String> mResolvedPubsANdDevs = new ArrayList<>();
     //Resolved Game modes
-    private List<String> mResolvedGameModes;
+    private List<String> mResolvedGameModes = new ArrayList<>();
     private String mResolvedReleaseDate;
 
 

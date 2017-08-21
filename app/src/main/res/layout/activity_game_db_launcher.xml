@@ -39,7 +39,6 @@
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
-
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
@@ -47,6 +46,7 @@
         android:layout_above="@+id/bottom_navigation"
         android:layout_below="@id/toolbar_launcher"
         android:animateLayoutChanges="true">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

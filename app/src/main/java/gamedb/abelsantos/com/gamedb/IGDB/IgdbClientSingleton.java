@@ -55,14 +55,12 @@ public class IgdbClientSingleton extends Application{
     @Override
     public void onCreate(){
         super.onCreate();
-
         sIgdbClientSingleton = this;
     }
 
     public static synchronized IgdbClientSingleton getInstance(){
         if(sIgdbClientSingleton == null){
             sIgdbClientSingleton = new IgdbClientSingleton();
-            Log.d(TAG, "New Instance");
         }
         return sIgdbClientSingleton;
     }
