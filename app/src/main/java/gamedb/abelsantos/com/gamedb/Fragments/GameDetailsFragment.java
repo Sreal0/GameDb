@@ -3,50 +3,20 @@ package gamedb.abelsantos.com.gamedb.Fragments;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
 import gamedb.abelsantos.com.gamedb.Database.GameDetailsPair;
-import gamedb.abelsantos.com.gamedb.IGDB.GameDetailsResolver;
+import gamedb.abelsantos.com.gamedb.IGDB.Resolver.GameDetailsResolver;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbClientSingleton;
-import gamedb.abelsantos.com.gamedb.IGDB.IgdbCompany;
 import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
-import gamedb.abelsantos.com.gamedb.IGDB.IgdbGameMode;
 import gamedb.abelsantos.com.gamedb.R;
 import gamedb.abelsantos.com.gamedb.RecyclerView.GameDetailsAdapter;
 

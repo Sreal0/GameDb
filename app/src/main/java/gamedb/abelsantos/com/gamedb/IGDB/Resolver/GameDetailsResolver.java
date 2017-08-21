@@ -1,4 +1,4 @@
-package gamedb.abelsantos.com.gamedb.IGDB;
+package gamedb.abelsantos.com.gamedb.IGDB.Resolver;
 
 import android.content.Context;
 
@@ -9,6 +9,8 @@ import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
 import gamedb.abelsantos.com.gamedb.Database.GameDetailsPair;
+import gamedb.abelsantos.com.gamedb.IGDB.IgdbGame;
+import gamedb.abelsantos.com.gamedb.IGDB.IgdbWebsite;
 
 /**
  * Created by Abel Cruz dos Santos on 19.07.2017.

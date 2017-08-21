@@ -3,11 +3,9 @@ package gamedb.abelsantos.com.gamedb.Fragments;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,8 +23,6 @@ import java.util.List;
 
 import gamedb.abelsantos.com.gamedb.Activities.GameDbLauncher;
 import gamedb.abelsantos.com.gamedb.Database.Game;
-import gamedb.abelsantos.com.gamedb.Fragments.ViewPagerAdapter.BaseFragmentMyGames;
-import gamedb.abelsantos.com.gamedb.Fragments.ViewPagerAdapter.ViewPagerAdapter;
 import gamedb.abelsantos.com.gamedb.R;
 
 /**

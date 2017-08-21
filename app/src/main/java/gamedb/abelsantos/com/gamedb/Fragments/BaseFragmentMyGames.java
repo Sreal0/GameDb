@@ -1,15 +1,15 @@
-package gamedb.abelsantos.com.gamedb.Fragments.ViewPagerAdapter;
+package gamedb.abelsantos.com.gamedb.Fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import gamedb.abelsantos.com.gamedb.Fragments.MyGameGeneralInfoFragment;
-import gamedb.abelsantos.com.gamedb.Fragments.MyGamesPersonalDetailsFragment;
+import gamedb.abelsantos.com.gamedb.Fragments.ViewPagerAdapter.ViewPagerAdapter;
 import gamedb.abelsantos.com.gamedb.R;
 
 /**
@@ -39,6 +39,9 @@ public class BaseFragmentMyGames extends Fragment {
 
     private void setupViewAdapter(ViewPager viewPager){
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+        FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
+        Fragment gamesGeneralInfo = supportFragmentManager.findFragmentByTag(MyGameGeneralInfoFragment.TAG);
+
         adapter.addFrag(new MyGameGeneralInfoFragment(), "General");
         adapter.addFrag(new MyGamesPersonalDetailsFragment(), "Personal");
         viewPager.setAdapter(adapter);
