@@ -3,8 +3,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="game_title_text">17sp</dimen>
-    <dimen name="game_title_big">27sp</dimen>
+    <dimen name="game_title_big">40sp</dimen>
     <dimen name="standard">13sp</dimen>
+    <dimen name="game_detail_fields_title">20sp</dimen>
     <dimen name="game_detail_fields">16sp</dimen>
     <dimen name="game_score_huge">46sp</dimen>
     <dimen name="game_score_big">28sp</dimen>

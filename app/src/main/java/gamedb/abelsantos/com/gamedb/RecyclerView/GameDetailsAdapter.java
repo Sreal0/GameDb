@@ -1,6 +1,5 @@
 package gamedb.abelsantos.com.gamedb.RecyclerView;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -121,6 +120,7 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private void configureTopHolder(TopHolder topHolder){
+        //Search for detv
         String protocol = "";
         try{
             protocol = sIgdbClientSingleton.getUrlCoverBig() +
@@ -172,12 +172,16 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private TextView mGameTitle;
         private TextView mGameScore;
         private ImageView mGameCover;
+        private TextView mGameScoreTitle;
+        //private TextView mDev;
 
         private TopHolder(View itemView) {
             super(itemView);
             mGameCover = (ImageView)itemView.findViewById(R.id.imageView);
             mGameTitle = (TextView)itemView.findViewById(R.id.txt_game_title);
             mGameScore = (TextView)itemView.findViewById(R.id.txt_game_score);
+            mGameScoreTitle = (TextView)itemView.findViewById(R.id.txt_score_title);
+            //mDev = (TextView)itemView.findViewById(R.id.txt_developer);
         }
 
         private TextView getGameTitle() {

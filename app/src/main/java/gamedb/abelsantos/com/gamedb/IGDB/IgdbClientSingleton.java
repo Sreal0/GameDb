@@ -41,7 +41,7 @@ public class IgdbClientSingleton extends Application{
     private static final String IMAGE_FORMAT_PNG = ".png";
     private static final String IMAGE_FORMAT_JPG = ".jpg";
     private static final String SINGLE_GAME_DETAILS = "&fields=name,cover,genres,release_dates,aggregated_rating,first_release_date" +
-            ",developers,publishers,summary,game_modes,websites";
+            ",developers,publishers,summary,game_modes,websites,time_to_beat";
     private static final String COMPANY_FIELDS = "&fields=name,slug,url";
 
 

@@ -71,6 +71,7 @@ public class GameDetailsResolver {
                 mGameDetailsPairs.add(detailsPair);
                 mViewTypeItems.add(DETAIL);
             }
+            //DEVS are added in the top list item
             //Developers - If there is no dev or pub it won´t show anything
             mCompanies = ((GameDbLauncher)mContext).getCompanies();
             if (mCompanies.size() > 0){

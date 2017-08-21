@@ -518,7 +518,7 @@ public class GameDbLauncher extends AppCompatActivity {
     public IgdbGame getASingleGameFromAPI(int gameId){
         String url = sIgdbClientSingleton.getSingleGameDetails(gameId);
         mItemsHashMap = new HashMap<>();
-        //Log.d("Single", url);
+        Log.d("Single", url);
         final JsonArrayRequest req = new JsonArrayRequest(
                 url, new Response.Listener<JSONArray>() {
             @Override

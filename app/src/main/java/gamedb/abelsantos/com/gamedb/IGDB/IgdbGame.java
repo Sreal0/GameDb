@@ -46,6 +46,7 @@ public class IgdbGame implements Serializable{
     //Resolved Game modes
     private List<String> mResolvedGameModes = new ArrayList<>();
     private String mResolvedReleaseDate;
+    private IGDBTimeToBeat mIGDBTimeToBeat;
 
 
     public IgdbGameCover getIgdbGameCover() {
@@ -280,5 +281,13 @@ public class IgdbGame implements Serializable{
 
     public void setResolvedReleaseDate(String resolvedReleaseDate) {
         mResolvedReleaseDate = resolvedReleaseDate;
+    }
+
+    public IGDBTimeToBeat getIGDBTimeToBeat() {
+        return mIGDBTimeToBeat;
+    }
+    @JsonSetter("time_to_beat")
+    public void setIGDBTimeToBeat(IGDBTimeToBeat IGDBTimeToBeat) {
+        mIGDBTimeToBeat = IGDBTimeToBeat;
     }
 }
