@@ -424,6 +424,15 @@ public class GameDbLauncher extends AppCompatActivity {
                 if(igdbGame.getResolvedPlatforms() != null){
                     game.setPlatforms(igdbGame.getResolvedPlatforms());
                 }
+                //Game modes
+                if (igdbGame.getIgdbGameModes() != null){
+                    //FIXME
+                    List<String>  igdbGameModes = igdbGame.getIgdbGameModes();
+                    String modes = igdbGameModes.toString();
+                    String cleanedUp = modes.replace("[", "");
+                    cleanedUp = cleanedUp.replace("]", "");
+                    game.setGameModes(cleanedUp);
+                }
             }
         }, new Realm.Transaction.OnSuccess() {
             @Override

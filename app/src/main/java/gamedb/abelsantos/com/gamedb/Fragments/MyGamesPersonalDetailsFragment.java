@@ -14,11 +14,13 @@ import gamedb.abelsantos.com.gamedb.R;
 
 public class MyGamesPersonalDetailsFragment extends Fragment {
     public static final String TAG = "MyGamesPersonalDetailsFragment";
+    private static final String KEY = "id";
+    private int mId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_games_private_details, container, false);
+        View view = inflater.inflate(R.layout.tab_view_private_info, container, false);
 
         return view;
     }
@@ -34,7 +36,9 @@ public class MyGamesPersonalDetailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null){
+        Bundle bundle = this.getArguments();
+        if (bundle != null){
+            mId = bundle.getInt(KEY);
         }
     }
 }

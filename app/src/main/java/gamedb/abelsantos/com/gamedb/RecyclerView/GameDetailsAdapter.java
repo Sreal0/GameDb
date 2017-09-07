@@ -177,7 +177,7 @@ public class GameDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         private TopHolder(View itemView) {
             super(itemView);
-            mGameCover = (ImageView)itemView.findViewById(R.id.imageView);
+            mGameCover = (ImageView)itemView.findViewById(R.id.iv_game_cover);
             mGameTitle = (TextView)itemView.findViewById(R.id.txt_game_title);
             mGameScore = (TextView)itemView.findViewById(R.id.txt_game_score);
             mGameScoreTitle = (TextView)itemView.findViewById(R.id.txt_score_title);

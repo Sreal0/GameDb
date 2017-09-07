@@ -33,6 +33,7 @@ public class Game extends RealmObject {
     private String mPlatforms;
     private String mReleasedate;
     private String mGenre;
+    private String mGameModes;
 
 
     //Default empty Constructor must be declared
@@ -165,5 +166,13 @@ public class Game extends RealmObject {
 
     public void setGenre(String genre) {
         mGenre = genre;
+    }
+
+    public String getGameModes() {
+        return mGameModes;
+    }
+
+    public void setGameModes(String gameModes) {
+        mGameModes = gameModes;
     }
 }

@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import gamedb.abelsantos.com.gamedb.Fragments.MyGameGeneralInfoFragment;
+import gamedb.abelsantos.com.gamedb.Fragments.MyGamesPersonalDetailsFragment;
+
 /**
  * Created by Abel Cruz dos Santos on 16.08.2017.
  */
@@ -31,6 +34,14 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        /*switch (position) {
+            case 0:
+                return new MyGameGeneralInfoFragment();
+            case 1:
+                return new MyGamesPersonalDetailsFragment();
+            default:
+                return null; // Problem occurs at this condition!
+        }*/
         return mFragmentList.get(position);
     }
 

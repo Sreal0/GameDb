@@ -30,6 +30,7 @@ import gamedb.abelsantos.com.gamedb.R;
  */
 
 public class MyGamesFragment extends Fragment{
+    private static final String KEY = "id";
     public static final String TAG = "MyGamesFragment";
     private static final String URL_COVER_BIG = "https://images.igdb.com/igdb/image/upload/t_cover_big/";
     private static final String IMAGE_FORMAT_PNG = ".png";
@@ -93,6 +94,7 @@ public class MyGamesFragment extends Fragment{
     }
 
     private class MyGamesHolder extends RecyclerView.ViewHolder{
+        private Game mGame;
 
         public MyGamesHolder(View itemView) {
             super(itemView);
@@ -106,11 +108,14 @@ public class MyGamesFragment extends Fragment{
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    //Bundle
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(KEY, (int) mGame.getId());
                     //Starts base fragment where tabs are
                     FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
-                    Fragment gameDetails = supportFragmentManager.findFragmentByTag(BaseFragmentMyGames.TAG);
+                    Fragment gameDetails = supportFragmentManager.findFragmentByTag(TabViewHomeFragment.TAG);
                     supportFragmentManager.beginTransaction()
-                            .replace(R.id.frame_layout, BaseFragmentMyGames.newInstance(), BaseFragmentMyGames.TAG)
+                            .replace(R.id.frame_layout, TabViewHomeFragment.newInstance((int) mGame.getId()), TabViewHomeFragment.TAG)
                             .addToBackStack(GameDetailsFragment.TAG)
                             .commit();
                 }
@@ -119,6 +124,7 @@ public class MyGamesFragment extends Fragment{
         }
 
         private void bingGameListItem(final Game game){
+            mGame = game;
             //Name
             mGameName.setText(game.getGameName());
             //Rating

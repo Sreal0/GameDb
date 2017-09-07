@@ -33,7 +33,7 @@ public class IgdbClientSingleton extends Application{
     private static final String FILTER_FIRST_RELEASE_DATE_LOWER_THAN_TODAY = "&filter[first_release_date][lte]=";
     private static final String GET_GAMES_KEY_ATTRIBUTES_LIMIT = "https://igdbcom-internet-game-database-v1.p.mashape.com/games/" +
                                                             "?mashape-key=spjH1mZDLmmsh2xi8l8E4sz5dRFBp1FexQhjsnEsNlSCIqVzS0" +
-                                                            "&fields=name,cover,genres,release_dates,aggregated_rating,first_release_date" +
+                                                            "&fields=name,cover,genres,release_dates,aggregated_rating,first_release_date,game_modes" +
                                                             "&limit=20&offset=%d";
     private static final String URL_SCREENSHOT_BIG = "https://images.igdb.com/igdb/image/upload/t_screenshot_big/";
     private static final String URL_COVER_BIG_2X = "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/";
